@@ -1,10 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View, Image } from "react-native";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Image
+        source={require("./assets/petfolio-logo.png")}
+        style={styles.image}
+      />
+      <Text>Welcome To</Text>
+      <Text>PetFolio</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -13,8 +18,15 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#F6F1EB",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    color: "#3D3D3D",
+  },
+  image: {
+    width: 100,
+    height: 100,
   },
 });
