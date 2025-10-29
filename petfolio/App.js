@@ -1,7 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image } from "react-native";
+import Button from "./components/Button.tsx";
 
-export default function App() {
+export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -13,6 +14,11 @@ export default function App() {
       <View style={styles.textContainer}>
         <Text style={styles.text}>Welcome To</Text>
         <Text style={styles.text}>PetFolio</Text>
+
+      </View>
+      <View style = {styles.buttonContainer}>
+          <Button label="Register"/>
+          <Button label="Login"/>
       </View>
       <StatusBar style="auto" />
     </View>
@@ -24,27 +30,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F6F1EB",
     alignItems: "center",
-    justifyContent: "center",
+    marginBottom: 0,
   },
   imageContainer: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "flex-start",
-    paddingTop: 100,
   },
   textContainer: {
-    flex: 2,
     alignItems: "center",
-    justifyContent: "flex-start",
-    width: "100%",
+  },
+  buttonContainer:
+  {
+   margin: 15,
+   
   },
   text: {
     color: "#3D3D3D",
+   
   },
   image: {
     resizeMode: "center",
     aspectRatio: 1,
-    flex:1,
-
   },
 });
