@@ -35,14 +35,16 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 2,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     width: "100%",
   },
   text: {
     color: "#3D3D3D",
   },
   image: {
-    width: 100,
-    height: 100,
+    resizeMode: "center",
+    aspectRatio: 1,
+    flex:1,
+
   },
 });
