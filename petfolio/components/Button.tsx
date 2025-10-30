@@ -16,20 +16,17 @@ export default function Button({ label }: Props) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    width: 320,
-    height: 68,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 3,
   },
   button: {
     borderRadius: 10,
-    width: '50%',
-    height: '75%',
+    width: '75%',
+    height: '30%',
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: "#3D3D3D",
   },
   buttonLabel: {
