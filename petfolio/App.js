@@ -1,10 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image } from "react-native";
 import Button from "./components/Button.tsx";
+import Header from "./components/Header.tsx";
 
 export default function Index() {
   return (
     <View style={styles.container}>
+      <Header/>
       <View style={styles.imageContainer}>
         <Image
           source={require("./assets/petfolio-logo.png")}
@@ -48,6 +50,6 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 100,
-    width: 90,
+    width: 95,
   },
 });
