@@ -1,18 +1,23 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Image } from "react-native";
+import Button from "./components/Button.tsx";
+import Header from "./components/Header.tsx";
 
-export default function App() {
+export default function Index() {
   return (
     <View style={styles.container}>
+      <Header/>
       <View style={styles.imageContainer}>
         <Image
           source={require("./assets/petfolio-logo.png")}
           style={styles.image}
         />
-      </View>
-      <View style={styles.textContainer}>
         <Text style={styles.text}>Welcome To</Text>
         <Text style={styles.text}>PetFolio</Text>
+      </View>
+      <View style = {styles.buttonContainer}>
+          <Button label="Register"/>
+          <Button label="Login"/>
       </View>
       <StatusBar style="auto" />
     </View>
@@ -24,25 +29,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F6F1EB",
     alignItems: "center",
-    justifyContent: "center",
+    marginBottom: 0,
+    maxWidth: "100%",
   },
   imageContainer: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "flex-start",
-    paddingTop: 100,
+    marginTop: 50,
   },
-  textContainer: {
-    flex: 2,
-    alignItems: "center",
+
+  buttonContainer:
+  {
+    flexDirection: "row",
     justifyContent: "center",
-    width: "100%",
+    alignItems: "center",
+   
   },
   text: {
     color: "#3D3D3D",
+   
   },
   image: {
-    width: 100,
     height: 100,
+    width: 95,
   },
 });
