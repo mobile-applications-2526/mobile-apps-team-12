@@ -11,8 +11,9 @@ export default function Index() {
           source={require("../assets/petfolio-logo.png")}
           style={styles.image}
         />
-        <Text style={styles.text}>Welcome To</Text>
-        <Text style={styles.text}>PetFolio</Text>
+        <View>
+          <Text style={styles.text}>Welcome To Petfolio</Text>
+        </View>
       </View>
       <View style={styles.buttonContainer}>
         <Button label="Register" path="/register" />
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#3D3D3D",
+    margin: 5,
   },
   image: {
     height: 100,

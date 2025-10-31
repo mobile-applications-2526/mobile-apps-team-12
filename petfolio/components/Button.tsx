@@ -11,7 +11,9 @@ export default function Button({ label, path }: Props) {
   return (
     <View style={styles.buttonContainer}>
       <Pressable style={styles.button} onPress={() => router.navigate(path)}>
-        <Text style={styles.buttonLabel}>{label}</Text>
+        <View>
+          <Text style={styles.buttonLabel}>{label}</Text>
+        </View>
       </Pressable>
     </View>
   );

@@ -4,7 +4,9 @@ export default function Register() {
   return (
     <View style={styles.container}>
       <Header />
-      <Text>Register here</Text>
+      <View>
+        <Text>Register here</Text>
+      </View>
     </View>
   );
 }
