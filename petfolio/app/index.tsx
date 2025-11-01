@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import Button from "../components/Button";
 import Header from "../components/Header";
+import { useRouter } from "expo-router";
 
 export default function Index() {
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <Header />
@@ -16,8 +18,8 @@ export default function Index() {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <Button label="Register" path="/register" />
-        <Button label="Login" path="/login" />
+        <Button label="Register" onPress={() => router.navigate("/register")}/>
+        <Button label="Login" onPress={() => router.navigate("/login")} />
       </View>
     </View>
   );
