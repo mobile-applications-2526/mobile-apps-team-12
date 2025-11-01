@@ -1,12 +1,11 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Header from "../../components/Header";
+import RegisterForm from "../../components/RegisterForm";
 export default function Register() {
   return (
     <View style={styles.container}>
       <Header />
-      <View>
-        <Text>Register here</Text>
-      </View>
+     <RegisterForm/>
     </View>
   );
 }

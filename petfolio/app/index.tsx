@@ -14,7 +14,7 @@ export default function Index() {
           style={styles.image}
         />
         <View>
-          <Text style={styles.text}>Welcome To Petfolio</Text>
+          <Text style={styles.title}>Welcome To Petfolio</Text>
         </View>
       </View>
       <View style={styles.buttonContainer}>
@@ -43,12 +43,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  text: {
-    color: "#3D3D3D",
-    margin: 5,
-  },
   image: {
     height: 100,
     width: 95,
+  },
+   title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: "#3D3D3D",
+    margin: 5,
   },
 });
