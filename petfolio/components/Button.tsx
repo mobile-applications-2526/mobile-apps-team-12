@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     backgroundColor: "#3D3D3D",
+    padding: 5
   },
   buttonLabel: {
     color: "#fff",
