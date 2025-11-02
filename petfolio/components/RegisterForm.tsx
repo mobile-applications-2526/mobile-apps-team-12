@@ -4,16 +4,19 @@ import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from "expo-router";
 import Button from "./Button";
 import { ScrollView } from 'react-native';
+import UserService from "../services/UserService"
 export default function RegisterForm() {    
     const router = useRouter();
     const { control, handleSubmit, watch, formState: { errors } } = useForm();
     const password = watch('password'); //watch password for validation
     const [isRegistered, setIsRegistered] = useState(false);
-    const onSubmit = useCallback((data) => {
-        console.log(data);
+    const onSubmit = useCallback(async (data) => {
+        const { confirmPassword, ...userData } = data; //confirmPassword is not data we need to send to the backend
+        console.log(userData);
+        const response = await UserService.registerUser(userData);
         setIsRegistered(true);
+        setTimeout(() => router.navigate("/login"), 2000);
     }, [])
-
 
     return (
         <ScrollView contentContainerStyle={{ paddingVertical: 90, paddingHorizontal: 10 }}>
