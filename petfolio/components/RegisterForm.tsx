@@ -10,18 +10,31 @@ export default function RegisterForm() {
     const { control, handleSubmit, watch, formState: { errors } } = useForm();
     const password = watch('password'); //watch password for validation
     const [isRegistered, setIsRegistered] = useState(false);
+    const [registrationError, setRegistrationError] = useState("");
     const onSubmit = useCallback(async (data) => {
         const { confirmPassword, ...userData } = data; //confirmPassword is not data we need to send to the backend
         console.log(userData);
-        const response = await UserService.registerUser(userData);
-        setIsRegistered(true);
-        setTimeout(() => router.navigate("/login"), 2000);
+        try {
+            const response = await UserService.registerUser(userData);
+            if (response && response.ok) {
+                setIsRegistered(true);
+                setTimeout(() => router.navigate("/login"), 2000);
+            }
+        } catch (error) {
+            // network or server error; show friendly message
+            console.error(error);
+            setRegistrationError(
+                "Network or server error. Please check your connection and try again."
+            );
+        }
+
     }, [])
 
     return (
         <ScrollView contentContainerStyle={{ paddingVertical: 90, paddingHorizontal: 10 }}>
             <View>
                 <Text style={styles.title}>Register here</Text>
+                {registrationError && <Text style={styles.error}>{registrationError}</Text>}
                 {isRegistered && <Text style={styles.success}>Registration succesfull!</Text>}
                 <Text>First Name*</Text>
                 <Controller
