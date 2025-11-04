@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, View, Text, ScrollView, Image, ActivityIndicator } from "react-native";
 import React, {useState, useEffect} from "react";
 import Header from "../../components/Header";
 import PetService from "../../services/PetService";
@@ -10,12 +10,14 @@ export default function PetOverview() {
   const db = useSQLiteContext(); // get DB from provider
   const [pets, setPets] = useState<Pet[]>([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   function clearErrors() {
     setError("");
   }
   async function getPetsData() {
     clearErrors()
+
     try {
        const result = await PetService.getPets(db);
     if (result.length > 0) {
@@ -28,14 +30,24 @@ export default function PetOverview() {
       console.error("Failed to fetch pets", err);
       setPets([]);
       setError("Failed to load pets. Please try again.");
-    }
+    }  
+    finally {
+        setLoading(false);
+      }
   }
 
   useEffect(() => {
     getPetsData()
   }, [])
 
-  
+  if (loading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#507C59" />
+        </View>
+      );
+      }
+
   return (
     <View style={styles.container}>
       <Header />
@@ -44,7 +56,7 @@ export default function PetOverview() {
         {error && <Text style={styles.error}>{error}</Text>}
               {pets.length === 0 ? (
           <Text style={styles.text}>There are currently no pets...</Text>
-          ) : (<PetsTable pets={pets}/>)}
+          ) : (<PetsTable petData={pets}/>)}
       </View>
     </View>
   );
@@ -56,6 +68,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 0,
     maxWidth: "100%",
+  },
+    loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   imageContainer: {
     alignItems: "center",

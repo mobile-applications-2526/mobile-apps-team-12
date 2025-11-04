@@ -1,85 +1,103 @@
 import {Pet} from "../types";
 import React from "react";
-import {View, Text, StyleSheet, FlatList, Animated} from "react-native";
+import { useRouter } from "expo-router";
+import { StyleSheet, View, Text, ScrollView, Image, ActivityIndicator } from "react-native";
+import Header from "../components/Header";
+import Button from "../components/Button";
+import { useEffect, useState } from "react";
+
 type Props = {
-    pets: Pet[]
+    petData: Pet[]
 }
 
-export default function PetsTable({pets}: Props){
-        const columns = [
-        { key: "name", label: "Name", flex: 4 },
-        { key: "birthdate", label: "Birthdate", flex: 3 },
-        { key: "description", label: "Description", flex: 5 },]
-        
-        const renderHeader = () => (
-        <View style={[styles.row, styles.headerRow]}>
-        {columns.map((col) => (
-            <Text key={col.key} style={[styles.cell, { flex: col.flex, fontWeight: "700" }]}>
-            {col.label}
-            </Text>
-        ))}
-        </View>
-        );
-        const renderItem = ({ item, index }: { item: Pet; index: number }) => {
-            return (
-            <Animated.View style={[ styles.row, { backgroundColor: index % 2 === 0 ? "#fafafa" : "#fff" },]}
-    >
-      <Text style={[styles.cell, { flex: columns[0].flex }]}>{item.name}</Text>
-      <Text style={[styles.cell, { flex: columns[1].flex }]}>{item.birthdate ?? "-"}</Text>
-      <Text
-        style={[styles.cell, { flex: columns[2].flex }]}
-        numberOfLines={2} > {item.description ?? "-"}</Text>
-    </Animated.View>
-            );
-        };
-        return (
+export default function PetsTable({petData}: Props){
+    const router = useRouter();
+
+    return (
         <View style={styles.container}>
-              <FlatList
-                data={pets}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                ListHeaderComponent={renderHeader}
-                stickyHeaderIndices={[0]}
-                ItemSeparatorComponent={() => <View style={styles.separator} />}
-                />
-        </View>)
+            <Text style={styles.subtitle}>Pets:</Text>
+
+            <ScrollView contentContainerStyle={styles.petList}>
+                {petData.map((pet) => (
+                    <View key={pet.id} style={styles.petCard}>
+                        {/* <Image
+                            source={pet.image ? pet.image : require("../assets/azula.jpg")}
+                            style={styles.petImage}
+                        /> */}
+                        <View style={styles.petInfo}>
+                            <Text style={styles.petName}>{pet.name}</Text>
+                            <Text style={styles.petName}>{pet.birthdate}</Text>
+                            <Text style={styles.petType}>{pet.description}</Text>
+                        </View>
+                    </View>
+                ))}
+            </ScrollView>
+            <Button label="Add pet" onPress={()=>router.navigate("/addPet")}/>
+        </View>
+    );
+
     }
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 10,
-    marginVertical: 10,
-    borderRadius: 12,
-    overflow: "hidden",
-    backgroundColor: "#f9f9f9",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  row: {
-    flexDirection: "row",
-    paddingVertical: 10,
-    paddingHorizontal: 8,
+    flex: 1,
+    backgroundColor: "#F6F1EB",
     alignItems: "center",
   },
-  headerRow: {
-    backgroundColor: "#f3f3f3",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+  welcome: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#3D3D3D",
+    alignSelf: "flex-start",
+    marginLeft: 25,
   },
-  headerText: {
-    fontWeight: "700",
+  subtitle: {
+    fontSize: 18,
+    color: "#3D3D3D",
+    alignSelf: "flex-start",
+    marginLeft: 25,
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  petList: {
+    alignItems: "center",
+  },
+  petCard: {
+    backgroundColor: "#E2866E",
+    borderRadius: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    width: 300,
+    padding: 10,
+    marginBottom: 15,
+  },
+  petImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 10,
+    marginRight: 15,
+  },
+  petInfo: {
+    flexDirection: "column",
+  },
+  petName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#3D3D3D",
+  },
+  petType: {
     fontSize: 14,
-    color: "#444",
+    color: "#3D3D3D",
   },
-  cell: {
-    paddingHorizontal: 6,
-    color: "#333",
-    fontSize: 14,
+  addButton: {
+    backgroundColor: "#507C59",
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    marginTop: 10,
   },
-  separator: {
-    height: 1,
-    backgroundColor: "#eee",
+  addButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
