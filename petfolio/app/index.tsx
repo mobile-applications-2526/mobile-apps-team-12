@@ -18,8 +18,11 @@ export default function Index() {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <Button label="Register" onPress={() => router.navigate("/register")}/>
-        <Button label="Login" onPress={() => router.navigate("/login")} />
+        <Button
+          label="Pet Overview"
+          onPress={() => router.navigate("/petOverview")}
+        />
+        <Button label="Add Pet" onPress={() => router.navigate("/addPet")} />
       </View>
     </View>
   );
@@ -47,9 +50,9 @@ const styles = StyleSheet.create({
     height: 100,
     width: 95,
   },
-   title: {
+  title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
     color: "#3D3D3D",
     margin: 5,
