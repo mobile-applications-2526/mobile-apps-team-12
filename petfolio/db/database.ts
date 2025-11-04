@@ -2,11 +2,12 @@ import { type SQLiteDatabase } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
 
 export async function migrateDbIfNeeded(db: SQLiteDatabase) {
+    //ALWAYS INCREASE THIS WITH 1 WHEN YOU INSERT NEW MIGRATIONS!!!!!!
     const DATABASE_VERSION = 3;
-
     const result = await db.getFirstAsync<{ user_version: number }>(
         'PRAGMA user_version'
     );
+    
 
     let currentDbVersion = result?.user_version ?? 0;
     console.log('Current DB version:', currentDbVersion);
@@ -48,6 +49,23 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
         await db.execAsync(sql);
         
         currentDbVersion = 2;}
+    
+     //seed database again
+    if (currentDbVersion === 2) {
+         const seed = [
+          { name: 'Momo', birthdate: '2024-06-01', desc: 'White rabbit with brown spots' },
+          { name: 'Azula', birthdate: '2023-01-01', desc: 'White Rabbit with brown and black spots' },
+        ];
+        const esc = (s: string) => (s ?? '').toString().replace(/'/g, "''");
+        // the line of values for each pet in the seed list
+        const tuples = seed
+          .map(p => `('${esc(uuid.v4().toString())}','${esc(p.name)}','${esc(p.birthdate)}','${esc(p.desc)}')`)
+          .join(',\n');
+        //insert the lines into the table
+        const sql = `INSERT OR IGNORE INTO pets (id, name, birthdate, description) VALUES\n${tuples};`;
+        await db.execAsync(sql);
+        
+        currentDbVersion = 3;}
     // Update database version
     await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
 }
