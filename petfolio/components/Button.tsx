@@ -1,16 +1,14 @@
 import { StyleSheet, View, Pressable, Text } from "react-native";
-import { useRouter } from "expo-router";
 
 type Props = {
   label: string;
-  path: string;
+  onPress: () => void; //callback function
 };
 
-export default function Button({ label, path }: Props) {
-  const router = useRouter();
+export default function Button({ label, onPress }: Props) {
   return (
     <View style={styles.buttonContainer}>
-      <Pressable style={styles.button} onPress={() => router.navigate(path)}>
+      <Pressable style={styles.button} onPress={onPress}>
         <View>
           <Text style={styles.buttonLabel}>{label}</Text>
         </View>
@@ -33,6 +31,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     backgroundColor: "#3D3D3D",
+    padding: 5
   },
   buttonLabel: {
     color: "#fff",

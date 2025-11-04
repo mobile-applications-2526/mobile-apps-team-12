@@ -1,12 +1,11 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Header from "../../components/Header";
+import RegisterForm from "../../components/RegisterForm";
 export default function Register() {
   return (
     <View style={styles.container}>
       <Header />
-      <View>
-        <Text>Register here</Text>
-      </View>
+     <RegisterForm/>
     </View>
   );
 }
@@ -16,7 +15,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F6F1EB",
     alignItems: "center",
-    marginBottom: 0,
+    margin:0,
     maxWidth: "100%",
   },
 });
