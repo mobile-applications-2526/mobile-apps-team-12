@@ -1,28 +1,15 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import Button from "../components/Button";
-import Header from "../components/Header";
-
-export default function Index() {
+import Header from "../../components/Header";
+export default function PetOverview() {
   return (
     <View style={styles.container}>
       <Header />
-      <View style={styles.imageContainer}>
-        <Image
-          source={require("../assets/petfolio-logo.png")}
-          style={styles.image}
-        />
-        <View>
-          <Text style={styles.text}>Welcome To Petfolio</Text>
-        </View>
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button label="Pet Overview" path="/petOverview" />
-        <Button label="Add Pet" path="/addPet" />
+      <View>
+        <Text style={styles.text}>This is the pet Overview</Text>
       </View>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
