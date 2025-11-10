@@ -1,3 +1,5 @@
+import { SQLiteDatabase } from "expo-sqlite";
+import { getAllUsers } from "../db/users";
 
 
 const registerUser = async (userData) => {
@@ -29,5 +31,15 @@ const registerUser = async (userData) => {
     }
 };
 
-const UserService = {registerUser}
+const getUsers = async (db: SQLiteDatabase) => {
+    try {
+        const users = await getAllUsers(db);
+        return Array.isArray(users) ? users : [];
+    } catch (error) {
+        console.error(`Error fetching users`, error);
+        throw error;
+    }
+}
+
+const UserService = { registerUser, getUsers }
 export default UserService;

@@ -114,22 +114,23 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
     );
   `);
 
-    const profileSeed = [
-      { userId: '1', pictures: null },
-      { userId: '2', pictures: null },
-      { userId: '3', pictures: null },
-      { userId: '4', pictures: null },
-    ];
+    const users = await db.getAllAsync<{ id: string }>("SELECT id FROM users");
 
-    const esc = (s: string) => (s ?? '').toString().replace(/'/g, "''");
+    const profileSeed = users.map(u => ({
+      userId: u.id,
+      pictures: null,
+    }));
+
+    const esc = (s: string) => (s ?? "").toString().replace(/'/g, "''");
 
     const tuples = profileSeed
       .map(u => `('${esc(uuid.v4().toString())}','${esc(u.userId)}','${esc(u.pictures)}')`)
-      .join(',\n');
+      .join(",\n");
 
     const sql = `INSERT OR IGNORE INTO profiles (id, user_id, pictures) VALUES\n${tuples};`;
     await db.execAsync(sql);
 
     currentDbVersion = 5;
   }
+
 }

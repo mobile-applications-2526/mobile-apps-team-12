@@ -1,7 +1,7 @@
 export type User = {
     id: string
-    firstName: String,
-    lastName: String,
+    firstname: String,
+    lastname: String,
     email: String,
     phonenumber: String,
     password: String,
@@ -18,6 +18,6 @@ export type Pet = {
 
 export type Profile = {
     id: string,
-    userId: User,
+    user_id: User,
     pictures: [];
 }
