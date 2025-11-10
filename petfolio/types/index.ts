@@ -1,5 +1,6 @@
 export type User = {
-    firstName : String,
+    id: string
+    firstName: String,
     lastName: String,
     email: String,
     phonenumber: String,
@@ -13,4 +14,10 @@ export type Pet = {
     description: string,
     created_at: string,
     updated_at: string,
+}
+
+export type Profile = {
+    id: string,
+    userId: User,
+    pictures: [];
 }
