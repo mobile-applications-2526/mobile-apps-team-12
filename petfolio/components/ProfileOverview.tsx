@@ -23,7 +23,7 @@ export default function ProfileOverview({ profileData }: Props) {
             <View style={styles.profile}>
                 <Text style={styles.profileName}>{profileData.user_id.firstname}</Text>
                 <Table>
-                    <Rows rowStyle={styles.row} data={tableData} />
+                    <Rows style={styles.row} data={tableData} />
                 </Table>
             </View>
         </View>
@@ -42,29 +42,31 @@ const styles = StyleSheet.create({
     profile: {
         width: '100%',
         backgroundColor: '#E2866E',
-        borderRadius: 15,
+        borderRadius: 30,
         alignItems: 'stretch',
-        padding: 16,
+        padding: 20,
         paddingTop: 80,
         height: 700
     },
     profilePic: {
         position: 'absolute',
-        top: -60,
-        width: 120,
-        height: 120,
-        borderRadius: 60,
+        top: -75,
+        width: 150,
+        height: 150,
+        borderRadius: 75,
         zIndex: 2
     },
     profileName: {
-        fontSize: 36,
+        fontSize: 40,
         textAlign: 'center',
         marginBottom: 20
     },
 
     row: {
-        backgroundColor: '#cf6044ff',
-        borderBottomWidth: 1
+        borderTopWidth: 2,
+        borderTopColor: '#d56e54ff',
+        paddingTop: 20,
+        paddingBottom: 20
     }
 
 });
