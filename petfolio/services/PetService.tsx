@@ -1,5 +1,9 @@
 import { SQLiteDatabase } from 'expo-sqlite';
-import {getAllPets} from "../db/pets";
+import {getAllPets, addPet as addPetDb} from "../db/pets";
+import { ca } from 'react-native-paper-dates';
+
+
+
 const getPets = async (db: SQLiteDatabase) => {
     try {
             const pets = await getAllPets(db);
@@ -10,5 +14,16 @@ const getPets = async (db: SQLiteDatabase) => {
         }
     }
 
-const PetService = { getPets };
+const addPet = async ({ pet, db}) =>  {
+    try {
+        const newPet = await addPetDb(db,pet);
+        return newPet;
+    }
+    catch (error) {
+        console.error('Error adding pet:', error);
+        throw error;
+    }
+}
+
+const PetService = { getPets, addPet };
 export default PetService;
