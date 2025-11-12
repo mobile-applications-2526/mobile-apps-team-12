@@ -1,5 +1,6 @@
 import { SQLiteDatabase } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
+import { Medication, Pet, Vaccin, Weight } from '../types';
 
 interface PetInput {
     name: string;
@@ -7,11 +8,11 @@ interface PetInput {
     description: string;
 }
 
-interface Pet extends PetInput {
-    id: string;
-    created_at: string;
-    updated_at: string;
-}
+// interface Pet extends PetInput {
+//     id: string;
+//     created_at: string;
+//     updated_at: string;
+// }
 
 // CREATE: Add a new pet
 export async function addPet(
@@ -55,7 +56,35 @@ export async function getAllPets(db: SQLiteDatabase): Promise<Pet[]> {
 export async function getPetWithId(db: SQLiteDatabase, id: string): Promise<Pet> {
     try {
         const query = `select * from pets where id = '${id}'`;
-        const pet = await db.getFirstAsync<Pet>(query);
+        const petId = await db.getFirstAsync<Pet>(query);
+
+        const queryWeight = `
+        SELECT w.id, w.value, w.date
+        FROM weight w
+        INNER JOIN pets_weight pw ON pw.weight_id = w.id
+        WHERE pw.pet_id = '${id}';`;
+        const weight = await db.getAllAsync<Weight>(queryWeight);
+
+        const vaccinQuery = `
+        SELECT v.id, v.name, v.type, v.shot_date, v.expire_date
+        FROM vaccins v
+        INNER JOIN pets_vaccins pv ON pv.vaccin_id = v.id
+        WHERE pv.pet_id = '${id}';`;
+        const vaccins = await db.getAllAsync<Vaccin>(vaccinQuery);
+
+        const medicationQuery = `
+        SELECT m.id, m.name, m.description, m.quantity
+        FROM medications m
+        INNER JOIN pets_medications pm ON pm.medication_id = m.id
+        WHERE pm.pet_id = '${id}';`;
+        const medication = await db.getAllAsync<Medication>(medicationQuery);
+
+        const pet: Pet = {
+            ...petId,
+            vaccins,
+            medication,
+            weight
+        };
         return pet
     } catch (error) {
         console.error("Error getting pet:", error);
