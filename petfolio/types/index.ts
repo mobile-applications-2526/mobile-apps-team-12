@@ -33,7 +33,7 @@ export type Pet = {
     name: string,
     birthdate: string,
     description: string,
-    vaccins: Vaccin[],
+    vaccins?: Vaccin[],
     medication?: Medication[],
     weight?: Weight[],
     created_at: string,
