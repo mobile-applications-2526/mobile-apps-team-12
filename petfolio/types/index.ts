@@ -7,6 +7,27 @@ export type User = {
     password: String,
 }
 
+export type Weight = {
+    id: string,
+    value: string,
+    date: string
+}
+
+export type Medication = {
+    id: string,
+    name: string,
+    description: string,
+    quantity: string
+}
+
+export type Vaccin = {
+    id: string,
+    name: string,
+    type: string,
+    shot_date: string,
+    expire_date: string
+}
+
 export type Pet = {
     id: string,
     name: string,

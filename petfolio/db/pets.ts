@@ -41,13 +41,24 @@ export async function addPet(
 }
 
 // READ: get All Pets
-export async function getAllPets(db: SQLiteDatabase): Promise<Pet[]>{
+export async function getAllPets(db: SQLiteDatabase): Promise<Pet[]> {
     try {
         const query = ` select * from pets`;
         const allPets = await db.getAllAsync<Pet>(query);
         return allPets
     } catch (error) {
-    console.error("Error getting all pets:", error);
-    return [];
-    }; 
+        console.error("Error getting all pets:", error);
+        return [];
+    };
+}
+
+export async function getPetWithId(db: SQLiteDatabase, id: string): Promise<Pet> {
+    try {
+        const query = `select * from pets where id = '${id}'`;
+        const pet = await db.getFirstAsync<Pet>(query);
+        return pet
+    } catch (error) {
+        console.error("Error getting pet:", error);
+        return null;
+    };
 }
