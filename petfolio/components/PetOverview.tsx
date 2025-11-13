@@ -9,12 +9,23 @@ type Props = {
 
 export default function PetOverview({ petData }: Props) {
 
+    const medications = ["Painkiller"];
+    const vaccins = ["Rabies"]
+
+    petData.medication.forEach(med => {
+        medications.push(med.name)
+    })
+
+    petData.vaccins.forEach(vac => {
+        vaccins.push(vac.name)
+    })
+
     const tableData = [
         ['Birthday', petData.birthdate],
-        ['Current weight', petData.name],
-        ['Food', []],
-        ['Medication', []],
-        ['Vaccincations', []]
+        ['Current weight', petData.weight[0].value],
+        ['Food', ['Wet food, Kibble']],
+        ['Medication', medications.join(", ")],
+        ['Vaccincations', vaccins.join(", ")]
 
     ];
 
