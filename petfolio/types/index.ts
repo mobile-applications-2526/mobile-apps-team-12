@@ -1,3 +1,12 @@
+export enum PetType {
+    Cat = 'Cat',
+    Dog = 'Dog',
+    Rabbit = 'Rabbit',
+    Fish = 'Fish',
+    Hamster = 'Hamster',
+    Bird = 'Bird'
+}
+
 export type User = {
     id: string
     firstname: String,
@@ -31,6 +40,7 @@ export type Vaccin = {
 export type Pet = {
     id: string,
     name: string,
+    type: PetType,
     birthdate: string,
     description: string,
     vaccins?: Vaccin[],

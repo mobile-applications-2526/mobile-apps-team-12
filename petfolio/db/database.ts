@@ -1,9 +1,10 @@
 import { type SQLiteDatabase } from 'expo-sqlite';
 import uuid from 'react-native-uuid';
+import { PetType } from '../types';
 
 export async function migrateDbIfNeeded(db: SQLiteDatabase) {
   //ALWAYS INCREASE THIS WITH 1 WHEN YOU INSERT NEW MIGRATIONS!!!!!!
-  const DATABASE_VERSION = 9;
+  const DATABASE_VERSION = 10;
   const result = await db.getFirstAsync<{ user_version: number }>(
     'PRAGMA user_version'
   );
@@ -256,4 +257,16 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
   }
 
   currentDbVersion = 9;
+
+  if (currentDbVersion === 9) {
+    await db.execAsync(`
+            PRAGMA journal_mode = 'wal';
+
+            UPDATE pets SET type = '${PetType.Cat.toString()}' WHERE name IN ('Lena', 'Marieke', 'Bengel');
+            UPDATE pets SET type = '${PetType.Dog.toString()}' WHERE name = 'Pebbles';
+            UPDATE pets SET type = '${PetType.Rabbit.toString()}' WHERE name IN ('Momo', 'Azula');
+        `);
+
+    currentDbVersion = 10;
+  }
 }
