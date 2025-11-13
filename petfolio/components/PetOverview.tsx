@@ -9,23 +9,20 @@ type Props = {
 
 export default function PetOverview({ petData }: Props) {
 
-    const medications = ["Painkiller"];
-    const vaccins = ["Rabies"]
+    // petData.medication.forEach(med => {
+    //     medications.push(med.name)
+    // })
 
-    petData.medication.forEach(med => {
-        medications.push(med.name)
-    })
-
-    petData.vaccins.forEach(vac => {
-        vaccins.push(vac.name)
-    })
+    // petData.vaccins.forEach(vac => {
+    //     vaccins.push(vac.name)
+    // })
 
     const tableData = [
         ['Birthday', petData.birthdate],
         ['Current weight', petData.weight[0].value],
         ['Food', ['Wet food, Kibble']],
-        ['Medication', medications.join(", ")],
-        ['Vaccincations', vaccins.join(", ")]
+        ['Medication', petData.medication[0].name],
+        ['Vaccincations', petData.vaccins[0].name]
 
     ];
 
@@ -37,6 +34,7 @@ export default function PetOverview({ petData }: Props) {
             />
             <View style={styles.profile}>
                 <Text style={styles.profileName}>{petData.name}</Text>
+                <Text style={styles.petType}>{petData.type}</Text>
                 <Table>
                     <Rows style={styles.row} data={tableData} />
                 </Table>
@@ -73,6 +71,11 @@ const styles = StyleSheet.create({
     },
     profileName: {
         fontSize: 40,
+        textAlign: 'center'
+    },
+
+    petType: {
+        fontSize: 26,
         textAlign: 'center',
         marginBottom: 20
     },
