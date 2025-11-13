@@ -3,7 +3,7 @@ import uuid from 'react-native-uuid';
 
 export async function migrateDbIfNeeded(db: SQLiteDatabase) {
   //ALWAYS INCREASE THIS WITH 1 WHEN YOU INSERT NEW MIGRATIONS!!!!!!
-  const DATABASE_VERSION = 5;
+  const DATABASE_VERSION = 9;
   const result = await db.getFirstAsync<{ user_version: number }>(
     'PRAGMA user_version'
   );
@@ -133,4 +133,127 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
     currentDbVersion = 5;
   }
 
+  if (currentDbVersion === 5) {
+    await db.execAsync(`
+    PRAGMA journal_mode = 'wal';
+    CREATE TABLE IF NOT EXISTS weight (
+      id TEXT PRIMARY KEY,
+      "value" TEXT,
+      "date" TEXT
+    );
+  `);
+
+    const seed = [
+      { value: '1,5 kg', date: '2025-10-11' },
+      { value: '4 kg', date: '2025-11-11', },
+    ];
+    const esc = (s: string) => (s ?? '').toString().replace(/'/g, "''");
+
+    const tuples = seed
+      .map(p => `('${esc(uuid.v4().toString())}','${esc(p.value)}','${esc(p.date)}')`)
+      .join(',\n');
+
+    const sql = `INSERT OR IGNORE INTO weight (id, "value", "date") VALUES\n${tuples};`;
+    await db.execAsync(sql);
+
+    currentDbVersion = 6;
+  }
+
+  if (currentDbVersion === 6) {
+    await db.execAsync(`
+    PRAGMA journal_mode = 'wal';
+    CREATE TABLE IF NOT EXISTS vaccins (
+      id TEXT PRIMARY KEY,
+      name VARCHAR(100),
+      type VARCHAR(100),
+      shot_date TEXT,
+      expire_date TEXT
+    );
+  `);
+
+    const seed = [
+      { name: 'Anti-wormen', type: 'A', shot_date: '2012-12-12', expire_date: '2022-12-12' },
+      { name: 'Rabies', type: 'A', shot_date: '2012-12-12', expire_date: '2022-12-12' },
+      { name: 'Anti-vlooien', type: 'B', shot_date: '2012-12-12', expire_date: '2022-12-12' },
+    ];
+    const esc = (s: string) => (s ?? '').toString().replace(/'/g, "''");
+
+    const tuples = seed
+      .map(p => `('${esc(uuid.v4().toString())}','${esc(p.name)}','${esc(p.type)}','${esc(p.shot_date)}','${esc(p.expire_date)}')`)
+      .join(',\n');
+
+    const sql = `INSERT OR IGNORE INTO vaccins (id, name, type, shot_date, expire_date) VALUES\n${tuples};`;
+    await db.execAsync(sql);
+
+    currentDbVersion = 7;
+  }
+
+  if (currentDbVersion === 7) {
+    await db.execAsync(`
+    PRAGMA journal_mode = 'wal';
+    CREATE TABLE IF NOT EXISTS medications (
+      id TEXT PRIMARY KEY,
+      name VARCHAR(100),
+      description TEXT,
+      quantity TEXT
+    );
+  `);
+
+    const seed = [
+      { name: 'Antibiotica', description: '2015-02-02', quantity: '10' },
+    ];
+    const esc = (s: string) => (s ?? '').toString().replace(/'/g, "''");
+
+    const tuples = seed
+      .map(p => `('${esc(uuid.v4().toString())}','${esc(p.name)}','${esc(p.description)}','${esc(p.quantity)}')`)
+      .join(',\n');
+
+    const sql = `INSERT OR IGNORE INTO medications (id, name, description, quantity) VALUES\n${tuples};`;
+    await db.execAsync(sql);
+
+    currentDbVersion = 8;
+  }
+
+  if (currentDbVersion === 8) {
+    await db.execAsync(`
+    PRAGMA journal_mode = 'wal';
+    CREATE TABLE IF NOT EXISTS pets_medications (
+      pet_id TEXT REFERENCES pets(id) ON DELETE CASCADE,
+      medication_id TEXT REFERENCES medications(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS pets_vaccins (
+        pet_id TEXT REFERENCES pets(id) ON DELETE CASCADE,
+        vaccin_id TEXT REFERENCES vaccins(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS pets_weight (
+        pet_id TEXT REFERENCES pets(id) ON DELETE CASCADE,
+        weight_id TEXT REFERENCES weight(id) ON DELETE CASCADE
+    );
+  `);
+
+    const pets = await db.getAllAsync<{ id: string }>("SELECT id FROM pets");
+    const weights = await db.getAllAsync<{ id: string }>("SELECT id FROM weight");
+    const vaccins = await db.getAllAsync<{ id: string }>("SELECT id FROM vaccins");
+    const medications = await db.getAllAsync<{ id: string }>("SELECT id FROM medications");
+
+    const esc = (s: string) => (s ?? '').toString().replace(/'/g, "''");
+
+    const petWeightTuples = pets.map(p => `('${esc(p.id)}','${esc(weights[0].id)}')`).join(",\n");
+
+    const petVaccinTuples = pets.map(p => `('${esc(p.id)}','${esc(vaccins[0].id)}')`).join(",\n");
+
+    const petMedicationTuples = pets.map(p => `('${esc(p.id)}','${esc(medications[0].id)}')`).join(",\n");
+
+    const sqlWeight = `INSERT OR IGNORE INTO pets_weight (pet_id, weight_id) VALUES\n${petWeightTuples};`;
+    const sqlVaccins = `INSERT OR IGNORE INTO pets_vaccins (pet_id, vaccin_id) VALUES\n${petVaccinTuples};`;
+    const sqlMedications = `INSERT OR IGNORE INTO pets_medications (pet_id, medication_id) VALUES\n${petMedicationTuples};`;
+
+    await db.execAsync(sqlWeight);
+    await db.execAsync(sqlVaccins);
+    await db.execAsync(sqlMedications);
+  }
+
+  currentDbVersion = 9;
 }
