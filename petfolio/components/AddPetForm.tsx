@@ -14,6 +14,7 @@ type FormDataPet = {
 };
 
 export default function AddPetForm() {
+  const [errors, setErrors] = useState<string|null>(null)
   const db = useSQLiteContext(); // get DB from provider
   const { control, handleSubmit } = useForm<FormDataPet>({
     defaultValues: {
@@ -24,10 +25,16 @@ export default function AddPetForm() {
   const [birthdateSelected, setBirthdateSelected]= useState(false)
 
   const onSubmit = async (data: FormDataPet) => {
+    try{
     const newPet = await PetService.addPet({pet: {name: data.petName, birthdate: data.birthdate, description: data.description}, db});
     console.log(data);
     console.log(newPet);
+    }
+    catch (error) {
+      console.log(error)
+    }
   };
+
   return (
     <>
       <Text style={styles.title}>Register Pet</Text>
