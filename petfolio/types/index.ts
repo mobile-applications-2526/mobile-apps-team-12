@@ -9,8 +9,12 @@ export type User = {
 export type Pet = {
     id: string,
     name: string,
-    birthdate: string,
+    birthdate: Date,
     description: string,
-    created_at: string,
-    updated_at: string,
+}
+
+export type PetInput = {
+    name: string,
+    birthdate: Date,
+    description: string,
 }

@@ -24,8 +24,9 @@ export default function AddPetForm() {
   const [birthdateSelected, setBirthdateSelected]= useState(false)
 
   const onSubmit = async (data: FormDataPet) => {
-    const pet= await PetService.addPet({pet: {petName: data.petName, birthdate: data.birthdate, description: data.description}, db});
+    const newPet = await PetService.addPet({pet: {name: data.petName, birthdate: data.birthdate, description: data.description}, db});
     console.log(data);
+    console.log(newPet);
   };
   return (
     <>
