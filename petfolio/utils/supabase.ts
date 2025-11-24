@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = "https://ccqacjrgnbqfyvkfxjoq.supabase.co";
 const supabasePublishableKey = "sb_publishable_er4-JYK258s6fUpzHCd7BA_pP-vDn76";
-
+// starting point for supabase database
 export const supabase = createClient(supabaseUrl, supabasePublishableKey, {
   auth: {
     storage: localStorage,
