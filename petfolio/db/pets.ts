@@ -22,8 +22,8 @@ export async function addPet(
     try {
         const petId = uuid.v4().toString();
         await db.runAsync(
-            `INSERT INTO pets (id, name, birthdate, description, created_at, updated_at)
-            VALUES (?, ?, ?, ?, datetime('now'), datetime('now')); `,
+            `INSERT INTO pets (id, name, birthdate, description)
+            VALUES (?, ?, ?, ?); `,
             [
                 petId,
                 pet.name,

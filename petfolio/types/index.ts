@@ -40,18 +40,21 @@ export type Vaccin = {
 export type Pet = {
     id: string,
     name: string,
-    type: PetType,
-    birthdate: string,
+    birthdate: Date,
     description: string,
-    vaccins?: Vaccin[],
-    medication?: Medication[],
-    weight?: Weight[],
-    created_at: string,
-    updated_at: string,
+}
+
+export type PetInput = {
+    name: string,
+    birthdate: Date,
+    description: string,
+
+
 }
 
 export type Profile = {
     id: string,
     user_id: User,
     pictures: [];
+
 }
