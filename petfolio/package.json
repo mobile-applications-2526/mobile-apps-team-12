@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-vector-icons/ionicons": "^12.3.0",
+    "@supabase/supabase-js": "^2.84.0",
     "expo": "~54.0.13",
     "expo-constants": "~18.0.10",
     "expo-image": "~3.0.9",

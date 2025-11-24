@@ -1,16 +1,16 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import Button from "../components/Button";
-import Header from "../components/Header";
+import Button from "../../components/Button";
+import Header from "../../components/Header";
 import { useRouter } from "expo-router";
 
-export default function Index() {
+export default function Homepage() {
   const router = useRouter();
   return (
-    <View style={styles.container}>
+ <View style={styles.container}>
       <Header />
       <View style={styles.imageContainer}>
         <Image
-          source={require("../assets/petfolio-logo.png")}
+          source={require("../../assets/petfolio-logo.png")}
           style={styles.image}
         />
         <View>
@@ -19,10 +19,10 @@ export default function Index() {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          label="Register"
-          onPress={() => router.navigate("/register")}
+          label="Pet Overview"
+          onPress={() => router.navigate("/petOverview")}
         />
-        <Button label="Login" onPress={() => router.navigate("/login")} />
+        <Button label="Add Pet" onPress={() => router.navigate("/addPet")} />
       </View>
     </View>
   );
