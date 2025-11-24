@@ -1,42 +1,42 @@
-import {Pet} from "../types";
+import { Pet } from "../types";
 import React from "react";
 import { useRouter } from "expo-router";
-import { StyleSheet, View, Text, ScrollView, Image, ActivityIndicator } from "react-native";
-import Header from "../components/Header";
+import { StyleSheet, View, Text, ScrollView, Image, ActivityIndicator, TouchableOpacity } from "react-native";
 import Button from "../components/Button";
-import { useEffect, useState } from "react";
 
 type Props = {
-    petData: Pet[]
+  petData: Pet[]
 }
 
-export default function PetsTable({petData}: Props){
-    const router = useRouter();
+export default function PetsTable({ petData }: Props) {
+  const router = useRouter();
 
-    return (
-        <View style={styles.container}>
-            <Text style={styles.subtitle}>Pets:</Text>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.subtitle}>Pets:</Text>
 
-            <ScrollView contentContainerStyle={styles.petList}>
-                {petData.map((pet) => (
-                    <View key={pet.id} style={styles.petCard}>
-                        {/* <Image
+      <ScrollView contentContainerStyle={styles.petList}>
+        {petData.map((pet) => (
+          <View key={pet.id} style={styles.petCard} >
+            <TouchableOpacity onPress={() => router.navigate(`/pet/${pet.id}`)}>
+              {/* <Image
                             source={pet.image ? pet.image : require("../assets/azula.jpg")}
                             style={styles.petImage}
                         /> */}
-                        <View style={styles.petInfo}>
-                            <Text style={styles.petName}>{pet.name}</Text>
-                            <Text style={styles.petName}>{pet.birthdate}</Text>
-                            <Text style={styles.petType}>{pet.description}</Text>
-                        </View>
-                    </View>
-                ))}
-            </ScrollView>
-            <Button label="Add pet" onPress={()=>router.navigate("/addPet")}/>
-        </View>
-    );
+              <View style={styles.petInfo}>
+                <Text style={styles.petName}>{pet.name}</Text>
+                <Text style={styles.petName}>{pet.birthdate}</Text>
+                <Text style={styles.petType}>{pet.description}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </ScrollView>
+      <Button label="Add pet" onPress={() => router.navigate("/addPet")} />
+    </View>
+  );
 
-    }
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

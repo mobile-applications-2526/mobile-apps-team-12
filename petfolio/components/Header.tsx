@@ -8,16 +8,19 @@ export default function Header() {
     <View style={styles.container}>
       <View style={styles.leftButtons}>
         <Pressable
-        onPress={() => router.navigate("/")}
+          onPress={() => router.navigate("/")}
         >
-        <Image
-          source={require("../assets/petfolio-logo.png")}
-          style={styles.image}
-        />
+          <Image
+            source={require("../assets/petfolio-logo.png")}
+            style={styles.image}
+          />
         </Pressable>
       </View>
       <View style={styles.rightButtons}>
-        <Ionicons name="person" size={40} color="rgba(0, 28, 5, 1)" />
+
+        <Pressable
+          onPress={() => router.navigate("/profile")}
+        ><Ionicons name="person" size={40} color="rgba(0, 28, 5, 1)" /></Pressable>
         <Ionicons
           name="calendar-clear-outline"
           size={40}
