@@ -14,8 +14,8 @@ export default function LoginForm() {
         const { confirmPassword, ...userData } = data; //confirmPassword is not data we need to send to the backend
         console.log(userData);
         try {
-            const response = await UserService.registerUser(userData);
-            if (response && response.ok) {
+            const response = await UserService.loginUser(userData);
+            if (response) {
                 setIsLoggedIn(true);
                 setTimeout(() => router.navigate("/homepage"), 2000);
             }

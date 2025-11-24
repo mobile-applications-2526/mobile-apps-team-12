@@ -1,5 +1,6 @@
 import { SQLiteDatabase } from "expo-sqlite";
 import { getAllUsers } from "../db/users";
+import { supabase } from '../utils/supabase'
 
 
 const registerUser = async (userData) => {
@@ -31,6 +32,24 @@ const registerUser = async (userData) => {
     }
 };
 
+const loginUser = async (userData) => {
+    try {
+    const { data, error } = await supabase.auth.signUp({
+      email: userData.email,
+      password: userData.password,
+    });
+
+    if (error) throw error;
+    console.log('User signed up successfully:', data);
+    return data;
+  } catch (error) {
+    console.error('Error signing up:', error.message);
+    return null;
+  }
+};
+
+
+
 const getUsers = async (db: SQLiteDatabase) => {
     try {
         const users = await getAllUsers(db);
@@ -41,5 +60,5 @@ const getUsers = async (db: SQLiteDatabase) => {
     }
 }
 
-const UserService = { registerUser, getUsers }
+const UserService = { registerUser, getUsers, loginUser }
 export default UserService;

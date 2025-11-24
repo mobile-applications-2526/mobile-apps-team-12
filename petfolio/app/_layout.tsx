@@ -6,7 +6,9 @@ import { View, StyleSheet } from "react-native";
 import { SQLiteProvider } from 'expo-sqlite';
 import { migrateDbIfNeeded } from '../db/database';
 
+
 export default function RootLayout() {
+
   return (
     <SafeAreaProvider>
     <SQLiteProvider databaseName="petfolioLocalDb.db" onInit={migrateDbIfNeeded}>
@@ -17,6 +19,7 @@ export default function RootLayout() {
       </View>
     </SQLiteProvider>
     </SafeAreaProvider>
+       
   );
 }
 const styles = StyleSheet.create({
