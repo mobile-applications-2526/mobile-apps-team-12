@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS "public"."Pets" (
     "birthdate" "date" NOT NULL,
     "description" "text",
     "type" character varying NOT NULL,
-    "owner_id" bigint NOT NULL
+    "owner_id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL
 );
 
 
@@ -142,7 +142,10 @@ CREATE TABLE IF NOT EXISTS "public"."User Information" (
     "id" bigint NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "first_name" character varying NOT NULL,
-    "last_name" character varying NOT NULL
+    "last_name" character varying NOT NULL,
+    "auth_user_id" "uuid" NOT NULL,
+    "phonenumber" character varying,
+    "email" character varying
 );
 
 
@@ -273,6 +276,11 @@ ALTER TABLE ONLY "public"."Profiles"
 
 
 ALTER TABLE ONLY "public"."User Information"
+    ADD CONSTRAINT "User Information_auth_user_id_key" UNIQUE ("auth_user_id");
+
+
+
+ALTER TABLE ONLY "public"."User Information"
     ADD CONSTRAINT "Users_pkey" PRIMARY KEY ("id");
 
 
@@ -303,12 +311,17 @@ ALTER TABLE ONLY "public"."pets_weight"
 
 
 ALTER TABLE ONLY "public"."Pets"
-    ADD CONSTRAINT "Pets_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "public"."User Information"("id") ON DELETE CASCADE;
+    ADD CONSTRAINT "Pets_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "public"."User Information"("auth_user_id") ON DELETE CASCADE;
 
 
 
 ALTER TABLE ONLY "public"."Profiles"
     ADD CONSTRAINT "Profiles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."User Information"("id");
+
+
+
+ALTER TABLE ONLY "public"."User Information"
+    ADD CONSTRAINT "User Information_auth_user_id_fkey" FOREIGN KEY ("auth_user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
 
 

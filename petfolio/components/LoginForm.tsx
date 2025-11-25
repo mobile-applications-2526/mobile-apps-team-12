@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, TextInput} from "react-native";
 import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from "expo-router";
 import Button from "./Button";
-import { ScrollView } from 'react-native';
 import UserService from "../services/UserService"
 export default function LoginForm() {    
     const router = useRouter();
@@ -34,7 +33,7 @@ export default function LoginForm() {
             <View>
                 <Text style={styles.title}>Log in here</Text>
                 {loggedInError && <Text style={styles.error}>{loggedInError}</Text>}
-                {isLoggedIn && <Text style={styles.success}>Registration succesfull!</Text>}
+                {isLoggedIn && <Text style={styles.success}>Login succesfull!</Text>}
                     <Text>Email*</Text>
                     <Controller
                         control={control}
