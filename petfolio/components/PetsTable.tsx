@@ -25,7 +25,7 @@ export default function PetsTable({ petData }: Props) {
                         /> */}
               <View style={styles.petInfo}>
                 <Text style={styles.petName}>{pet.name}</Text>
-                <Text style={styles.petName}>{pet.birthdate}</Text>
+                <Text style={styles.petName}>{pet.birthdate.toString()}</Text>
                 <Text style={styles.petType}>{pet.description}</Text>
               </View>
             </TouchableOpacity>

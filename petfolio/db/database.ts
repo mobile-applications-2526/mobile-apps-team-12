@@ -3,6 +3,20 @@ import uuid from 'react-native-uuid';
 import { PetType } from '../types';
 
 export async function migrateDbIfNeeded(db: SQLiteDatabase) {
+
+  await db.execAsync(`
+  DELETE FROM pets;
+  DELETE FROM users;
+  DELETE FROM profiles;
+  DELETE FROM weight;
+  DELETE FROM vaccins;
+  DELETE FROM medications;
+  DELETE FROM pets_medications;
+  DELETE FROM pets_vaccins;
+  DELETE FROM pets_weight;
+`);
+
+
   //ALWAYS INCREASE THIS WITH 1 WHEN YOU INSERT NEW MIGRATIONS!!!!!!
   const DATABASE_VERSION = 10;
   const result = await db.getFirstAsync<{ user_version: number }>(
@@ -201,7 +215,7 @@ export async function migrateDbIfNeeded(db: SQLiteDatabase) {
   `);
 
     const seed = [
-      { name: 'Antibiotica', description: '2015-02-02', quantity: '10' },
+      { name: 'Antibiotica', description: 'Against infection', quantity: '10' },
     ];
     const esc = (s: string) => (s ?? '').toString().replace(/'/g, "''");
 

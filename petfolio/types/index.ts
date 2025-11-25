@@ -42,6 +42,10 @@ export type Pet = {
     name: string,
     birthdate: Date,
     description: string,
+    type?: PetType,
+    vaccins?: Vaccin[],
+    medication?: Medication[],
+    weight?: Weight[]
 }
 
 export type PetInput = {
