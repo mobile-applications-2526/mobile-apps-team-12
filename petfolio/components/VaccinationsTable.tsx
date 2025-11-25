@@ -13,7 +13,7 @@ export default function VaccinationsTable({ petData }: Props) {
     return (
         <View style={styles.container}>
             <View style={styles.profile}>
-                <Text style={styles.profileName}>{petData.name}'s Medication</Text>
+                <Text style={styles.profileName}>{petData.name}'s Vaccinations</Text>
                 <ScrollView>
                     <Table>
                         {petData && petData.vaccins.map((vac) => (
