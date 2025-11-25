@@ -1,13 +1,14 @@
 import { useSQLiteContext } from "expo-sqlite";
 import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import Header from "../../components/Header";
-import { Pet } from "../../types";
-import PetOverview from "../../components/PetOverview";
-import PetService from "../../services/PetService";
 import { Link, useLocalSearchParams } from "expo-router";
+import { Pet } from "../../../types";
+import PetService from "../../../services/PetService";
+import Header from "../../../components/Header";
+import MedicationsTable from "../../../components/MedicationsTable";
+import VaccinationsTable from "../../../components/VaccinationsTable";
 
-export default function PetShow() {
+export default function MedicationShow() {
     const db = useSQLiteContext();
     const [pet, setPet] = useState<Pet>(null);
     const [error, setError] = useState("");
@@ -17,7 +18,7 @@ export default function PetShow() {
     function clearErrors() {
         setError("");
     }
-    async function getProfileByUser() {
+    async function getPet() {
         clearErrors()
 
         try {
@@ -31,6 +32,7 @@ export default function PetShow() {
                     setPet(null);
                     console.log(petId + "id")
                     setError("Something went wrong with fetching your pet...")
+                    console.log(error)
                 }
             } else {
                 setPet(null);
@@ -49,15 +51,15 @@ export default function PetShow() {
     }
 
     useEffect(() => {
-        getProfileByUser()
+        getPet()
     }, [])
 
     return (
         <View style={styles.container}>
             <Header />
-            <Link style={styles.backLink} href="/petOverview">&larr; Back to pets overview</Link>
+            <Link style={styles.backLink} href={`/petOverview`}>&larr; Back to pets</Link>
             <View>
-                {!error && pet && <PetOverview petData={pet} />}
+                {!error && pet && <VaccinationsTable petData={pet} />}
                 {error && <Text>Error</Text>}
             </View>
         </View>
@@ -77,6 +79,5 @@ const styles = StyleSheet.create({
         textDecorationLine: "underline",
         color: "#043500ff",
         marginLeft: 20,
-        marginBottom: 40
     }
 });
