@@ -2,46 +2,48 @@ import { useSQLiteContext } from "expo-sqlite";
 import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import { Pet } from "../../types";
-import PetOverview from "../../components/PetOverview";
+import { Medication } from "../../types";
 import PetService from "../../services/PetService";
 import { Link, useLocalSearchParams } from "expo-router";
+import MedicationsTable from "../../components/MedicationsTable";
+import MedicationService from "../../services/MedicationService";
+import MedicationSpecification from "../../components/MedicationSpecification";
 
-export default function PetShow() {
+export default function MedicationShow() {
     const db = useSQLiteContext();
-    const [pet, setPet] = useState<Pet>(null);
+    const [med, setMed] = useState<Medication>(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
-    const { petId } = useLocalSearchParams<{ petId: string }>();
+    const { medId } = useLocalSearchParams<{ medId: string }>();
 
     function clearErrors() {
         setError("");
     }
-    async function getProfileByUser() {
+    async function getMed() {
         clearErrors()
 
         try {
-            if (petId != null) {
-                const result = await PetService.getPetById(db, petId);
+            if (medId != null) {
+                const result = await MedicationService.getMedicationById(db, medId);
                 console.log(result);
                 if (result != null) {
-                    setPet(result);
+                    setMed(result);
 
                 } else {
-                    setPet(null);
-                    console.log(petId + "id")
-                    setError("Something went wrong with fetching your pet...")
+                    setMed(null);
+                    console.log(medId + "id")
+                    setError("Something went wrong with fetching medication...")
                 }
             } else {
-                setPet(null);
-                console.log("paremeter:" + petId)
+                setMed(null);
+                console.log("paremeter:" + medId)
                 setError("Pet not found")
             }
 
         } catch (err) {
             console.error("Failed to fetch pet", err);
-            setPet(null);
-            setError("Failed to load pet. Please try again.");
+            setMed(null);
+            setError("Failed to load medication. Please try again.");
         }
         finally {
             setLoading(false);
@@ -49,15 +51,15 @@ export default function PetShow() {
     }
 
     useEffect(() => {
-        getProfileByUser()
+        getMed()
     }, [])
 
     return (
         <View style={styles.container}>
             <Header />
-            <Link style={styles.backLink} href="/petOverview">&larr; Back to pets overview</Link>
+            <Link style={styles.backLink} href={`/`}>&larr; Back to home</Link>
             <View>
-                {!error && pet && <PetOverview petData={pet} />}
+                {!error && med && <MedicationSpecification medicationData={med} />}
                 {error && <Text>Error</Text>}
             </View>
         </View>
@@ -77,6 +79,5 @@ const styles = StyleSheet.create({
         textDecorationLine: "underline",
         color: "#043500ff",
         marginLeft: 20,
-        marginBottom: 40
     }
 });

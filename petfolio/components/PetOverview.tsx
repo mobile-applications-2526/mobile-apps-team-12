@@ -2,6 +2,7 @@ import React from "react";
 import { Pet } from "../types";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { Table, Rows } from 'react-native-table-component';
+import { Link } from "expo-router";
 
 type Props = {
     petData: Pet
@@ -21,7 +22,7 @@ export default function PetOverview({ petData }: Props) {
         ['Birthday', petData.birthdate],
         ['Current weight', petData.weight[0].value],
         ['Food', ['Wet food, Kibble']],
-        ['Medication', petData.medication[0].name],
+        ['Medication', <Link style={styles.arrow} href={`/pet/medications/${petData.id}`}>&rsaquo;</Link>],
         ['Vaccincations', petData.vaccins[0].name]
 
     ];
@@ -85,6 +86,11 @@ const styles = StyleSheet.create({
         borderTopColor: '#d56e54ff',
         paddingTop: 20,
         paddingBottom: 20
+    },
+    arrow: {
+        fontSize: 20,
+        textAlign: "right",
+        marginRight: 30
     }
 
 });
