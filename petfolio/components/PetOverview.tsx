@@ -23,7 +23,7 @@ export default function PetOverview({ petData }: Props) {
         ['Current weight', petData.weight[0].value],
         ['Food', ['Wet food, Kibble']],
         ['Medication', <Link style={styles.arrow} href={`/pet/medications/${petData.id}`}>&rsaquo;</Link>],
-        ['Vaccincations', petData.vaccins[0].name]
+        ['Vaccincations', <Link style={styles.arrow} href={`/pet/vaccinations/${petData.id}`}>&rsaquo;</Link>]
 
     ];
 

@@ -1,23 +1,24 @@
 import React from "react";
-import { Medication, Profile } from "../types";
-import { View, Text, StyleSheet, Image } from "react-native";
-import { Table, Row, Rows } from 'react-native-table-component';
+import { Vaccin } from "../types";
+import { View, Text, StyleSheet } from "react-native";
+import { Table, Rows } from 'react-native-table-component';
 
 type Props = {
-    medicationData: Medication
+    vacData: Vaccin
 }
 
-export default function MedicationSpecification({ medicationData }: Props) {
+export default function VaccinSpecification({ vacData }: Props) {
 
     const tableData = [
-        ["Amount", medicationData.quantity],
-        ["Description", medicationData.description]
+        ["Date", vacData.shot_date],
+        ["Type", vacData.type],
+        ["Expiration Date", vacData.expire_date]
     ];
 
     return (
         <View style={styles.container}>
             <View style={styles.profile}>
-                <Text style={styles.profileName}>{medicationData.name}</Text>
+                <Text style={styles.profileName}>{vacData.name}</Text>
                 <Table>
                     <Rows style={styles.row} data={tableData} />
                 </Table>

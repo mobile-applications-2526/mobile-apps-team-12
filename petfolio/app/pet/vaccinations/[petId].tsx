@@ -1,49 +1,49 @@
 import { useSQLiteContext } from "expo-sqlite";
 import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import Header from "../../components/Header";
-import { Medication } from "../../types";
-import PetService from "../../services/PetService";
 import { Link, useLocalSearchParams } from "expo-router";
-import MedicationsTable from "../../components/MedicationsTable";
-import MedicationService from "../../services/MedicationService";
-import MedicationSpecification from "../../components/MedicationSpecification";
+import { Pet } from "../../../types";
+import PetService from "../../../services/PetService";
+import Header from "../../../components/Header";
+import MedicationsTable from "../../../components/MedicationsTable";
+import VaccinationsTable from "../../../components/VaccinationsTable";
 
 export default function MedicationShow() {
     const db = useSQLiteContext();
-    const [med, setMed] = useState<Medication>(null);
+    const [pet, setPet] = useState<Pet>(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
-    const { medId } = useLocalSearchParams<{ medId: string }>();
+    const { petId } = useLocalSearchParams<{ petId: string }>();
 
     function clearErrors() {
         setError("");
     }
-    async function getMed() {
+    async function getPet() {
         clearErrors()
 
         try {
-            if (medId != null) {
-                const result = await MedicationService.getMedicationById(db, medId);
+            if (petId != null) {
+                const result = await PetService.getPetById(db, petId);
                 console.log(result);
                 if (result != null) {
-                    setMed(result);
+                    setPet(result);
 
                 } else {
-                    setMed(null);
-                    console.log(medId + "id")
-                    setError("Something went wrong with fetching medication...")
+                    setPet(null);
+                    console.log(petId + "id")
+                    setError("Something went wrong with fetching your pet...")
+                    console.log(error)
                 }
             } else {
-                setMed(null);
-                console.log("paremeter:" + medId)
+                setPet(null);
+                console.log("paremeter:" + petId)
                 setError("Pet not found")
             }
 
         } catch (err) {
-            console.error("Failed to fetch med", err);
-            setMed(null);
-            setError("Failed to load medication. Please try again.");
+            console.error("Failed to fetch pet", err);
+            setPet(null);
+            setError("Failed to load pet. Please try again.");
         }
         finally {
             setLoading(false);
@@ -51,15 +51,15 @@ export default function MedicationShow() {
     }
 
     useEffect(() => {
-        getMed()
+        getPet()
     }, [])
 
     return (
         <View style={styles.container}>
             <Header />
-            <Link style={styles.backLink} href={`/`}>&larr; Back to home</Link>
+            <Link style={styles.backLink} href={`/petOverview`}>&larr; Back to pets</Link>
             <View>
-                {!error && med && <MedicationSpecification medicationData={med} />}
+                {!error && pet && <VaccinationsTable petData={pet} />}
                 {error && <Text>Error</Text>}
             </View>
         </View>
