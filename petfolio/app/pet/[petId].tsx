@@ -8,8 +8,8 @@ import PetService from "../../services/PetService";
 import { Link, useLocalSearchParams } from "expo-router";
 
 export default function PetShow() {
-    const db = useSQLiteContext();
-    const [pet, setPet] = useState<Pet>(null);
+    // const db = useSQLiteContext();
+    const [pet, setPet] = useState<Pet | null>(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
     const { petId } = useLocalSearchParams<{ petId: string }>();
@@ -17,15 +17,28 @@ export default function PetShow() {
     function clearErrors() {
         setError("");
     }
+    const mapToPet = (raw: any): Pet => ({
+        id: String(raw.id), // ensure string
+        name: raw.name,
+        birthdate: new Date(raw.birthdate), // convert string → Date
+        description: raw.description,
+        type: raw.type,
+        vaccins: raw.vaccins ?? [],
+        medication: raw.medication ?? [],
+        weight: raw.weight ?? []
+    });
     async function getProfileByUser() {
         clearErrors()
 
         try {
             if (petId != null) {
-                const result = await PetService.getPetById(db, petId);
-                console.log(result);
-                if (result != null) {
-                    setPet(result);
+                const pet = await PetService.getPetById(petId);
+
+                const mappedPet = mapToPet(pet);
+                
+                if (pet != null) {
+                    setPet(mappedPet);
+                console.log("mapped pet",mappedPet);
 
                 } else {
                     setPet(null);

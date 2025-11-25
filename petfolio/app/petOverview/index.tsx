@@ -5,40 +5,54 @@ import PetService from "../../services/PetService";
 import PetsTable from "../../components/PetsTable";
 import {Pet} from "../../types"
 import { useSQLiteContext } from 'expo-sqlite';
+import { useAuth } from "../../context/authContext";
+import { useRouter } from "expo-router";
 
 export default function PetOverview() {
-  const db = useSQLiteContext(); // get DB from provider
+  // const db = useSQLiteContext(); // get DB from provider
   const [pets, setPets] = useState<Pet[]>([]);
   const [error, setError] = useState("");
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const { user, loading: authLoading } = useAuth();
 
   function clearErrors() {
     setError("");
   }
   async function getPetsData() {
     clearErrors()
-
-    try {
-       const result = await PetService.getPets(db);
-    if (result.length > 0) {
-      setPets(result);
-    } else {
+      if (!user) {
+      setError("Please log in to view your pets");
       setPets([]);
-      setError("Something went wrong with fetching Pets Data...")
+      setLoading(false);
+      return;
     }
+     try {
+      const result = await PetService.getMyPets();
+      setPets(result);
     } catch (err) {
       console.error("Failed to fetch pets", err);
       setPets([]);
       setError("Failed to load pets. Please try again.");
-    }  
-    finally {
-        setLoading(false);
-      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
     getPetsData()
   }, [])
+
+  useEffect(() => {
+    if (!authLoading) {
+      getPetsData();
+    }
+  }, [authLoading, user]);
+  // Redirect to login if not authenticated
+  if (!user) {
+    router.replace('/login');
+    return null;
+  }
 
   if (loading) {
       return (

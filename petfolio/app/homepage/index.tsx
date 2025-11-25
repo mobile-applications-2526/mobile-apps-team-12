@@ -2,10 +2,13 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import Button from "../../components/Button";
 import Header from "../../components/Header";
 import { useRouter } from "expo-router";
+import { useAuth } from "../../context/authContext";
 
 export default function Homepage() {
   const router = useRouter();
-  return (
+  const { user, loading: authLoading } = useAuth();
+
+  if (user) return  (
  <View style={styles.container}>
       <Header />
       <View style={styles.imageContainer}>

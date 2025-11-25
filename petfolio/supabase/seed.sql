@@ -4,7 +4,7 @@ SET session_replication_role = replica;
 -- PostgreSQL database dump
 --
 
--- \restrict hKahjP1afcKr4exwy0v1tjU0BC9O8ZNHO9abO7NuBFFgtn1GnvlkwN56vVVn5Ae
+-- \restrict np7q4SjoiJ7BVDpuPah3pYhysEYcYBcRftLM5SsaTojuEQz5IK7PniW2YJMKbGP
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 17.6
@@ -38,11 +38,11 @@ SET row_security = off;
 --
 
 INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
-	('00000000-0000-0000-0000-000000000000', 'dc18e6c0-1032-4834-8bf2-0481d297fa7c', 'authenticated', 'authenticated', 'testuser@ucll.be', '$2a$10$eYrjlmWG0ibPqWU.FygV3OAbBWn7xNFHYEi1PZHRP40lAp4zJYP1y', '2025-11-25 11:50:02.683756+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-11-25 11:50:02.692683+00', '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-24 18:04:11.824149+00', '2025-11-25 11:50:02.713787+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
-	('00000000-0000-0000-0000-000000000000', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69', 'authenticated', 'authenticated', 'odemalfait@student.ucll.be', '$2a$10$GeJDK3hCAywADBpf1bAwq.AZY6SXUgcfAyJCJeZXPPK0dL9yjk7Ti', '2025-11-25 12:12:09.157288+00', NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-25 12:12:09.151356+00', '2025-11-25 12:12:09.158242+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
+	('00000000-0000-0000-0000-000000000000', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69', 'authenticated', 'authenticated', 'odemalfait@student.ucll.be', '$2a$10$GeJDK3hCAywADBpf1bAwq.AZY6SXUgcfAyJCJeZXPPK0dL9yjk7Ti', '2025-11-25 12:12:09.157288+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-11-25 14:34:47.603199+00', '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-25 12:12:09.151356+00', '2025-11-25 14:34:47.606499+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
 	('00000000-0000-0000-0000-000000000000', '84e45809-43f5-431c-b7c0-e797e665ab32', 'authenticated', 'authenticated', 'nina.deweerd@student.ucll.be', '$2a$10$WhdNHPOdTuudXGiSQ1ERKeCE0lRZU.qGSi56Q3AMNotPvxfy2NW8S', '2025-11-25 12:19:18.752713+00', NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-25 12:19:18.749394+00', '2025-11-25 12:19:18.754161+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
 	('00000000-0000-0000-0000-000000000000', 'a355b08a-4cf1-48de-850e-cde57fa43eaf', 'authenticated', 'authenticated', 'ashley.timmermans@student.ucll.be', '$2a$10$pvfWSH1CVj3GXVVDgFxvb.p9fsZC7ZfnlyOC8c83ucNT3vk6e.qYm', '2025-11-25 12:20:05.687068+00', NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-25 12:20:05.68457+00', '2025-11-25 12:20:05.687833+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
-	('00000000-0000-0000-0000-000000000000', '10ed4022-2da0-4cae-892d-933e6de9c68b', 'authenticated', 'authenticated', 'lotte.geeraerts@ucll.be', '$2a$10$9Qkrv3FjjeaBUaZDrl4zt.wq5PODfAQ8mnyLINf5SCc1.6FO5Zitq', '2025-11-25 12:20:36.114919+00', NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-25 12:20:36.112399+00', '2025-11-25 12:20:36.11632+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
+	('00000000-0000-0000-0000-000000000000', '10ed4022-2da0-4cae-892d-933e6de9c68b', 'authenticated', 'authenticated', 'lotte.geeraerts@ucll.be', '$2a$10$9Qkrv3FjjeaBUaZDrl4zt.wq5PODfAQ8mnyLINf5SCc1.6FO5Zitq', '2025-11-25 12:20:36.114919+00', NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-25 12:20:36.112399+00', '2025-11-25 12:20:36.11632+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
+	('00000000-0000-0000-0000-000000000000', 'dc18e6c0-1032-4834-8bf2-0481d297fa7c', 'authenticated', 'authenticated', 'testuser@ucll.be', '$2a$10$eYrjlmWG0ibPqWU.FygV3OAbBWn7xNFHYEi1PZHRP40lAp4zJYP1y', '2025-11-25 11:50:02.683756+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-11-25 11:50:02.692683+00', '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-24 18:04:11.824149+00', '2025-11-25 14:09:41.184662+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
@@ -74,7 +74,11 @@ INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "pro
 --
 
 INSERT INTO "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag", "oauth_client_id", "refresh_token_hmac_key", "refresh_token_counter") VALUES
-	('e650d19b-267d-42e5-a743-6b8a260f1b7b', 'dc18e6c0-1032-4834-8bf2-0481d297fa7c', '2025-11-25 11:50:02.693453+00', '2025-11-25 11:50:02.693453+00', NULL, 'aal1', NULL, NULL, 'okhttp/4.12.0', '94.224.38.207', NULL, NULL, NULL, NULL);
+	('e650d19b-267d-42e5-a743-6b8a260f1b7b', 'dc18e6c0-1032-4834-8bf2-0481d297fa7c', '2025-11-25 11:50:02.693453+00', '2025-11-25 14:09:41.18907+00', NULL, 'aal1', NULL, '2025-11-25 14:09:41.188964', 'okhttp/4.12.0', '94.224.38.207', NULL, NULL, NULL, NULL),
+	('e18285ed-70fb-4fb0-8a5e-7b59770371f2', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69', '2025-11-25 14:10:04.617181+00', '2025-11-25 14:10:04.617181+00', NULL, 'aal1', NULL, NULL, 'okhttp/4.12.0', '94.224.38.207', NULL, NULL, NULL, NULL),
+	('1c0e3265-3320-416d-8e52-64b9b068f071', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69', '2025-11-25 14:11:54.652078+00', '2025-11-25 14:11:54.652078+00', NULL, 'aal1', NULL, NULL, 'okhttp/4.12.0', '94.224.38.207', NULL, NULL, NULL, NULL),
+	('afbfeea5-f9c3-4738-9511-cb6099393849', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69', '2025-11-25 14:21:58.155104+00', '2025-11-25 14:21:58.155104+00', NULL, 'aal1', NULL, NULL, 'okhttp/4.12.0', '94.224.38.207', NULL, NULL, NULL, NULL),
+	('9b4e25f7-4cb0-4aac-b3d9-dcd97c61e2b2', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69', '2025-11-25 14:34:47.603292+00', '2025-11-25 14:34:47.603292+00', NULL, 'aal1', NULL, NULL, 'okhttp/4.12.0', '94.224.38.207', NULL, NULL, NULL, NULL);
 
 
 --
@@ -82,7 +86,11 @@ INSERT INTO "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "fac
 --
 
 INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "authentication_method", "id") VALUES
-	('e650d19b-267d-42e5-a743-6b8a260f1b7b', '2025-11-25 11:50:02.714323+00', '2025-11-25 11:50:02.714323+00', 'password', '11a055e6-cffe-4170-8170-47456d60c442');
+	('e650d19b-267d-42e5-a743-6b8a260f1b7b', '2025-11-25 11:50:02.714323+00', '2025-11-25 11:50:02.714323+00', 'password', '11a055e6-cffe-4170-8170-47456d60c442'),
+	('e18285ed-70fb-4fb0-8a5e-7b59770371f2', '2025-11-25 14:10:04.623179+00', '2025-11-25 14:10:04.623179+00', 'password', '32e8a554-9c20-4837-8f93-602935af498b'),
+	('1c0e3265-3320-416d-8e52-64b9b068f071', '2025-11-25 14:11:54.656747+00', '2025-11-25 14:11:54.656747+00', 'password', 'd08ff2fd-0ff3-4ee7-8272-1c197220c87f'),
+	('afbfeea5-f9c3-4738-9511-cb6099393849', '2025-11-25 14:21:58.159888+00', '2025-11-25 14:21:58.159888+00', 'password', 'be0a8f92-cdfe-4b8f-bda0-6116c76d46a3'),
+	('9b4e25f7-4cb0-4aac-b3d9-dcd97c61e2b2', '2025-11-25 14:34:47.607264+00', '2025-11-25 14:34:47.607264+00', 'password', '2508931d-db83-474a-b059-3e2c63e08b93');
 
 
 --
@@ -120,7 +128,12 @@ INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "
 --
 
 INSERT INTO "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "revoked", "created_at", "updated_at", "parent", "session_id") VALUES
-	('00000000-0000-0000-0000-000000000000', 1, 'exfavbzimupi', 'dc18e6c0-1032-4834-8bf2-0481d297fa7c', false, '2025-11-25 11:50:02.707944+00', '2025-11-25 11:50:02.707944+00', NULL, 'e650d19b-267d-42e5-a743-6b8a260f1b7b');
+	('00000000-0000-0000-0000-000000000000', 1, 'exfavbzimupi', 'dc18e6c0-1032-4834-8bf2-0481d297fa7c', true, '2025-11-25 11:50:02.707944+00', '2025-11-25 14:09:41.181649+00', NULL, 'e650d19b-267d-42e5-a743-6b8a260f1b7b'),
+	('00000000-0000-0000-0000-000000000000', 2, '6ohtsfkfogfn', 'dc18e6c0-1032-4834-8bf2-0481d297fa7c', false, '2025-11-25 14:09:41.183423+00', '2025-11-25 14:09:41.183423+00', 'exfavbzimupi', 'e650d19b-267d-42e5-a743-6b8a260f1b7b'),
+	('00000000-0000-0000-0000-000000000000', 3, 'beb5nucr2yp2', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69', false, '2025-11-25 14:10:04.621882+00', '2025-11-25 14:10:04.621882+00', NULL, 'e18285ed-70fb-4fb0-8a5e-7b59770371f2'),
+	('00000000-0000-0000-0000-000000000000', 4, 'dy2etp6hgafc', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69', false, '2025-11-25 14:11:54.653779+00', '2025-11-25 14:11:54.653779+00', NULL, '1c0e3265-3320-416d-8e52-64b9b068f071'),
+	('00000000-0000-0000-0000-000000000000', 5, 'ibrfsprqrtcp', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69', false, '2025-11-25 14:21:58.156787+00', '2025-11-25 14:21:58.156787+00', NULL, 'afbfeea5-f9c3-4738-9511-cb6099393849'),
+	('00000000-0000-0000-0000-000000000000', 6, 'slim6ihfqh4k', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69', false, '2025-11-25 14:34:47.604943+00', '2025-11-25 14:34:47.604943+00', NULL, '9b4e25f7-4cb0-4aac-b3d9-dcd97c61e2b2');
 
 
 --
@@ -148,18 +161,18 @@ INSERT INTO "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "r
 
 
 --
--- Data for Name: Medication; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: medication; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."Medication" ("id", "created_at", "name", "description", "quantity") VALUES
+INSERT INTO "public"."medication" ("id", "created_at", "name", "description", "quantity") VALUES
 	(1, '2025-11-24 16:00:19.492431+00', 'Antibiotica', '2015-02-02', '10');
 
 
 --
--- Data for Name: User Information; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: user_information; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."User Information" ("id", "created_at", "first_name", "last_name", "auth_user_id", "phonenumber", "email") VALUES
+INSERT INTO "public"."user_information" ("id", "created_at", "first_name", "last_name", "auth_user_id", "phonenumber", "email") VALUES
 	(5, '2025-11-25 12:24:14.50874+00', 'Ode', 'Malfait', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69', NULL, NULL),
 	(6, '2025-11-25 12:24:43.388426+00', 'Lotte', 'Geeraerts', '10ed4022-2da0-4cae-892d-933e6de9c68b', NULL, NULL),
 	(7, '2025-11-25 12:25:21.143581+00', 'Nina', 'de Weerd', '84e45809-43f5-431c-b7c0-e797e665ab32', NULL, NULL),
@@ -168,10 +181,10 @@ INSERT INTO "public"."User Information" ("id", "created_at", "first_name", "last
 
 
 --
--- Data for Name: Pets; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: pets; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."Pets" ("id", "created_at", "name", "birthdate", "description", "type", "owner_id") VALUES
+INSERT INTO "public"."pets" ("id", "created_at", "name", "birthdate", "description", "type", "owner_id") VALUES
 	(8, '2025-11-25 13:22:36.844973+00', 'Lena', '2015-04-26', 'Brown Cat', 'Cat', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69'),
 	(9, '2025-11-25 13:23:04.783512+00', 'Marieke', '2015-04-26', 'Brown Cat with orange spots', 'Cat', 'bc2a9a0d-1399-47ca-aa06-8bd8e7dbda69'),
 	(10, '2025-11-25 13:24:15.983702+00', 'Bengel', '2012-09-22', 'Orange Cat with with spots', 'Cat', '84e45809-43f5-431c-b7c0-e797e665ab32'),
@@ -179,38 +192,6 @@ INSERT INTO "public"."Pets" ("id", "created_at", "name", "birthdate", "descripti
 ', 'Dog', '10ed4022-2da0-4cae-892d-933e6de9c68b'),
 	(12, '2025-11-25 13:25:53.364771+00', 'Momo', '2024-06-01', 'White Rabbit with brown spots', 'Rabbit', 'a355b08a-4cf1-48de-850e-cde57fa43eaf'),
 	(13, '2025-11-25 13:26:42.676789+00', 'Azula', '2023-01-01', 'White Rabbit with brown and black spots', 'Rabbit', 'a355b08a-4cf1-48de-850e-cde57fa43eaf');
-
-
---
--- Data for Name: Profiles; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO "public"."Profiles" ("id", "created_at", "user_id", "pictures") VALUES
-	(5, '2025-11-25 12:26:34.624415+00', 5, NULL),
-	(6, '2025-11-25 12:26:45.621389+00', 6, NULL),
-	(7, '2025-11-25 12:26:53.885016+00', 7, NULL),
-	(8, '2025-11-25 12:27:05.068637+00', 8, NULL),
-	(9, '2025-11-25 12:27:14.146894+00', 9, NULL);
-
-
---
--- Data for Name: Vaccins; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO "public"."Vaccins" ("id", "created_at", "name", "type", "shot_date", "expire_date") VALUES
-	(1, '2025-11-24 17:08:14.291203+00', 'Anti-wormen', 'A', '2012-12-12', '2022-12-12'),
-	(2, '2025-11-24 17:08:46.107365+00', 'Rabies', 'A', '2012-12-12', '2022-12-12'),
-	(3, '2025-11-24 17:09:22.891928+00', 'Anti-vlooien', 'B', '2012-12-12', '2022-12-12');
-
-
---
--- Data for Name: Weight; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO "public"."Weight" ("id", "created_at", "value", "date") VALUES
-	(1, '2025-11-24 16:36:32.768974+00', '1,5 kg', '2025-10-11'),
-	(2, '2025-11-24 16:36:55.822753+00', '4', '2025-11-11'),
-	(3, '2025-11-24 17:13:48.214928+00', '5 kg', '2025-11-24');
 
 
 --
@@ -227,6 +208,16 @@ INSERT INTO "public"."pets_medication" ("pet_id", "medication_id") VALUES
 
 
 --
+-- Data for Name: vaccins; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."vaccins" ("id", "created_at", "name", "type", "shot_date", "expire_date") VALUES
+	(1, '2025-11-24 17:08:14.291203+00', 'Anti-wormen', 'A', '2012-12-12', '2022-12-12'),
+	(2, '2025-11-24 17:08:46.107365+00', 'Rabies', 'A', '2012-12-12', '2022-12-12'),
+	(3, '2025-11-24 17:09:22.891928+00', 'Anti-vlooien', 'B', '2012-12-12', '2022-12-12');
+
+
+--
 -- Data for Name: pets_vaccin; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -240,6 +231,16 @@ INSERT INTO "public"."pets_vaccin" ("pet_id", "vaccin_id") VALUES
 
 
 --
+-- Data for Name: weight; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."weight" ("id", "created_at", "value", "date") VALUES
+	(1, '2025-11-24 16:36:32.768974+00', '1,5 kg', '2025-10-11'),
+	(2, '2025-11-24 16:36:55.822753+00', '4', '2025-11-11'),
+	(3, '2025-11-24 17:13:48.214928+00', '5 kg', '2025-11-24');
+
+
+--
 -- Data for Name: pets_weight; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -247,6 +248,18 @@ INSERT INTO "public"."pets_weight" ("pet_id", "weight_id") VALUES
 	(8, 3),
 	(9, 2),
 	(12, 1);
+
+
+--
+-- Data for Name: profiles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."profiles" ("id", "created_at", "user_id", "pictures") VALUES
+	(5, '2025-11-25 12:26:34.624415+00', 5, NULL),
+	(6, '2025-11-25 12:26:45.621389+00', 6, NULL),
+	(7, '2025-11-25 12:26:53.885016+00', 7, NULL),
+	(8, '2025-11-25 12:27:05.068637+00', 8, NULL),
+	(9, '2025-11-25 12:27:14.146894+00', 9, NULL);
 
 
 --
@@ -301,7 +314,7 @@ INSERT INTO "public"."pets_weight" ("pet_id", "weight_id") VALUES
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 1, true);
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 6, true);
 
 
 --
@@ -350,6 +363,6 @@ SELECT pg_catalog.setval('"public"."Weight_id_seq"', 3, true);
 -- PostgreSQL database dump complete
 --
 
--- \unrestrict hKahjP1afcKr4exwy0v1tjU0BC9O8ZNHO9abO7NuBFFgtn1GnvlkwN56vVVn5Ae
+-- \unrestrict np7q4SjoiJ7BVDpuPah3pYhysEYcYBcRftLM5SsaTojuEQz5IK7PniW2YJMKbGP
 
 RESET ALL;
