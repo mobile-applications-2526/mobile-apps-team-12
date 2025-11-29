@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS "public"."pets" (
     "birthdate" "date" NOT NULL,
     "description" "text",
     "type" character varying NOT NULL,
-    "owner_id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL
+    "owner_id" "uuid" DEFAULT "auth"."uid"() NOT NULL
 );
 
 
@@ -310,11 +310,6 @@ ALTER TABLE ONLY "public"."pets_weight"
 
 
 
-ALTER TABLE ONLY "public"."pets"
-    ADD CONSTRAINT "Pets_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "public"."user_information"("auth_user_id") ON DELETE CASCADE;
-
-
-
 ALTER TABLE ONLY "public"."profiles"
     ADD CONSTRAINT "Profiles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user_information"("id");
 
@@ -335,6 +330,11 @@ ALTER TABLE ONLY "public"."pets_medication"
 
 
 
+ALTER TABLE ONLY "public"."pets"
+    ADD CONSTRAINT "pets_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+
+
+
 ALTER TABLE ONLY "public"."pets_vaccin"
     ADD CONSTRAINT "pets_vaccin_pet_id_fkey" FOREIGN KEY ("pet_id") REFERENCES "public"."pets"("id") ON DELETE CASCADE;
 
@@ -352,6 +352,14 @@ ALTER TABLE ONLY "public"."pets_weight"
 
 ALTER TABLE ONLY "public"."pets_weight"
     ADD CONSTRAINT "pets_weight_weight_id_fkey" FOREIGN KEY ("weight_id") REFERENCES "public"."weight"("id") ON DELETE CASCADE;
+
+
+
+CREATE POLICY "Users can insert their pets" ON "public"."pets" FOR INSERT WITH CHECK (("auth"."uid"() = "owner_id"));
+
+
+
+CREATE POLICY "Users can read their pets" ON "public"."pets" FOR SELECT USING (("auth"."uid"() = "owner_id"));
 
 
 
