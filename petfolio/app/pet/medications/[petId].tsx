@@ -8,75 +8,73 @@ import Header from "../../../components/Header";
 import MedicationsTable from "../../../components/MedicationsTable";
 
 export default function MedicationShow() {
-    const db = useSQLiteContext();
-    const [pet, setPet] = useState<Pet>(null);
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(true);
-    const { petId } = useLocalSearchParams<{ petId: string }>();
+  const [pet, setPet] = useState<Pet>(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const { petId } = useLocalSearchParams<{ petId: string }>();
 
-    function clearErrors() {
-        setError("");
-    }
-    async function getPet() {
-        clearErrors()
+  function clearErrors() {
+    setError("");
+  }
+  async function getPet() {
+    clearErrors();
 
-        try {
-            if (petId != null) {
-                const result = await PetService.getPetById(db, petId);
-                console.log(result);
-                if (result != null) {
-                    setPet(result);
-
-                } else {
-                    setPet(null);
-                    console.log(petId + "id")
-                    setError("Something went wrong with fetching your pet...")
-                    console.log(error)
-                }
-            } else {
-                setPet(null);
-                console.log("paremeter:" + petId)
-                setError("Pet not found")
-            }
-
-        } catch (err) {
-            console.error("Failed to fetch pet", err);
-            setPet(null);
-            setError("Failed to load pet. Please try again.");
+    try {
+      if (petId != null) {
+        const result = await PetService.getPetById(petId);
+        console.log(result);
+        if (result != null) {
+          setPet(result);
+        } else {
+          setPet(null);
+          console.log(petId + "id");
+          setError("Something went wrong with fetching your pet...");
+          console.log(error);
         }
-        finally {
-            setLoading(false);
-        }
+      } else {
+        setPet(null);
+        console.log("paremeter:" + petId);
+        setError("Pet not found");
+      }
+    } catch (err) {
+      console.error("Failed to fetch pet", err);
+      setPet(null);
+      setError("Failed to load pet. Please try again.");
+    } finally {
+      setLoading(false);
     }
+  }
 
-    useEffect(() => {
-        getPet()
-    }, [])
+  useEffect(() => {
+    getPet();
+  }, []);
 
-    return (
-        <View style={styles.container}>
-            <Header />
-            <Link style={styles.backLink} href={`/petOverview`}>&larr; Back to pets</Link>
-            <View>
-                {!error && pet && <MedicationsTable petData={pet} />}
-                {error && <Text>Error</Text>}
-            </View>
-        </View>
-    );
+  return (
+    <View style={styles.container}>
+      <Header />
+      <Link style={styles.backLink} href={`/petOverview`}>
+        &larr; Back to pets
+      </Link>
+      <View>
+        {!error && pet && <MedicationsTable petData={pet} />}
+        {error && <Text>Error</Text>}
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#F6F1EB",
-        alignItems: "stretch",
-        marginBottom: 0,
-        maxWidth: "100%",
-        width: '100%'
-    },
-    backLink: {
-        textDecorationLine: "underline",
-        color: "#043500ff",
-        marginLeft: 20,
-    }
+  container: {
+    flex: 1,
+    backgroundColor: "#F6F1EB",
+    alignItems: "stretch",
+    marginBottom: 0,
+    maxWidth: "100%",
+    width: "100%",
+  },
+  backLink: {
+    textDecorationLine: "underline",
+    color: "#043500ff",
+    marginLeft: 20,
+  },
 });

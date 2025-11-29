@@ -1,15 +1,20 @@
-import { StyleSheet, View, Text, ScrollView, Image, ActivityIndicator } from "react-native";
-import React, {useState, useEffect} from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  Image,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
 import PetService from "../../services/PetService";
 import PetsTable from "../../components/PetsTable";
-import {Pet} from "../../types"
-import { useSQLiteContext } from 'expo-sqlite';
+import { Pet } from "../../types";
 import { useAuth } from "../../context/authContext";
 import { useRouter } from "expo-router";
 
 export default function PetOverview() {
-  // const db = useSQLiteContext(); // get DB from provider
   const [pets, setPets] = useState<Pet[]>([]);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -20,14 +25,14 @@ export default function PetOverview() {
     setError("");
   }
   async function getPetsData() {
-    clearErrors()
-      if (!user) {
+    clearErrors();
+    if (!user) {
       setError("Please log in to view your pets");
       setPets([]);
       setLoading(false);
       return;
     }
-     try {
+    try {
       const result = await PetService.getMyPets();
       setPets(result);
     } catch (err) {
@@ -40,8 +45,8 @@ export default function PetOverview() {
   }
 
   useEffect(() => {
-    getPetsData()
-  }, [])
+    getPetsData();
+  }, []);
 
   useEffect(() => {
     if (!authLoading) {
@@ -50,17 +55,17 @@ export default function PetOverview() {
   }, [authLoading, user]);
   // Redirect to login if not authenticated
   if (!user) {
-    router.replace('/login');
+    router.replace("/login");
     return null;
   }
 
   if (loading) {
-      return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#507C59" />
-        </View>
-      );
-      }
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#507C59" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -68,9 +73,11 @@ export default function PetOverview() {
       <View>
         <Text style={styles.title}>This is the pet Overview</Text>
         {error && <Text style={styles.error}>{error}</Text>}
-              {pets.length === 0 ? (
+        {pets.length === 0 ? (
           <Text style={styles.text}>There are currently no pets...</Text>
-          ) : (<PetsTable petData={pets}/>)}
+        ) : (
+          <PetsTable petData={pets} />
+        )}
       </View>
     </View>
   );
@@ -83,7 +90,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     maxWidth: "100%",
   },
-    loadingContainer: {
+  loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -104,7 +111,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
     color: "#3D3D3D",
     margin: 3,
@@ -114,6 +121,6 @@ const styles = StyleSheet.create({
     width: 95,
   },
   error: {
-        color:  "#d20202ff",
-    },
+    color: "#d20202ff",
+  },
 });
