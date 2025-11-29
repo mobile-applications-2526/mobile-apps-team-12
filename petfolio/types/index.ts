@@ -9,11 +9,11 @@ export enum PetType {
 
 export type User = {
   id: string;
-  firstname: String;
-  lastname: String;
-  email: String;
-  phonenumber: String;
-  password: String;
+  firstname: string;
+  lastname: string;
+  email: string;
+  phonenumber: string;
+  password: string;
 };
 
 export type Weight = {
@@ -56,6 +56,10 @@ export type PetInput = {
 
 export type Profile = {
   id: string;
-  user_id: User;
+  user_id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  phonenumber: string;
   pictures: [];
 };
