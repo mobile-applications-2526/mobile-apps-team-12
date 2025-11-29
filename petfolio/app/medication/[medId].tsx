@@ -10,74 +10,81 @@ import MedicationService from "../../services/MedicationService";
 import MedicationSpecification from "../../components/MedicationSpecification";
 
 export default function MedicationShow() {
-    const db = useSQLiteContext();
-    const [med, setMed] = useState<Medication>(null);
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(true);
-    const { medId } = useLocalSearchParams<{ medId: string }>();
+  const [med, setMed] = useState<Medication>(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const { medId } = useLocalSearchParams<{ medId: string }>();
 
-    function clearErrors() {
-        setError("");
-    }
-    async function getMed() {
-        clearErrors()
+  function clearErrors() {
+    setError("");
+  }
 
-        try {
-            if (medId != null) {
-                const result = await MedicationService.getMedicationById(db, medId);
-                console.log(result);
-                if (result != null) {
-                    setMed(result);
+  const mapToMed = (raw: any): Medication => ({
+    id: raw.id,
+    name: raw.name,
+    description: raw.description,
+    quantity: raw.quantity,
+  });
 
-                } else {
-                    setMed(null);
-                    console.log(medId + "id")
-                    setError("Something went wrong with fetching medication...")
-                }
-            } else {
-                setMed(null);
-                console.log("paremeter:" + medId)
-                setError("Pet not found")
-            }
+  async function getMed() {
+    clearErrors();
 
-        } catch (err) {
-            console.error("Failed to fetch med", err);
-            setMed(null);
-            setError("Failed to load medication. Please try again.");
+    try {
+      if (medId != null) {
+        const result = await MedicationService.getMedicationById(medId);
+
+        if (result != null) {
+          const mappedMed = mapToMed(result[0]);
+          setMed(mappedMed);
+        } else {
+          setMed(null);
+          console.log(medId + "id");
+          setError("Something went wrong with fetching medication...");
         }
-        finally {
-            setLoading(false);
-        }
+      } else {
+        setMed(null);
+        console.log("paremeter:" + medId);
+        setError("Pet not found");
+      }
+    } catch (err) {
+      console.error("Failed to fetch med", err);
+      setMed(null);
+      setError("Failed to load medication. Please try again.");
+    } finally {
+      setLoading(false);
     }
+  }
 
-    useEffect(() => {
-        getMed()
-    }, [])
+  useEffect(() => {
+    getMed();
+  }, []);
 
-    return (
-        <View style={styles.container}>
-            <Header />
-            <Link style={styles.backLink} href={`/`}>&larr; Back to home</Link>
-            <View>
-                {!error && med && <MedicationSpecification medicationData={med} />}
-                {error && <Text>Error</Text>}
-            </View>
-        </View>
-    );
+  return (
+    <View style={styles.container}>
+      <Header />
+      <Link style={styles.backLink} href={`/`}>
+        &larr; Back to home
+      </Link>
+      <View>
+        {!error && med && <MedicationSpecification medicationData={med} />}
+        {error && <Text>Error</Text>}
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#F6F1EB",
-        alignItems: "stretch",
-        marginBottom: 0,
-        maxWidth: "100%",
-        width: '100%'
-    },
-    backLink: {
-        textDecorationLine: "underline",
-        color: "#043500ff",
-        marginLeft: 20,
-    }
+  container: {
+    flex: 1,
+    backgroundColor: "#F6F1EB",
+    alignItems: "stretch",
+    marginBottom: 0,
+    maxWidth: "100%",
+    width: "100%",
+  },
+  backLink: {
+    textDecorationLine: "underline",
+    color: "#043500ff",
+    marginLeft: 20,
+  },
 });
