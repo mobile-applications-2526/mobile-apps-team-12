@@ -1,35 +1,55 @@
 import { SQLiteDatabase } from "expo-sqlite";
 import { getAllUsers } from "../db/users";
+import { supabase } from '../utils/supabase'
 
 
 const registerUser = async (userData) => {
     try {
-        const response = await fetch(
-            process.env.NEXT_PUBLIC_API_URL + "/users/register",
-            {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify(userData),
-            }
-        );
+    const { data, error } = await supabase.auth.signUp({
+      email: userData.email,
+      password: userData.password,
+    });
 
-        if (!response || !response.ok) {
-            // Throw a clear error so callers can handle failures explicitly
-            const text = await (response?.text?.() || Promise.resolve(""));
-            throw new Error(
-                `Failed to sign up user: ${response?.status ?? "no-response"} ${text}`
-            );
-        }
-
-        return response;
-    } catch (error) {
-        console.error(error);
-        // Re-throw so callers don't receive undefined and can handle errors.
-        throw error;
-    }
+    if (error) throw error;
+     // 2. Insert additional user information into your User Information table
+        const { data: userInfo, error: userInfoError } = await supabase
+            .from('User Information')
+            .insert({
+                id: data.user.id, 
+                first_name: userData.firstName,
+                last_name: userData.lastName,
+                phonenumber: userData.phoneNumber,
+                email: userData.email,
+                auth_user_id: data.user.id
+            });
+        
+        if (userInfoError) throw userInfoError;
+    console.log('User signed up successfully:', data);
+    console.log("Succesfully made user Info: ", userInfo)
+    return data;
+  } catch (error) {
+    console.error('Error signing up:', error.message);
+    return null;
+  }
 };
+
+const loginUser = async (userData) => {
+    try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: userData.email,
+      password: userData.password,
+    });
+
+    if (error) throw error;
+    console.log('User signed up successfully:', data);
+    return data;
+  } catch (error) {
+    console.error('Error signing up:', error.message);
+    return null;
+  }
+};
+
+
 
 const getUsers = async (db: SQLiteDatabase) => {
     try {
@@ -41,5 +61,5 @@ const getUsers = async (db: SQLiteDatabase) => {
     }
 }
 
-const UserService = { registerUser, getUsers }
+const UserService = { registerUser, getUsers, loginUser }
 export default UserService;

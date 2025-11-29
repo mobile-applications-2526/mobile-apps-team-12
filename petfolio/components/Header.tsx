@@ -8,7 +8,7 @@ export default function Header() {
     <View style={styles.container}>
       <View style={styles.leftButtons}>
         <Pressable
-          onPress={() => router.navigate("/")}
+          onPress={() => router.navigate("/homepage")}
         >
           <Image
             source={require("../assets/petfolio-logo.png")}

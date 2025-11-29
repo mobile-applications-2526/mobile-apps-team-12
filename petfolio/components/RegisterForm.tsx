@@ -16,7 +16,7 @@ export default function RegisterForm() {
         console.log(userData);
         try {
             const response = await UserService.registerUser(userData);
-            if (response && response.ok) {
+            if (response) {
                 setIsRegistered(true);
                 setTimeout(() => router.navigate("/login"), 2000);
             }
