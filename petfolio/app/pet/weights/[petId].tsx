@@ -14,12 +14,13 @@ export default function WeightPage() {
     const [pet, setPet ] = useState<Pet | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
 
-    useEffect(() => {
-        async function fetchPet() {
+    const fetchPet = async () => {
             if (!petId) return;
             const result = await PetService.getPetById(petId);
             setPet(result);
-        }
+    };
+
+    useEffect(() => {
         fetchPet();
     }, [petId]);
 
