@@ -1,8 +1,8 @@
 import React from "react";
 import { Pet } from "../types";
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from "react-native";
 import { Table, Rows } from "react-native-table-component";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 type Props = {
   petData: Pet;
@@ -17,27 +17,41 @@ export default function PetOverview({ petData }: Props) {
   //     vaccins.push(vac.name)
   // })
 
+  const router = useRouter();
+
+  const getCurrentWeight = () => {
+    if (!petData.weight || petData.weight.length === 0) return "N/A";
+
+    const sortedWeights = [...petData.weight].sort((a, b) => {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
+
+    return `${sortedWeights[0].value} kg`;
+  }
+
   const tableData = [
     ["Birthday", petData.birthdate],
-    ["Current weight", petData.weight[0].value],
     ["Food", ["Wet food, Kibble"]],
     [
-      "Medication",
-      <Link style={styles.arrow} href={`/pet/medications/${petData.id}`}>
-        &rsaquo;
-      </Link>,
+      "Current weight", 
+      <TouchableOpacity onPress={() => router.push(`/pet/weights/${petData.id}`)}>
+        <View style={styles.rowContent}>
+          <Text>{getCurrentWeight()}</Text>
+          <Text style={styles.arrow}>&rsaquo;</Text>
+        </View>
+      </TouchableOpacity>
     ],
     [
-      "Vaccincations",
-      <Link style={styles.arrow} href={`/pet/vaccinations/${petData.id}`}>
-        &rsaquo;
-      </Link>,
+      "Medication",
+      <TouchableOpacity onPress={() => router.push(`/pet/medications/${petData.id}`)}>
+        <Text style={styles.arrow}>&rsaquo;</Text>
+      </TouchableOpacity>,
     ],
-        [
-      "Weights",
-      <Link style={styles.arrow} href={`/pet/weights/${petData.id}`}>
-        &rsaquo;
-      </Link>,
+    [
+      "Vaccinations",
+      <TouchableOpacity onPress={() => router.push(`/pet/vaccinations/${petData.id}`)}>
+        <Text style={styles.arrow}>&rsaquo;</Text>
+      </TouchableOpacity>,
     ],
   ];
 
@@ -105,6 +119,14 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
   },
+  
+  rowContent: {  
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 10,
+  },
+  
   arrow: {
     fontSize: 20,
     textAlign: "right",
