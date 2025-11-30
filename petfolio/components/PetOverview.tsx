@@ -31,7 +31,6 @@ export default function PetOverview({ petData }: Props) {
 
   const tableData = [
     ["Birthday", petData.birthdate],
-    ["Food", ["Wet food, Kibble"]],
     [
       "Current weight", 
       <TouchableOpacity onPress={() => router.push(`/pet/weights/${petData.id}`)}>
@@ -39,6 +38,11 @@ export default function PetOverview({ petData }: Props) {
           <Text>{getCurrentWeight()}</Text>
           <Text style={styles.arrow}>&rsaquo;</Text>
         </View>
+      </TouchableOpacity>
+    ],
+    ["Food", 
+      <TouchableOpacity onPress={() => router.push(`/pet/foods/${petData.id}`)}>
+        <Text style={styles.arrow}>&rsaquo;</Text>
       </TouchableOpacity>
     ],
     [

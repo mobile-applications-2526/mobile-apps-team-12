@@ -37,6 +37,13 @@ export type Vaccin = {
   expire_date: Date;
 };
 
+export type Food = {
+  id: string;
+  name: string;
+  description: string;
+  quantity: string;
+};
+
 export type Pet = {
   id: string;
   name: string;
@@ -46,6 +53,7 @@ export type Pet = {
   vaccins?: Vaccin[];
   medication?: Medication[];
   weight?: Weight[];
+  food?: Food[];
 };
 
 export type PetInput = {

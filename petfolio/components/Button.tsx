@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
-    backgroundColor: "#3D3D3D",
+    backgroundColor: "#507e62",
     padding: 5
   },
   buttonLabel: {
