@@ -33,6 +33,12 @@ export default function PetOverview({ petData }: Props) {
         &rsaquo;
       </Link>,
     ],
+        [
+      "Weights",
+      <Link style={styles.arrow} href={`/pet/weights/${petData.id}`}>
+        &rsaquo;
+      </Link>,
+    ],
   ];
 
   return (
