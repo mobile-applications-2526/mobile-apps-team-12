@@ -77,6 +77,9 @@ const getPetById = async (petId: string) => {
     ),
     pets_vaccin(
       vaccins(*)
+    ),
+    pets_food(
+      food(*)
     )
   `
       )
@@ -111,6 +114,13 @@ const getPetById = async (petId: string) => {
           expire_date: pv.vaccins.expire_date
             ? pv.vaccins.expire_date
             : undefined,
+        })) ?? [],
+      food:
+        data.pets_food?.map((pf: any) => ({
+          id: pf.food.id,
+          name: pf.food.name,
+          description: pf.food.description,
+          quantity: pf.food.quantity,
         })) ?? [],
     };
 

@@ -1,7 +1,7 @@
 import { useSQLiteContext } from "expo-sqlite";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { Pet } from "../../../types";
 import PetService from "../../../services/PetService";
 import Header from "../../../components/Header";
@@ -53,9 +53,9 @@ export default function MedicationShow() {
   return (
     <View style={styles.container}>
       <Header />
-      <Link style={styles.backLink} href={`/petOverview`}>
-        &larr; Back to pets
-      </Link>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
+          <Text style={styles.backLinkText}>&larr; Back to pet</Text>
+        </TouchableOpacity>
       <View>
         {!error && pet && <VaccinationsTable petData={pet} />}
         {error && <Text>Error</Text>}
@@ -73,9 +73,12 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     width: "100%",
   },
-  backLink: {
-    textDecorationLine: "underline",
-    color: "#043500ff",
-    marginLeft: 20,
-  },
+    backLink: { 
+        marginLeft: 20, 
+        marginBottom: 10 
+    },
+        backLinkText: {
+        textDecorationLine: "underline", 
+        color: "#043500ff"
+    },
 });

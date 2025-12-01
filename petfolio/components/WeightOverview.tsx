@@ -6,9 +6,13 @@ type Props = {
 };
 
 export default function WeightOverview({ weights = [] }: Props) {
+    const sortedWeights = [...weights].sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
+    
     return (
         <ScrollView>
-            {weights.map((weight) => {
+            {sortedWeights.map((weight) => {
                 const date = new Date(weight.date);
                 const formatted = date.toLocaleDateString("nl-BE", {
                     day: "numeric",
@@ -26,9 +30,6 @@ export default function WeightOverview({ weights = [] }: Props) {
                             <Text>{formatted}</Text>
                         </View>
 
-                        <View style={styles.thirdCell}>
-                            <Text>&rsaquo;</Text>
-                        </View>
                     </View>
                 )
             })}
