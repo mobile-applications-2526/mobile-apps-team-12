@@ -86,10 +86,27 @@ const getFoodById = async (foodId: string) => {
     }
 };
 
+const updateFood = async (foodId: string, updates: { name?: string; description?: string; quantity?: string; }) => {
+    try{
+        const {data, error} = await supabase
+            .from("food")
+            .update(updates)
+            .eq("id", Number(foodId))
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    }catch (error) {
+        console.error(`Error updating food`, error);
+        throw error;
+    }
+};
+
 const FoodsService = {
     addFoodToPet,
     getFoods,
     getFoodById,
+    updateFood,
 };
 
 export default FoodsService;

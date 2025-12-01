@@ -1,8 +1,8 @@
-import { Link, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { Link, router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { Pet } from "../../../types";
 import PetService from "../../../services/PetService";
-import { ScrollView, Text, StyleSheet } from "react-native";
+import { ScrollView, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Header from "../../../components/Header";
 import Button from "../../../components/Button";
 import AddWeightModel from "../../../components/AddWeightModal";
@@ -20,20 +20,19 @@ export default function WeightPage() {
             setPet(result);
     };
 
-    useEffect(() => {
-        fetchPet();
-    }, [petId]);
+    useFocusEffect(
+        useCallback(() => {
+            fetchPet();
+        }, [petId])
+    );
 
     const handleAddWeight = async (value: string, date: string) => {
         if (!petId || !pet) return;
 
         try{
-            const newWeight = await WeightsService.addWeightToPet(petId, value, date);
+            await WeightsService.addWeightToPet(petId, value, date);
 
-            setPet({
-                ...pet,
-                weight: [newWeight, ...(pet.weight || [])],
-            });
+            await fetchPet();
 
             setModalVisible(false);
         } catch (error) {
@@ -44,9 +43,9 @@ export default function WeightPage() {
     return (
         <ScrollView>
             <Header />
-            <Link style={styles.backLink} href={`/petOverview`}>
-                &larr; Back to pets
-            </Link>
+            <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
+                <Text style={styles.backLinkText}>&larr; Back to pets</Text>
+            </TouchableOpacity>
             
             <Text style={styles.title}>{pet?.name}'s Weights</Text>
 
@@ -66,5 +65,11 @@ export default function WeightPage() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F6F1EB" },
   title: { fontSize: 28, textAlign: "center", marginVertical: 20 },
-  backLink: { textDecorationLine: "underline", color: "#043500ff", marginLeft: 20, marginBottom: 10 },
-});
+    backLink: { 
+        marginLeft: 20, 
+        marginBottom: 10 
+    },
+        backLinkText: {
+        textDecorationLine: "underline", 
+        color: "#043500ff"
+    },});
