@@ -1,9 +1,17 @@
 import { StyleSheet, View, Image, Pressable } from "react-native";
 import { Ionicons } from "@react-native-vector-icons/ionicons";
 import { useRouter } from "expo-router";
+import { supabase } from "../utils/supabase";
 
 export default function Header() {
   const router = useRouter();
+
+  async function logout() {
+  const { error } = await supabase.auth.signOut()
+  if (error) {
+    throw new Error("Something went wrong when loggin out.", error);
+  }
+}
   return (
     <View style={styles.container}>
       <View style={styles.leftButtons}>
@@ -31,6 +39,12 @@ export default function Header() {
           size={40}
           color="rgba(0, 28, 5, 1)"
         />
+        <Pressable>
+          <Ionicons  onPress={() => logout()}
+          name="exit-outline"
+          size={42}
+          color="rgba(0, 28, 5, 1)"
+        /></Pressable>
       </View>
     </View>
   );
