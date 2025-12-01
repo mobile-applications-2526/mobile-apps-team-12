@@ -11,7 +11,7 @@ type Props = {
 export default function FoodOverview({ foods }: Props) {
 
     return (
-                <ScrollView>
+                <ScrollView contentContainerStyle={{ paddingBottom: 90, paddingHorizontal: 10 }}>
                     <Table>
                         {foods && foods.map((food) => (
                             <TouchableOpacity onPress={() => router.navigate(`/food/${food.id}`)} key={food.id} style={styles.customRow}>

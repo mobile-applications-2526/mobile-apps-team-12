@@ -19,14 +19,14 @@ export default function Button({ label, onPress }: Props) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    marginHorizontal: 10,
     alignItems: "center",
     justifyContent: "center",
   },
   button: {
     borderRadius: 10,
     width: "75%",
-    height: "30%",
+    paddingVertical: 20,
+    paddingHorizontal: 10,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
