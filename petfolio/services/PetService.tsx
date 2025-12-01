@@ -25,16 +25,42 @@ const getMyPets = async () => {
   }
 };
 
-// const addPet = async ({ pet, db }: { pet: PetInput, db: SQLiteDatabase }) => {
-//   try {
+const addPet = async ({ pet }: { pet: PetInput }) => {
+  try {
+        const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError) throw userError;
+    if (!user) throw new Error("No user logged in");
 
-//     const newPet = await addPetDb(db, { name: pet.name, birthdate: pet.birthdate.toLocaleDateString(), description: pet.description });
-//     return newPet;
-//   }
-//   catch (error) {
-//     console.error('Error in PetService adding pet:', error);
-//   }
-// }
+    const payload = {
+      name: pet.name,
+      birthdate: pet.birthdate ?? null,
+      description: pet.description ?? null,
+      type: pet.type ?? null,
+      owner_id: user.id,
+    };
+
+    const { data: insertedPets, error: insertError } = await supabase
+      .from("pets")
+      .insert(payload)
+      .select() // ask PostgREST to return the inserted row(s)
+      .single();
+
+    if (insertError) throw insertError;
+    if (!insertedPets || !insertedPets.id) {
+      throw new Error("Failed to create pet (no id returned)");
+    }
+
+        const fullPet = await getPetById(String(insertedPets.id));
+    return fullPet;
+  }
+  catch (error) {
+        console.error("Error adding pet", error);
+    throw error;
+  }
+}
 
 const getPetById = async (petId: string) => {
   try {
@@ -95,6 +121,6 @@ const getPetById = async (petId: string) => {
   }
 };
 
-const PetService = { getMyPets, getPetById };
+const PetService = { getMyPets, getPetById, addPet };
 
 export default PetService;

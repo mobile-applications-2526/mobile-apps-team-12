@@ -52,6 +52,7 @@ export type PetInput = {
   name: string;
   birthdate: Date;
   description: string;
+  type: PetType;
 };
 
 export type Profile = {
