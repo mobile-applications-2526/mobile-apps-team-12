@@ -1,4 +1,4 @@
-import { Slot } from "expo-router";
+import { useRouter, Slot } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import React, {useEffect} from "react";
@@ -11,6 +11,7 @@ import { AuthProvider } from '../context/authContext';
 
 
 export default function RootLayout() {
+    const router = useRouter();
   useEffect(() => {
     // Optional: Test Supabase connection on app start
     const testConnection = async () => {
@@ -24,6 +25,14 @@ export default function RootLayout() {
     
     testConnection();
   }, []);
+  //check logout session.
+  useEffect(() => {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT') {
+      router.replace('/');
+    }
+  });
+}, []);
 
   return (
     // <SafeAreaProvider>
