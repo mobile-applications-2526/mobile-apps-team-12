@@ -123,7 +123,6 @@ const getPetById = async (petId: string) => {
           quantity: pf.food.quantity,
         })) ?? [],
     };
-
     return mappedPet;
   } catch (error) {
     console.error(`Error fetching pets`, error);

@@ -11,7 +11,7 @@ export default function WeightOverview({ weights = [] }: Props) {
     });
     
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{ paddingBottom: 90, paddingHorizontal: 10 }}>
             {sortedWeights.map((weight) => {
                 const date = new Date(weight.date);
                 const formatted = date.toLocaleDateString("nl-BE", {
