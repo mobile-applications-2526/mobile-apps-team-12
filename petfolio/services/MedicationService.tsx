@@ -1,4 +1,5 @@
 import { getMedById } from "../db/medications";
+import { Medication } from "../types";
 import { supabase } from "../utils/supabase";
 
 const getMedicationById = async (medId: string) => {
@@ -23,6 +24,59 @@ const getMedicationById = async (medId: string) => {
   }
 };
 
-const MedicationService = { getMedicationById };
+const addMedicationToPet = async (petId: string, name: string, description: string, quantity: string): Promise<Medication> => {
+  try {
+    const { data: petCheck, error: petCheckError } = await supabase
+      .from("pets")
+      .select("id, owner_id")
+      .eq("id", Number(petId))
+      .single();
+
+    if (petCheckError) {
+      console.error("Pet check failed:", petCheckError);
+      throw new Error("Could not verify pet ownership");
+    }
+
+    console.log("Pet check passed:", petCheck);
+
+    const { data: medication, error: medicationError } = await supabase
+      .from("medication")
+      .insert({ name, description, quantity })
+      .select()
+      .single();
+
+    if (medicationError) {
+      console.error("Medication insert failed:", medicationError);
+      throw medicationError;
+    }
+
+    console.log("Medication inserted:", medication);
+
+    const { error: linkError } = await supabase
+      .from("pets_medication")
+      .insert({
+        pet_id: Number(petId),
+        medication_id: medication.id,
+      });
+
+    if (linkError) {
+      console.error("Linking medication to pet failed:", linkError);
+      await supabase.from("medication").delete().eq("id", medication.id);
+      throw linkError;
+    }
+
+    return {
+      id: medication.id,
+      name: medication.name,
+      description: medication.description,
+      quantity: medication.quantity,
+    };
+  } catch (error) {
+    console.error("Error in addMedicationToPet:", error);
+    throw error;
+  }
+};
+
+const MedicationService = { getMedicationById, addMedicationToPet };
 
 export default MedicationService;
