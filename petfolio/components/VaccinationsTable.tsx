@@ -23,7 +23,7 @@ export default function VaccinationsTable({ petData }: Props) {
                                 </View>
 
                                 <View style={styles.secondCell}>
-                                    <Text>{vac.shot_date}</Text>
+                                    <Text>{vac.shot_date instanceof Date ? vac.shot_date.toLocaleDateString() : String(vac.shot_date)}</Text>
                                 </View>
 
                                 <View style={styles.thirdCell}>

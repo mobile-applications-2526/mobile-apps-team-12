@@ -50,6 +50,19 @@ export default function WeightPage() {
             console.error("Failed to add weight", error);
         }
     };
+
+        const handleDeleteWeight = async (weightId: string) => {
+        if (!petId) return;
+
+        try {
+            await WeightsService.deleteWeight(weightId);
+            await fetchPet();
+        } catch (error) {
+            console.error("Failed to delete weight:", error);
+        }
+    };
+
+
         // Add loading state
         if (loading) {
             return (
@@ -76,24 +89,29 @@ export default function WeightPage() {
         }
 
     return (
-        <ScrollView>
-            <Header />
-            <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
-                <Text style={styles.backLinkText}>&larr; Back to pets</Text>
-            </TouchableOpacity>
-            
-            <Text style={styles.title}>{pet?.name}'s Weights</Text>
+        <View style={styles.container}>
+            <ScrollView>
+                <Header />
+                <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
+                    <Text style={styles.backLinkText}>&larr; Back to pets</Text>
+                </TouchableOpacity>
+                
+                <Text style={styles.title}>{pet?.name}'s Weights</Text>
 
-            <WeightOverview weights={pet?.weight} />
+                <WeightOverview 
+                    weights={pet?.weight} 
+                    onDelete={handleDeleteWeight}
+                />
 
-            <Button label="Add new weight" onPress={() => setModalVisible(true)} />
+                <Button label="Add new weight" onPress={() => setModalVisible(true)} />
 
-            <AddWeightModel
-                visible={modalVisible}
-                onClose={() => setModalVisible(false)}
-                onSubmit={handleAddWeight}
-            />
-        </ScrollView>
+                <AddWeightModel
+                    visible={modalVisible}
+                    onClose={() => setModalVisible(false)}
+                    onSubmit={handleAddWeight}
+                />
+            </ScrollView>
+        </View>
     )
 }
 

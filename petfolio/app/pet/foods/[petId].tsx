@@ -75,24 +75,26 @@ export default function FoodPage() {
     }
 
     return (
-        <ScrollView>
-            <Header />
-            <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
-                <Text style={styles.backLinkText}>&larr; Back to pet</Text>
-            </TouchableOpacity>
+        <View style={styles.container}>
+            <ScrollView>
+                <Header />
+                <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
+                    <Text style={styles.backLinkText}>&larr; Back to pet</Text>
+                </TouchableOpacity>
 
-            <Text style={styles.title}>{pet?.name}'s Foods</Text>
+                <Text style={styles.title}>{pet?.name}'s Foods</Text>
 
-            <FoodOverview foods={pet?.food} />
+                <FoodOverview foods={pet?.food} />
 
-            <Button label="Add new food" onPress={() => setModalVisible(true)} />
+                <Button label="Add new food" onPress={() => setModalVisible(true)} />
 
-            <AddFoodModal
-                visible={modalVisible}
-                onClose={() => setModalVisible(false)}
-                onSubmit={handleAddFood}
-            />
-        </ScrollView>
+                <AddFoodModal
+                    visible={modalVisible}
+                    onClose={() => setModalVisible(false)}
+                    onSubmit={handleAddFood}
+                />
+            </ScrollView>
+        </View>
     )
 }
 

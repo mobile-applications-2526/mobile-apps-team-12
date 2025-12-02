@@ -102,11 +102,41 @@ const updateFood = async (foodId: string, updates: { name?: string; description?
     }
 };
 
+const deleteFood = async (foodId: string) => {
+    try{
+        const {error: linkError} = await supabase
+            .from("pets_food")
+            .delete()
+            .eq("food_id", foodId);
+
+        if(linkError){
+            console.error("Failed to delete food link:", linkError);
+            throw linkError;
+        }
+
+        const {error: foodError} = await supabase
+            .from("food")
+            .delete()
+            .eq("id", foodId);
+        
+        if(foodError){
+            console.error("Failed to delete food:", foodError);
+            throw foodError;
+        }
+
+        console.log("Food deleted successfully:", foodId);
+    }catch(error){
+        console.error("Error deleting food:", error);
+        throw error;
+    }
+};
+
 const FoodsService = {
     addFoodToPet,
     getFoods,
     getFoodById,
     updateFood,
+    deleteFood,
 };
 
 export default FoodsService;

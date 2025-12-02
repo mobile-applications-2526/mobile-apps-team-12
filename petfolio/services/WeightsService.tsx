@@ -66,6 +66,35 @@ const getWeights = async (petId: string) => {
   return data.map((item: any) => item.weight);
 };
 
-const WeightsService = { getWeights, addWeightToPet };
+const deleteWeight = async (weightId: string) => {
+  try{
+    const {error: linkError} = await supabase
+      .from("pets_weight")
+      .delete()
+      .eq("weight_id", weightId);
+
+    if(linkError){
+      console.error("Failed to delete weight link:", linkError);
+      throw linkError;
+    }
+
+    const {error: weightError } = await supabase
+      .from("weight")
+      .delete()
+      .eq("id", weightId);
+  
+    if(weightError){
+      console.error("Failed to delete weight:", weightError);
+      throw weightError;
+    }
+
+    console.log("Weight deleted successfully:", weightId);
+  }catch(error){
+    console.error("Error deleting weight:", error);
+    throw error;
+  }
+};
+
+const WeightsService = { getWeights, addWeightToPet, deleteWeight };
 
 export default WeightsService;
