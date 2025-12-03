@@ -77,6 +77,52 @@ const addVaccinToPet = async (petId: string, name: string, type: string, shot_da
   }
 };
 
-const VaccinationService = { getVaccinById, addVaccinToPet };
+const updateVaccin = async (vaccinId: string, updatedVaccin: { name: string, type: string, shot_date: Date, expire_date: Date }) => {
+  try {
+    const { data, error } = await supabase
+      .from("vaccin")
+      .update(updatedVaccin)
+      .eq("id", Number(vaccinId))
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error(`Error updating vaccin`, error);
+    throw error;
+  }
+};
+
+const deleteVaccin = async (vaccinId: string) => {
+  try {
+    const { error: linkError } = await supabase
+      .from("pets_vaccin")
+      .delete()
+      .eq("vaccin_id", vaccinId);
+
+    if (linkError) {
+      console.error("Failed to delete vaccin link:", linkError);
+      throw linkError;
+    }
+
+    const { error: vaccinError } = await supabase
+      .from("vaccin")
+      .delete()
+      .eq("id", vaccinId);
+
+    if (vaccinError) {
+      console.error("Failed to delete vaccin:", vaccinError);
+      throw vaccinError;
+    }
+
+    console.log("Vaccin deleted successfully:", vaccinId);
+  } catch (error) {
+    console.error("Error deleting medication:", error);
+    throw error;
+  }
+};
+
+
+const VaccinationService = { getVaccinById, addVaccinToPet, updateVaccin, deleteVaccin };
 
 export default VaccinationService;

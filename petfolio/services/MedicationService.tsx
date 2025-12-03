@@ -77,6 +77,51 @@ const addMedicationToPet = async (petId: string, name: string, description: stri
   }
 };
 
-const MedicationService = { getMedicationById, addMedicationToPet };
+const updateMedication = async (medicationId: string, updatedMedication: { name?: string; description?: string; quantity?: string; }) => {
+  try {
+    const { data, error } = await supabase
+      .from("medication")
+      .update(updatedMedication)
+      .eq("id", Number(medicationId))
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error(`Error updating medication`, error);
+    throw error;
+  }
+};
+
+const deleteMedication = async (medicationId: string) => {
+  try {
+    const { error: linkError } = await supabase
+      .from("pets_medication")
+      .delete()
+      .eq("medication_id", medicationId);
+
+    if (linkError) {
+      console.error("Failed to delete medication link:", linkError);
+      throw linkError;
+    }
+
+    const { error: medicationError } = await supabase
+      .from("medication")
+      .delete()
+      .eq("id", medicationId);
+
+    if (medicationError) {
+      console.error("Failed to delete medication:", medicationError);
+      throw medicationError;
+    }
+
+    console.log("Medication deleted successfully:", medicationId);
+  } catch (error) {
+    console.error("Error deleting medication:", error);
+    throw error;
+  }
+};
+
+const MedicationService = { getMedicationById, addMedicationToPet, updateMedication, deleteMedication };
 
 export default MedicationService;
