@@ -29,11 +29,13 @@ export default function Header() {
         <Pressable
           onPress={() => router.navigate("/profile")}
         ><Ionicons name="person" size={40} color="rgba(0, 28, 5, 1)" /></Pressable>
+        <Pressable
+        onPress={() => router.navigate("/calendar")}>
         <Ionicons
           name="calendar-clear-outline"
           size={40}
           color="rgba(0, 28, 5, 1)"
-        />
+        /></Pressable>
         <Ionicons
           name="notifications-outline"
           size={40}
