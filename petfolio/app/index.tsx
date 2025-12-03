@@ -2,12 +2,15 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import Button from "../components/Button";
 import Header from "../components/Header";
 import { useRouter } from "expo-router";
+import TestScreen from "../components/TestNotifs";
+import BdayNotificationInitializer from "../components/BdayNotificationInitializer";
 
 export default function Index() {
   const router = useRouter();
   return (
     <View style={styles.container}>
       <Header />
+      <BdayNotificationInitializer />
       <View style={styles.imageContainer}>
         <Image
           source={require("../assets/petfolio-logo.png")}

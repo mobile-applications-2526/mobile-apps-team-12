@@ -8,9 +8,19 @@ import { migrateDbIfNeeded } from '../db/database';
 import { supabase } from '../utils/supabase';
 import { Stack } from 'expo-router';
 import { AuthProvider } from '../context/authContext';
+import { setUpNotification } from "../services/notificationService";
+import BdayNotificationInitializer from "../components/BdayNotificationInitializer";
 
 
 export default function RootLayout() {
+  useEffect(() => {
+  async function init() {
+    await setUpNotification();
+
+  }
+
+  init();
+}, []);
   useEffect(() => {
     // Optional: Test Supabase connection on app start
     const testConnection = async () => {
@@ -37,6 +47,7 @@ export default function RootLayout() {
     // {/* </SQLiteProvider> */}
     // </SafeAreaProvider>
     <AuthProvider>
+      
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
