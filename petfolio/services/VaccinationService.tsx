@@ -60,7 +60,7 @@ const addVaccinToPet = async (petId: string, name: string, type: string, shot_da
 
     if (linkError) {
       console.error("Linking vaccin to pet failed:", linkError);
-      await supabase.from("vaccin").delete().eq("id", vaccin.id);
+      await supabase.from("vaccins").delete().eq("id", vaccin.id);
       throw linkError;
     }
 
@@ -80,7 +80,7 @@ const addVaccinToPet = async (petId: string, name: string, type: string, shot_da
 const updateVaccin = async (vaccinId: string, updatedVaccin: { name: string, type: string, shot_date: Date, expire_date: Date }) => {
   try {
     const { data, error } = await supabase
-      .from("vaccin")
+      .from("vaccins")
       .update(updatedVaccin)
       .eq("id", Number(vaccinId))
       .select()
@@ -106,7 +106,7 @@ const deleteVaccin = async (vaccinId: string) => {
     }
 
     const { error: vaccinError } = await supabase
-      .from("vaccin")
+      .from("vaccins")
       .delete()
       .eq("id", vaccinId);
 
