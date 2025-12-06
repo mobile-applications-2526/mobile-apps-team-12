@@ -132,13 +132,16 @@ const getPetById = async (petId: string) => {
 
 const deletePet = async (petId: string) => {
   try {
-    await supabase
+    const {error} = await supabase
     .from("pets")
     .delete()
     .eq("id", petId);
-  } catch (error) {
-        console.error(`Error deleting pet`, error);
-    throw error;
+    if (error) {
+      throw error;
+    }
+  } catch (err) {
+        console.error(`Error deleting pet`, err);
+    throw err;
   }
 }
 
