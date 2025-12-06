@@ -130,6 +130,18 @@ const getPetById = async (petId: string) => {
   }
 };
 
-const PetService = { getMyPets, getPetById, addPet };
+const deletePet = async (petId: string) => {
+  try {
+    await supabase
+    .from("pets")
+    .delete()
+    .eq("id", petId);
+  } catch (error) {
+        console.error(`Error deleting pet`, error);
+    throw error;
+  }
+}
+
+const PetService = { getMyPets, getPetById, addPet, deletePet };
 
 export default PetService;

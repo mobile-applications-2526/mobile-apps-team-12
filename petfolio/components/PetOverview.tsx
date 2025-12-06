@@ -1,8 +1,10 @@
 import React from "react";
 import { Pet } from "../types";
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity} from "react-native";
 import { Table, Rows } from "react-native-table-component";
 import { Link, useRouter } from "expo-router";
+import Button from "./Button";
+import PetService from "../services/PetService";
 
 type Props = {
   petData: Pet;
@@ -28,6 +30,19 @@ export default function PetOverview({ petData }: Props) {
 
     return `${sortedWeights[0].value} kg`;
   }
+
+  const handleDelete = async () => {
+    try {
+    if (!petData || !petData.id) {
+      throw new Error("No pet information available");
+    }
+    await PetService.deletePet(petData.id);
+    router.navigate("/petOverview");
+  } catch (error) {
+    console.error("Error deleting pet:", error);
+  }
+
+  } 
 
   const tableData = [
     ["Birthday", petData.birthdate],
@@ -61,7 +76,7 @@ export default function PetOverview({ petData }: Props) {
 
   return (
     <ScrollView
-      contentContainerStyle={{ paddingVertical: 90, paddingHorizontal: 10 }}
+      contentContainerStyle={{ paddingVertical: 160, paddingHorizontal: 10 }}
     >
       <View style={styles.container}>
         <Image
@@ -74,6 +89,13 @@ export default function PetOverview({ petData }: Props) {
           <Table>
             <Rows style={styles.row} data={tableData} />
           </Table>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={handleDelete}
+                  disabled={!petData || !petData.id}
+              >
+                  <Text style={styles.deleteButtonText}>Delete Pet</Text>
+              </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -86,7 +108,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F1EB",
     alignItems: "center",
     width: "100%",
-    marginTop: 50,
+    marginTop: 10,
+    marginBottom: 50,
   },
 
   profile: {
@@ -136,4 +159,21 @@ const styles = StyleSheet.create({
     textAlign: "right",
     marginRight: 30,
   },
+deleteButton: {
+        backgroundColor: '#dc3545',
+        padding: 16,
+        borderRadius: 12,
+        alignItems: 'center',
+        marginTop: 30,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 3,
+        elevation: 3,
+    },
+    deleteButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: '600',
+    },
 });
