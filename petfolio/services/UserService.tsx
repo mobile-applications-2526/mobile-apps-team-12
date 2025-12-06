@@ -12,19 +12,32 @@ const registerUser = async (userData) => {
     if (error) throw error;
     // 2. Insert additional user information into your User Information table
     const { data: userInfo, error: userInfoError } = await supabase
-      .from("User Information")
+      .from("user_information")
       .insert({
-        id: data.user.id,
         first_name: userData.firstName,
         last_name: userData.lastName,
         phonenumber: userData.phoneNumber,
         email: userData.email,
         auth_user_id: data.user.id,
-      });
+      })
+      .select()
+      .single();
+
+    //create Profile for user
+    const {data: userProfile, error: profileError} = await supabase
+    .from("profiles")
+    .insert({
+      user_id: data.user.id,
+      pictures: null,
+    })
+    .select()
+    .single();
 
     if (userInfoError) throw userInfoError;
     console.log("User signed up successfully:", data);
     console.log("Succesfully made user Info: ", userInfo);
+        if (profileError) throw profileError;
+    console.log("Succesfully made user profile: ", userProfile);
     return data;
   } catch (error) {
     console.error("Error signing up:", error.message);
