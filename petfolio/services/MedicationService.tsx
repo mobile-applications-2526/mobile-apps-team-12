@@ -76,7 +76,28 @@ const addMedicationToPet = async (petId: string, name: string, description: stri
     throw error;
   }
 };
+const deleteMedication = async (medicationId: string) => {
+    try{
 
-const MedicationService = { getMedicationById, addMedicationToPet };
+      // pets_medication record will also be deleted once medicationId is gone. (delete Cascade)
+
+        const {error: medicationError} = await supabase
+            .from("medication")
+            .delete()
+            .eq("id", medicationId);
+        
+        if(medicationError){
+            console.error("Failed to delete medication:", medicationError);
+            throw medicationError;
+        }
+
+        console.log("medication deleted successfully:", medicationId);
+    }catch(error){
+        console.error("Error deleting medication:", error);
+        throw error;
+    }
+};
+
+const MedicationService = { getMedicationById, addMedicationToPet , deleteMedication};
 
 export default MedicationService;

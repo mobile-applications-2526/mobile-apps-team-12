@@ -76,7 +76,27 @@ const addVaccinToPet = async (petId: string, name: string, type: string, shot_da
     throw error;
   }
 };
+const deleteVaccin = async (vaccinationId: string) => {
+    try{
+// pets_vaccin record will also be deleted once vaccinId is gone. (delete Cascade)
 
-const VaccinationService = { getVaccinById, addVaccinToPet };
+        const {error: vaccinationError} = await supabase
+            .from("vaccins")
+            .delete()
+            .eq("id", vaccinationId);
+        
+        if(vaccinationError){
+            console.error("Failed to delete vaccination:", vaccinationError);
+            throw vaccinationError;
+        }
+
+        console.log("vaccination deleted successfully:", vaccinationId);
+    }catch(error){
+        console.error("Error deleting vaccination:", error);
+        throw error;
+    }
+};
+
+const VaccinationService = { getVaccinById, addVaccinToPet, deleteVaccin };
 
 export default VaccinationService;

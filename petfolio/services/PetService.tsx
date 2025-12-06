@@ -2,6 +2,10 @@ import { ca } from "react-native-paper-dates";
 import { PetInput } from "../types";
 import { supabase } from "../utils/supabase";
 import { Pet, PetType } from "../types";
+import FoodService from "./FoodService";
+import MedicationService from "./MedicationService";
+import WeightsService from "./WeightsService";
+import VaccinationService from "./VaccinationService";
 
 const getMyPets = async () => {
   try {
@@ -130,6 +134,43 @@ const getPetById = async (petId: string) => {
   }
 };
 
-const PetService = { getMyPets, getPetById, addPet };
+const deletePetAndExtras = async (petData: Pet) => {
+  try {
+    await Promise.all([
+      ...(petData.food || []).map(f => 
+        FoodService.deleteFood(f.id).then(() => 
+          console.log("deleted food:", f.name)
+        )
+      ),
+      ...(petData.medication || []).map(m => 
+        MedicationService.deleteMedication(m.id).then(() => 
+          console.log("deleted meds:", m.name)
+        )
+      ),
+      ...(petData.vaccins || []).map(v => 
+        VaccinationService.deleteVaccin(v.id).then(() => 
+          console.log("deleted vaccin:", v.name)
+        )
+      ),
+      ...(petData.weight || []).map(w => 
+        WeightsService.deleteWeight(w.id).then(() => 
+          console.log("deleted weight:", w.value)
+        )
+      )
+    ]);
+    const {error} = await supabase
+    .from("pets")
+    .delete()
+    .eq("id", petData.id);
+    if (error) {
+      throw error;
+    }
+  } catch (err) {
+        console.error(`Error deleting pet`, err);
+    throw err;
+  }
+}
+
+const PetService = { getMyPets, getPetById, addPet, deletePetAndExtras };
 
 export default PetService;
