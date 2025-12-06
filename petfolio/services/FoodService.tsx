@@ -104,15 +104,7 @@ const updateFood = async (foodId: string, updates: { name?: string; description?
 
 const deleteFood = async (foodId: string) => {
     try{
-        const {error: linkError} = await supabase
-            .from("pets_food")
-            .delete()
-            .eq("food_id", foodId);
-
-        if(linkError){
-            console.error("Failed to delete food link:", linkError);
-            throw linkError;
-        }
+// pets_food record will also be deleted once foodId is gone. (delete Cascade)
 
         const {error: foodError} = await supabase
             .from("food")
