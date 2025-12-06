@@ -83,6 +83,19 @@ const getUserInformationByUserId = async () => {
     throw error;
   }
 };
+const deleteUserAndExtras = async (userId: String) => {
+  try {
+    const { error } = await supabase.auth.admin.deleteUser(userId);
+    if (error) {
+      console.log("Deleting user failed: ", error)
+      throw error;}
+  } catch (error) {
+        console.error(`Error deleting pet`, error);
+    throw error;
+  }
 
-const UserService = { registerUser, loginUser, getUserInformationByUserId };
+
+}
+
+const UserService = { registerUser, loginUser, getUserInformationByUserId, deleteUserAndExtras };
 export default UserService;

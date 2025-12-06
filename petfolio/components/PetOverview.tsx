@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import { Pet } from "../types";
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Modal} from "react-native";
 import { Table, Rows } from "react-native-table-component";
-import { Link, useRouter } from "expo-router";
-import Button from "./Button";
+import { useRouter } from "expo-router";
 import PetService from "../services/PetService";
-import FoodService from "../services/FoodService";
-import MedicationService from "../services/MedicationService";
-import WeightsService from "../services/WeightsService";
+
 
 type Props = {
   petData: Pet;
