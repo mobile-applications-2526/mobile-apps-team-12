@@ -1,16 +1,41 @@
-import { Slot } from "expo-router";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
-import React, {useEffect} from "react";
+import { useRouter, useSegments } from "expo-router";
+import React, { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import { SQLiteProvider } from 'expo-sqlite';
+import { supabase } from "../utils/supabase";
+import { Stack } from "expo-router";
+import { AuthProvider, useAuth } from "../context/authContext";
 import { migrateDbIfNeeded } from '../db/database';
-import { supabase } from '../utils/supabase';
-import { Stack } from 'expo-router';
-import { AuthProvider } from '../context/authContext';
 import { setUpNotification } from "../services/notificationService";
 import BdayNotificationInitializer from "../components/BdayNotificationInitializer";
 
+// Define public routes that don't need authentication
+const PUBLIC_ROUTES = ["index", "login", "register"];
+
+function RootLayoutNav() {
+  const { session, loading } = useAuth();
+  const router = useRouter();
+  const segments = useSegments();
+
+  useEffect(() => {
+    if (loading) return;
+
+    const currentRoute = segments[0] || "index";
+    const isPublicRoute = PUBLIC_ROUTES.includes(currentRoute);
+
+    if (!session && !isPublicRoute) {
+      // Redirect to index page if not authenticated and not on public route
+      router.replace("/");
+    } else if (
+      session &&
+      (currentRoute === "login" || currentRoute === "register")
+    ) {
+      // Redirect to home if authenticated and on login/register
+      router.replace("/homepage"); // or your main route
+    }
+  }, [session, segments, loading]);
+
+  return <Stack screenOptions={{ headerShown: false }}></Stack>;
+}
 
 export default function RootLayout() {
   useEffect(() => {
@@ -24,39 +49,21 @@ export default function RootLayout() {
   useEffect(() => {
     // Optional: Test Supabase connection on app start
     const testConnection = async () => {
-      const { data, error } = await supabase.from('pets').select('count');
+      const { data, error } = await supabase.from("pets").select("count");
       if (error) {
-        console.log('Supabase connection error:', error.message);
+        console.log("Supabase connection error:", error.message);
       } else {
-        console.log('Supabase connected successfully');
+        console.log("Supabase connected successfully");
       }
     };
-    
+
     testConnection();
   }, []);
 
   return (
-    // <SafeAreaProvider>
-      
-    // {/* <SQLiteProvider databaseName="petfolioLocalDb.db" onInit={migrateDbIfNeeded}>
-    //   {/* Your providers and navigation */}
-    //         {/* <StatusBar style="auto" /> */}
-    //   <View style={styles.container}>
-    //     <Slot />
-    //   </View>
-    // {/* </SQLiteProvider> */}
-    // </SafeAreaProvider>
     <AuthProvider>
-      
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="register" options={{ headerShown: false }} />
-        {/* other screens */}
-      </Stack>
+      <RootLayoutNav />
     </AuthProvider>
-    
-       
   );
 }
 const styles = StyleSheet.create({

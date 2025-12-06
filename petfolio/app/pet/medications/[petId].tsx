@@ -1,65 +1,76 @@
-import { useSQLiteContext } from "expo-sqlite";
-import { View, Text, StyleSheet } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Link, useLocalSearchParams } from "expo-router";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { Pet } from "../../../types";
 import PetService from "../../../services/PetService";
 import Header from "../../../components/Header";
 import MedicationsTable from "../../../components/MedicationsTable";
+import AddMedicationModal from "../../../components/AddMedicationModal";
+import MedicationService from "../../../services/MedicationService";
+import Button from "../../../components/Button";
 
 export default function MedicationShow() {
   const [pet, setPet] = useState<Pet>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const { petId } = useLocalSearchParams<{ petId: string }>();
+  const [modalVisible, setModalVisible] = useState(false);
 
-  function clearErrors() {
-    setError("");
-  }
-  async function getPet() {
-    clearErrors();
-
+  const fetchPet = async () => {
+    if (!petId) return;
     try {
-      if (petId != null) {
-        const result = await PetService.getPetById(petId);
-        console.log(result);
-        if (result != null) {
-          setPet(result);
-        } else {
-          setPet(null);
-          console.log(petId + "id");
-          setError("Something went wrong with fetching your pet...");
-          console.log(error);
-        }
-      } else {
-        setPet(null);
-        console.log("paremeter:" + petId);
-        setError("Pet not found");
-      }
-    } catch (err) {
-      console.error("Failed to fetch pet", err);
-      setPet(null);
-      setError("Failed to load pet. Please try again.");
+      setLoading(true);
+      const result = await PetService.getPetById(petId);
+      console.log('Fetched pet result:', result);
+      setPet(result);
+      console.log('SetPet called with:', pet?.name);
+    } catch (error) {
+      console.error("Failed to fetch pet:", error);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  useEffect(() => {
-    getPet();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchPet();
+    }, [petId])
+  );
+
+  const handleAddMedication = async (name: string, description: string, quantity: string) => {
+    if (!petId || !pet) return;
+
+    try {
+      await MedicationService.addMedicationToPet(petId, name, description, quantity);
+      await fetchPet();
+
+      setModalVisible(false);
+    } catch (error) {
+      console.error("Failed to add medication", error);
+    }
+  };
 
   return (
-    <View style={styles.container}>
+    <ScrollView>
       <Header />
-      <Link style={styles.backLink} href={`/petOverview`}>
-        &larr; Back to pets
-      </Link>
-      <View>
-        {!error && pet && <MedicationsTable petData={pet} />}
-        {error && <Text>Error</Text>}
-      </View>
-    </View>
+      <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
+        <Text style={styles.backLinkText}>&larr; Back to pet</Text>
+      </TouchableOpacity>
+
+
+      {!error && pet && pet.medication?.length > 0 && <MedicationsTable petData={pet} />}
+      {error && <Text>Error</Text>}
+      {pet && pet.medication?.length == 0 && (<><Text style={styles.title}>{pet?.name}'s Mecidation</Text><Text style={styles.centerText}>{pet.name} has no medication</Text></>)}
+
+
+      <Button label="Add new medication" onPress={() => setModalVisible(true)} />
+
+      <AddMedicationModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSubmit={handleAddMedication}
+      />
+    </ScrollView>
   );
 }
 
@@ -73,8 +84,20 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   backLink: {
-    textDecorationLine: "underline",
-    color: "#043500ff",
     marginLeft: 20,
+    marginBottom: 10
+  },
+  backLinkText: {
+    textDecorationLine: "underline",
+    color: "#043500ff"
+  },
+  centerText: {
+    alignItems: "center",
+    textAlign: "center"
+  },
+  title: {
+    fontSize: 28,
+    textAlign: "center",
+    marginVertical: 20
   },
 });
