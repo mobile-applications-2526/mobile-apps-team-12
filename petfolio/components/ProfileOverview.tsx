@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Profile, User } from "../types";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Modal } from "react-native";
 import { Table, Row, Rows } from "react-native-table-component";
-import UserService from "../services/UserService";
 import { useRouter } from "expo-router";
+import { supabase } from "../utils/supabase";
 
 type Props = {
   profileData: Profile;
@@ -23,11 +23,36 @@ export default function ProfileOverview({ profileData }: Props) {
       throw new Error("No pet information available");
     }
     setShowDeleteModal(false);
-    await UserService.deleteUserAndExtras(profileData.user_id);
-    router.navigate("/");
-  } catch (error) {
-    console.error("Error deleting user:", error);
-  }
+const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session) {
+        console.log('Error', 'You must be logged in to delete your account');
+        return;
+      }
+
+      // Call the edge function
+      const { data, error } = await supabase.functions.invoke('self-delete-account', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      await supabase.auth.signOut();
+
+      console.log('Success', 'Your account has been deleted successfully');
+      
+      router.navigate("/");
+
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      throw new Error('Failed to delete account. Please try again.');
+    } finally {
+      setShowDeleteModal(false);
+    }
 
   } 
 
