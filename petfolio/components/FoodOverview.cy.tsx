@@ -1,11 +1,16 @@
 import React from 'react';
 import FoodOverview from './FoodOverview';
+import * as ExpoRouter from 'expo-router';
 
 describe('FoodOverview Component', () => {
   const mockFoods = [
     { id: '1', name: 'Dog Food', description: 'Premium kibble', quantity: '2 cups' },
     { id: '2', name: 'Treats', description: 'Chicken treats', quantity: '5 pieces' },
   ];
+
+  beforeEach(() => {
+    cy.stub(ExpoRouter.router, 'navigate').as('navigate');
+  });
 
   it('renders list of foods', () => {
     cy.mount(<FoodOverview foods={mockFoods} />);
@@ -25,8 +30,8 @@ describe('FoodOverview Component', () => {
   it('navigates to food detail when row is clicked', () => {
     cy.mount(<FoodOverview foods={mockFoods} />);
     
-    cy.contains('Dog Food').click();
-    
+    cy.contains('Dog Food').parent().click();
+    cy.get('@navigate').should('have.been.calledWith', '/food/1');
   });
 
   it('displays correct quantities', () => {
