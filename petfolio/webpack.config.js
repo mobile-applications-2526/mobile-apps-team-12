@@ -6,6 +6,8 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
       'react-native$': 'react-native-web',
+      '@react-native-community/datetimepicker': path.resolve(__dirname, 'cypress/mocks/datetimepicker.js'),
+      '@react-native-async-storage/async-storage': path.resolve(__dirname, 'cypress/mocks/AsyncStorage.js'),
     },
   },
   module: {
@@ -18,7 +20,7 @@ module.exports = {
           options: {
             presets: [
               '@babel/preset-env',
-              '@babel/preset-react',
+              ['@babel/preset-react', { runtime: 'automatic' }],
               '@babel/preset-typescript',
             ],
           },

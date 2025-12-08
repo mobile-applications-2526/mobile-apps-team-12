@@ -1,4 +1,4 @@
-import { useState } from "react";
+import react, { useState } from "react";
 import { View, Text, StyleSheet, Modal, TextInput, Pressable } from "react-native";
 
 type Props = {

@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { Weight } from "../types";
-import { useState } from "react";
+import React, { useState } from "react";
 
 type Props = {
     weights?: Weight[];

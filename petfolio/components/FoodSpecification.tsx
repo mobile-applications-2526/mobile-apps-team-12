@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput, Keyboard } from "react-native";
-import { Table, Row, Rows } from 'react-native-table-component';
 import { Food } from "../types";
-import { useState } from "react";
-import { de } from "react-native-paper-dates";
+import react, { useState } from "react";
 import FoodsService from "../services/FoodService";
 import { router } from "expo-router/build/exports";
 
