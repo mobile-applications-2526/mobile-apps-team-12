@@ -8,9 +8,7 @@ import {
   Modal,
   TextInput,
   Pressable,
-  TouchableOpacity,
 } from "react-native";
-import { DatePickerModal } from "react-native-paper-dates";
 
 type Props = {
   visible: boolean;
@@ -26,37 +24,31 @@ type Props = {
 export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
   const [name, setName] = useState("");
   const [type, setType] = useState("");
-  const [shot_date, setShotDate] = useState<Date>();
-  const [expire_date, setExpireDate] = useState<Date>();
-  const [openShot, setOpenShot] = useState(false);
-  const [openExpire, setOpenExpire] = useState(false);
+  const [shot_date, setShotDate] = useState<Date>(new Date());
+  const [expire_date, setExpireDate] = useState<Date>(new Date());
 
   return (
     <Modal visible={visible} transparent>
       <View style={styles.overlay}>
         <View style={styles.modal}>
-          <Text style={styles.title}>Add Medication</Text>
+          <Text style={styles.title}>Add Vaccine</Text>
 
-    return (
-        <Modal visible={visible} transparent>
-            <View style={styles.overlay}>
-                <View style={styles.modal}>
-                    <Text style={styles.title}>Add Vaccin</Text>
+          <Text style={styles.label}>Name:</Text>
+          <TextInput value={name} onChangeText={setName} style={styles.input} />
 
           <Text style={styles.label}>Type:</Text>
           <TextInput value={type} onChangeText={setType} style={styles.input} />
 
           <Text style={styles.label}>Shot date:</Text>
-
           <View style={styles.dateContainer}>
             <RNDateTimePicker
-              value={shot_date ? new Date(shot_date) : new Date()}
+              value={shot_date}
               onChange={(event, selectedDate) => {
                 if (selectedDate) {
                   setShotDate(selectedDate);
                 }
               }}
-            ></RNDateTimePicker>
+            />
             <Ionicons
               name="calendar-number-outline"
               size={30}
@@ -65,16 +57,15 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
           </View>
 
           <Text style={styles.label}>Expire date:</Text>
-
           <View style={styles.dateContainer}>
             <RNDateTimePicker
-              value={expire_date ? new Date(expire_date) : new Date()}
+              value={expire_date}
               onChange={(event, selectedDate) => {
                 if (selectedDate) {
                   setExpireDate(selectedDate);
                 }
               }}
-            ></RNDateTimePicker>
+            />
             <Ionicons
               name="calendar-number-outline"
               size={30}
@@ -92,7 +83,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
                 onSubmit(name, type, shot_date, expire_date);
               }}
               style={styles.addButton}
-              testID="add-weight-button"
+              testID="add-vaccine-button"
             >
               <Text style={styles.addText}>Add</Text>
             </Pressable>
