@@ -87,6 +87,7 @@ export default function WeightOverview({ weights = [], onDelete }: Props) {
                             <TouchableOpacity
                                 style={[styles.modalButton, styles.deleteButtonModal]}
                                 onPress={confirmDelete}
+                                testID="delete-weight-button"
                             >
                                 <Text style={styles.deleteButtonText}>Delete</Text>
                             </TouchableOpacity>

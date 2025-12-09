@@ -74,8 +74,8 @@ export default function LoginForm() {
                     />
             </View>
             <View style={styles.buttonContainer}>
-                <Button label="login" onPress={handleSubmit(onSubmit)} />
-                <Button label="cancel" onPress={() => router.navigate("/")} />
+                <Button label="login" onPress={handleSubmit(onSubmit)} testID="login-button"/>
+                <Button label="cancel" onPress={() => router.navigate("/")} testID="cancel-button" />
             </View>
             </View>
     )

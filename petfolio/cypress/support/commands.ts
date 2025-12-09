@@ -35,3 +35,46 @@
 //     }
 //   }
 // }
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      login(email?: string, password?: string): Chainable<void>;
+      logout(): Chainable<void>;
+    }
+  }
+}
+
+Cypress.Commands.add('login', (
+  email = 'ashley.timmermans@student.ucll.be',
+  password = 'welkom1234' 
+) => {
+  cy.session(['login-session', email, password], () => {
+    cy.visit('/login');
+    
+    cy.contains('Log in here', { timeout: 10000 }).should('be.visible');
+    
+    cy.get('input').first().clear().type(email);
+    cy.get('input').eq(1).clear().type(password);
+    
+    cy.get('[data-testid="login-button"]').click();
+        
+    cy.url({ timeout: 15000 }).should('include', '/homepage');
+    
+    cy.wait(2000);
+  }, {
+    validate() {
+      cy.request({
+        url: '/homepage',
+        failOnStatusCode: false
+      }).then((response) => {
+        if (response.status === 200 && response.body.includes('login')) {
+          throw new Error('Session expired');
+        }
+      });
+    }
+  });
+});
+
+
+export {};

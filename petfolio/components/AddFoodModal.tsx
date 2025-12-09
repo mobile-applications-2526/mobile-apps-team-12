@@ -40,7 +40,7 @@ export default function AddFoodModal({ visible, onClose, onSubmit }: Props) {
                     />
 
                     <View style={styles.buttonRow}>
-                        <Pressable onPress={onClose} style={styles.cancelButton}>
+                        <Pressable onPress={onClose} style={styles.cancelButton} testID="cancel-food-button">
                             <Text style={styles.cancelText}>Cancel</Text>
                         </Pressable>
 
@@ -48,6 +48,7 @@ export default function AddFoodModal({ visible, onClose, onSubmit }: Props) {
                                 onSubmit(name, description, quantity);
                             }}
                             style={styles.addButton}
+                            testID="add-food-button"
                         >
                             <Text style={styles.addText}>Add</Text>
                         </Pressable>

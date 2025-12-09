@@ -163,6 +163,7 @@ export default function FoodSpecification({ foodData }: Props) {
                                 <TouchableOpacity
                                     style={[styles.modalButton, styles.deleteModalButton]}
                                     onPress={handleDelete}
+                                    testID="delete-food-button"
                                 >
                                     <Text style={styles.deleteButtonText}>Delete</Text>
                                 </TouchableOpacity>

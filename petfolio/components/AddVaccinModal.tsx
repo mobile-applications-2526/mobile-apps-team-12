@@ -103,6 +103,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
                             onSubmit(name, type, shot_date, expire_date);
                         }}
                             style={styles.addButton}
+                            testID="add-weight-button"
                         >
                             <Text style={styles.addText}>Add</Text>
                         </Pressable>
