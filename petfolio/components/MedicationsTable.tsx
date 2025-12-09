@@ -14,7 +14,7 @@ export default function MedicationsTable({ petData }: Props) {
         <View style={styles.container}>
             <View style={styles.profile}>
                 <Text style={styles.profileName}>{petData.name}'s Medication</Text>
-                <ScrollView>
+                <ScrollView contentContainerStyle={{ paddingBottom: 90, paddingHorizontal: 10 }}>
                     <Table>
                         {petData && petData.medication.map((med) => (
                             <TouchableOpacity onPress={() => router.navigate(`/medication/${med.id}`)} key={med.id} style={styles.customRow}>
@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         alignItems: 'stretch',
         padding: 20,
-        height: 700
     },
     profileName: {
         fontSize: 40,
@@ -78,7 +77,8 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     firstCell: {
-        flex: 2
+        flex: 2,
+        paddingLeft: 20
     },
     secondCell: {
         flex: 1,
