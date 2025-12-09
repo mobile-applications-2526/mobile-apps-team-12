@@ -4,6 +4,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, Keyboard, TextInput } 
 import { Table, Rows } from 'react-native-table-component';
 import VaccinationService from "../services/VaccinationService";
 import { router } from "expo-router";
+import { DatePickerModal, en, registerTranslation } from "react-native-paper-dates";
+import Ionicons from "@react-native-vector-icons/ionicons";
 
 type Props = {
     vacData: Vaccin
@@ -12,17 +14,23 @@ type Props = {
 export default function VaccinSpecification({ vacData }: Props) {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [shotDate, setShotDate] = useState(vacData.shot_date);
+    const [shotDate, setShotDate] = useState(
+        vacData.shot_date ? new Date(vacData.shot_date) : null
+    );
+
+    const [expireDate, setExpiredate] = useState(
+        vacData.expire_date ? new Date(vacData.expire_date) : null
+    );
+
     const [type, setType] = useState(vacData.type);
-    const [expireDate, setExpiredate] = useState(vacData.expire_date);
     const [tempType, setTempType] = useState(type);
     const [showTypeModal, setShowTypeModal] = useState(false);
+    const [openShot, setOpenShot] = useState(false);
+    const [openExpire, setOpenExpire] = useState(false);
 
-    const tableData = [
-        ["Date", vacData.shot_date],
-        ["Type", vacData.type],
-        ["Expiration Date", vacData.expire_date]
-    ];
+    const dismissKeyboard = () => {
+        Keyboard.dismiss();
+    };
 
     const handleDelete = async () => {
         try {
@@ -36,41 +44,44 @@ export default function VaccinSpecification({ vacData }: Props) {
 
 
     const handleType = async () => {
-        if (type !== vacData.type) {
-            try {
-                await VaccinationService.updateVaccin(vacData.id, { type });
-            } catch (error) {
-                console.error("Failed to update vaccin type:", error);
-                setType(vacData.type);
-            }
+        dismissKeyboard();
+        try {
+            await VaccinationService.updateVaccin(vacData.id, { type: tempType });
+            setType(tempType);
+            setShowTypeModal(false);
+        } catch (error) {
+            console.error("Failed to update vaccin type:", error);
+            setType(vacData.type);
         }
     };
 
-    const handleShotDate = async () => {
-        if (shotDate !== vacData.shot_date) {
+    const handleShotDate = async (newDate: Date) => {
+        dismissKeyboard();
+        if (newDate.getTime() !== (vacData.shot_date ? new Date(vacData.shot_date).getTime() : 0)) {
             try {
-                await VaccinationService.updateVaccin(vacData.id, { shot_date: shotDate });
+                await VaccinationService.updateVaccin(vacData.id, { shot_date: newDate });
+                setShotDate(newDate);
             } catch (error) {
                 console.error("Failed to update vaccin shot date:", error);
-                setShotDate(vacData.shot_date);
+                setShotDate(vacData.shot_date ? new Date(vacData.shot_date) : null);
             }
         }
     };
 
-    const handleExpireDate = async () => {
-        if (expireDate !== vacData.expire_date) {
+
+    const handleExpireDate = async (newDate: Date) => {
+        dismissKeyboard();
+        if (newDate.getTime() !== (vacData.expire_date ? new Date(vacData.expire_date).getTime() : 0)) {
             try {
-                await VaccinationService.updateVaccin(vacData.id, { expire_date: expireDate });
+                await VaccinationService.updateVaccin(vacData.id, { expire_date: newDate });
+                setExpiredate(newDate);
             } catch (error) {
                 console.error("Failed to update vaccin expire date:", error);
-                setExpiredate(vacData.expire_date);
+                setExpiredate(vacData.expire_date ? new Date(vacData.expire_date) : null);
             }
         }
     };
 
-    const dismissKeyboard = () => {
-        Keyboard.dismiss();
-    };
 
 
     return (
@@ -91,24 +102,56 @@ export default function VaccinSpecification({ vacData }: Props) {
                     </View>
                 </TouchableOpacity>
 
-                <View>
-                    <TouchableOpacity
-                        style={styles.doneButton}
-                        onPress={dismissKeyboard}
-                    >
-                        <Text style={styles.doneButtonText}>Done</Text>
+                <Text style={styles.label}>Shot date:</Text>
+                <View style={styles.dateContainer}>
+                    {shotDate && <Text>{shotDate.toLocaleDateString()}</Text>}
+                    <TouchableOpacity onPress={() => setOpenShot(true)}>
+                        <Ionicons
+                            name="calendar-number-outline"
+                            size={30}
+                            color="rgba(0, 28, 5, 1)"
+                        />
                     </TouchableOpacity>
-
-                    <TextInput
-                        style={styles.descriptionInput}
-                        value={type}
-                        onChangeText={setType}
-                        onEndEditing={handleType}
-                        multiline
-                        placeholder={type}
-                        placeholderTextColor="#999"
-                    />
                 </View>
+
+                <DatePickerModal
+                    locale="en"
+                    mode="single"
+                    visible={openShot}
+                    date={shotDate}
+                    onDismiss={() => setOpenShot(false)}
+                    onConfirm={({ date }) => {
+                        setOpenShot(false);
+                        setShotDate(date);
+                        handleShotDate(date);
+                    }}
+                />
+
+
+                <Text style={styles.label}>Expire date:</Text>
+                <View style={styles.dateContainer}>
+                    {expireDate && <Text>{vacData.expire_date.toLocaleDateString()}</Text>}
+                    <TouchableOpacity onPress={() => setOpenExpire(true)}>
+                        <Ionicons
+                            name="calendar-number-outline"
+                            size={30}
+                            color="rgba(0, 28, 5, 1)"
+                        />
+                    </TouchableOpacity>
+                </View>
+
+                <DatePickerModal
+                    locale="en"
+                    mode="single"
+                    visible={openExpire}
+                    date={expireDate}
+                    onDismiss={() => setOpenExpire(false)}
+                    onConfirm={({ date }) => {
+                        setOpenExpire(false);
+                        setExpiredate(date);
+                        handleExpireDate(date)
+                    }}
+                />
                 <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => setShowDeleteModal(true)}
@@ -129,7 +172,7 @@ export default function VaccinSpecification({ vacData }: Props) {
                     <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
                         <Text style={styles.modalTitle}>Delete vaccin</Text>
                         <Text style={styles.confirmText}>
-                            Are you sure you want to medication {vacData.name}? This action cannot be undone.
+                            Are you sure you want to delete {vacData.name}? This action cannot be undone.
                         </Text>
 
                         <View style={styles.modalButtons}>
@@ -389,5 +432,37 @@ const styles = StyleSheet.create({
     doneButtonText: {
         color: 'white',
         fontWeight: '600',
+    },
+
+    label: {
+        marginTop: 10,
+        fontSize: 14,
+    },
+    input: {
+        backgroundColor: "#eee",
+        padding: 10,
+        borderRadius: 10,
+        marginTop: 5,
+    },
+    buttonRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 20,
+    },
+    dateContainer: {
+        borderColor: "rgb(200, 200, 200)",
+        borderWidth: 2,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        margin: 5,
+        borderRadius: 5,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    dateText: {
+        fontSize: 14,
+        color: "#3C3C434C",
+        margin: 5,
     },
 });

@@ -29,14 +29,13 @@ export default function MedicationSpecification({ medicationData }: Props) {
     }
 
     const handleQuantity = async () => {
-        if (quantity !== medicationData.quantity) {
-            try {
-                await MedicationService.updateMedication(medicationData.id, { quantity });
-                setQuantity(tempQuantity);
-                setShowQuantityModal(false);
-            } catch (error) {
-                console.error("Failed to update medication quantity:", error);
-            }
+        dismissKeyboard();
+        try {
+            await MedicationService.updateMedication(medicationData.id, { quantity: tempQuantity });
+            setQuantity(tempQuantity);
+            setShowQuantityModal(false);
+        } catch (error) {
+            console.error("Failed to update medication quantity:", error);
         }
     }
 
@@ -113,7 +112,7 @@ export default function MedicationSpecification({ medicationData }: Props) {
                     <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
                         <Text style={styles.modalTitle}>Delete Medication</Text>
                         <Text style={styles.confirmText}>
-                            Are you sure you want to medication {medicationData.name}? This action cannot be undone.
+                            Are you sure you want to delete {medicationData.name}? This action cannot be undone.
                         </Text>
 
                         <View style={styles.modalButtons}>

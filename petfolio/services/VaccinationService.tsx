@@ -95,16 +95,6 @@ const updateVaccin = async (vaccinId: string, updatedVaccin: { name?: string, ty
 
 const deleteVaccin = async (vaccinId: string) => {
   try {
-    const { error: linkError } = await supabase
-      .from("pets_vaccin")
-      .delete()
-      .eq("vaccin_id", vaccinId);
-
-    if (linkError) {
-      console.error("Failed to delete vaccin link:", linkError);
-      throw linkError;
-    }
-
     const { error: vaccinError } = await supabase
       .from("vaccins")
       .delete()
