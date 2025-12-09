@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { Vaccin } from "../types";
-import { View, Text, StyleSheet, TouchableOpacity, Modal } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Keyboard, TextInput } from "react-native";
 import { Table, Rows } from 'react-native-table-component';
 import VaccinationService from "../services/VaccinationService";
 import { router } from "expo-router";
@@ -12,6 +12,11 @@ type Props = {
 export default function VaccinSpecification({ vacData }: Props) {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [shotDate, setShotDate] = useState(vacData.shot_date);
+    const [type, setType] = useState(vacData.type);
+    const [expireDate, setExpiredate] = useState(vacData.expire_date);
+    const [tempType, setTempType] = useState(type);
+    const [showTypeModal, setShowTypeModal] = useState(false);
 
     const tableData = [
         ["Date", vacData.shot_date],
@@ -30,13 +35,80 @@ export default function VaccinSpecification({ vacData }: Props) {
     }
 
 
+    const handleType = async () => {
+        if (type !== vacData.type) {
+            try {
+                await VaccinationService.updateVaccin(vacData.id, { type });
+            } catch (error) {
+                console.error("Failed to update vaccin type:", error);
+                setType(vacData.type);
+            }
+        }
+    };
+
+    const handleShotDate = async () => {
+        if (shotDate !== vacData.shot_date) {
+            try {
+                await VaccinationService.updateVaccin(vacData.id, { shot_date: shotDate });
+            } catch (error) {
+                console.error("Failed to update vaccin shot date:", error);
+                setShotDate(vacData.shot_date);
+            }
+        }
+    };
+
+    const handleExpireDate = async () => {
+        if (expireDate !== vacData.expire_date) {
+            try {
+                await VaccinationService.updateVaccin(vacData.id, { expire_date: expireDate });
+            } catch (error) {
+                console.error("Failed to update vaccin expire date:", error);
+                setExpiredate(vacData.expire_date);
+            }
+        }
+    };
+
+    const dismissKeyboard = () => {
+        Keyboard.dismiss();
+    };
+
+
     return (
         <View style={styles.container}>
             <View style={styles.profile}>
                 <Text style={styles.profileName}>{vacData.name}</Text>
-                <Table>
-                    <Rows style={styles.row} data={tableData} />
-                </Table>
+                <TouchableOpacity
+                    style={styles.amountRow}
+                    onPress={() => {
+                        setTempType(type);
+                        setShowTypeModal(true);
+                    }}
+                >
+                    <Text style={styles.amountLabel}>Type</Text>
+                    <View style={styles.amountRight}>
+                        <Text style={styles.amountValue}>{type}</Text>
+                        <Text style={styles.arrow}>&rsaquo;</Text>
+                    </View>
+                </TouchableOpacity>
+
+                <View>
+                    <TouchableOpacity
+                        style={styles.doneButton}
+                        onPress={dismissKeyboard}
+                    >
+                        <Text style={styles.doneButtonText}>Done</Text>
+                    </TouchableOpacity>
+
+                    <TextInput
+                        style={styles.descriptionInput}
+                        value={type}
+                        onChangeText={setType}
+                        onEndEditing={handleType}
+                        multiline
+                        placeholder={type}
+                        placeholderTextColor="#999"
+                    />
+                </View>
                 <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => setShowDeleteModal(true)}
@@ -72,6 +144,44 @@ export default function VaccinSpecification({ vacData }: Props) {
                                 onPress={handleDelete}
                             >
                                 <Text style={styles.deleteButtonText}>Delete</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </Modal>
+            <Modal
+                visible={showTypeModal}
+                transparent={true}
+                animationType="fade"
+            >
+                <TouchableOpacity
+                    style={styles.modalOverlay}
+                    activeOpacity={1}
+                    onPress={() => setShowTypeModal(false)}
+                >
+                    <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
+                        <Text style={styles.modalTitle}>Edit Type</Text>
+                        <TextInput
+                            style={styles.modalInput}
+                            value={tempType}
+                            onChangeText={setTempType}
+                            placeholder={type}
+                            placeholderTextColor="#999"
+                            autoFocus
+                        />
+
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity
+                                style={[styles.modalButton, styles.cancelButton]}
+                                onPress={() => setShowTypeModal(false)}
+                            >
+                                <Text style={styles.cancelButtonText}>Cancel</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.modalButton, styles.saveButton]}
+                                onPress={handleType}
+                            >
+                                <Text style={styles.saveButtonText}>Save</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -196,6 +306,88 @@ const styles = StyleSheet.create({
     deleteModalButtonText: {
         color: 'white',
         fontSize: 16,
+        fontWeight: '600',
+    },
+
+    amountRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        padding: 16,
+        borderRadius: 12,
+        marginBottom: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+
+    amountLabel: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#333',
+    },
+
+    amountRight: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    amountValue: {
+        fontSize: 16,
+        color: '#666',
+        marginRight: 8,
+    },
+
+    arrow: {
+        fontSize: 24,
+        color: '#999',
+        fontWeight: '300',
+    },
+
+    descriptionLabel: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#333',
+        marginBottom: 8,
+    },
+
+    descriptionInput: {
+        backgroundColor: 'white',
+        padding: 16,
+        borderRadius: 12,
+        fontSize: 15,
+        color: '#333',
+        minHeight: 120,
+        textAlignVertical: 'top',
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    saveButton: {
+        backgroundColor: '#7B9B8A',
+    },
+
+    saveButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    doneButton: {
+        alignSelf: 'flex-end',
+        backgroundColor: '#7B9B8A',
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 8,
+        marginBottom: 8,
+    },
+
+    doneButtonText: {
+        color: 'white',
         fontWeight: '600',
     },
 });

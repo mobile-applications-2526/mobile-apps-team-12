@@ -17,10 +17,6 @@ export default function MedicationSpecification({ medicationData }: Props) {
     const [tempQuantity, setTempQuantity] = useState(quantity);
     const [showQuantityModal, setShowQuantityModal] = useState(false);
 
-    // const tableData = [
-    //     ["Amount", medicationData.quantity],
-    //     ["Description", medicationData.description]
-    // ];
 
     const handleDelete = async () => {
         try {

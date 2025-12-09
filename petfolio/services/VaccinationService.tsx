@@ -77,7 +77,7 @@ const addVaccinToPet = async (petId: string, name: string, type: string, shot_da
   }
 };
 
-const updateVaccin = async (vaccinId: string, updatedVaccin: { name: string, type: string, shot_date: Date, expire_date: Date }) => {
+const updateVaccin = async (vaccinId: string, updatedVaccin: { name?: string, type?: string, shot_date?: Date, expire_date?: Date }) => {
   try {
     const { data, error } = await supabase
       .from("vaccins")
