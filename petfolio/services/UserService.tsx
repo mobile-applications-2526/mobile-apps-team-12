@@ -24,19 +24,19 @@ const registerUser = async (userData) => {
       .single();
 
     //create Profile for user
-    const {data: userProfile, error: profileError} = await supabase
-    .from("profiles")
-    .insert({
-      user_id: data.user.id,
-      pictures: null,
-    })
-    .select()
-    .single();
+    const { data: userProfile, error: profileError } = await supabase
+      .from("profiles")
+      .insert({
+        user_id: data.user.id,
+        pictures: null,
+      })
+      .select()
+      .single();
 
     if (userInfoError) throw userInfoError;
     console.log("User signed up successfully:", data);
     console.log("Succesfully made user Info: ", userInfo);
-        if (profileError) throw profileError;
+    if (profileError) throw profileError;
     console.log("Succesfully made user profile: ", userProfile);
     return data;
   } catch (error) {
@@ -83,14 +83,15 @@ const getUserInformationByUserId = async () => {
     throw error;
   }
 };
-const deleteUserAndExtras = async (userId: String) => {
+const deleteUserAndExtras = async (userId: string) => {
   try {
     const { error } = await supabase.auth.admin.deleteUser(userId);
     if (error) {
       console.log("Deleting user failed: ", error)
-      throw error;}
+      throw error;
+    }
   } catch (error) {
-        console.error(`Error deleting pet`, error);
+    console.error(`Error deleting pet`, error);
     throw error;
   }
 

@@ -22,7 +22,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
         <Modal visible={visible} transparent>
             <View style={styles.overlay}>
                 <View style={styles.modal}>
-                    <Text style={styles.title}>Add Medication</Text>
+                    <Text style={styles.title}>Add Vaccin</Text>
 
                     <Text style={styles.label}>Name:</Text>
                     <TextInput
