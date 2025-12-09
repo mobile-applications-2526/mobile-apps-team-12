@@ -130,7 +130,7 @@ export default function VaccinSpecification({ vacData }: Props) {
 
                 <Text style={styles.label}>Expire date:</Text>
                 <View style={styles.dateContainer}>
-                    {expireDate && <Text>{vacData.expire_date.toLocaleDateString()}</Text>}
+                    {expireDate && <Text>{expireDate.toLocaleDateString()}</Text>}
                     <TouchableOpacity onPress={() => setOpenExpire(true)}>
                         <Ionicons
                             name="calendar-number-outline"
