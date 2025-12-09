@@ -3,12 +3,13 @@ import { StyleSheet, View, Pressable, Text } from "react-native";
 type Props = {
   label: string;
   onPress: () => void; //callback function
+  testID?: string;
 };
 
-export default function Button({ label, onPress }: Props) {
+export default function Button({ label, onPress, testID }: Props) {
   return (
     <View style={styles.buttonContainer}>
-      <Pressable style={styles.button} onPress={onPress}>
+      <Pressable style={styles.button} onPress={onPress} testID={testID || `button-${label}`} >
         <View>
           <Text style={styles.buttonLabel}>{label}</Text>
         </View>

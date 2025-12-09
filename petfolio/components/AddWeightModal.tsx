@@ -34,6 +34,7 @@ export default function AddWeightModel({ visible, onClose, onSubmit }: Props) {
             onChangeText={setWeight}
             keyboardType="decimal-pad"
             style={styles.input}
+            testID="weight-input"
           />
 
           <Text style={styles.label}>Date</Text>
@@ -55,6 +56,7 @@ export default function AddWeightModel({ visible, onClose, onSubmit }: Props) {
             </Pressable>
 
             <Pressable
+              testID="add-button"
               onPress={() => {
                 onSubmit(weight, date.toISOString());
               }}
