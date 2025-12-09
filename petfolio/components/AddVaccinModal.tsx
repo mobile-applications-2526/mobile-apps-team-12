@@ -37,8 +37,11 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
         <View style={styles.modal}>
           <Text style={styles.title}>Add Medication</Text>
 
-          <Text style={styles.label}>Name:</Text>
-          <TextInput value={name} onChangeText={setName} style={styles.input} />
+    return (
+        <Modal visible={visible} transparent>
+            <View style={styles.overlay}>
+                <View style={styles.modal}>
+                    <Text style={styles.title}>Add Vaccin</Text>
 
           <Text style={styles.label}>Type:</Text>
           <TextInput value={type} onChangeText={setType} style={styles.input} />

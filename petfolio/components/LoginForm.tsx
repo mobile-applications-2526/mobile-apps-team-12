@@ -22,7 +22,7 @@ export default function LoginForm() {
             // network or server error; show friendly message
             console.error(error);
             setLoggedInError(
-                "Network or server error. Please check your connection and try again."
+                error || "Network or server error. Please check your connection and try again."
             );
         }
 

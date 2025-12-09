@@ -68,15 +68,7 @@ const getWeights = async (petId: string) => {
 
 const deleteWeight = async (weightId: string) => {
   try{
-    const {error: linkError} = await supabase
-      .from("pets_weight")
-      .delete()
-      .eq("weight_id", weightId);
-
-    if(linkError){
-      console.error("Failed to delete weight link:", linkError);
-      throw linkError;
-    }
+// pets_weights record will also be deleted once weightId is gone. (delete Cascade)
 
     const {error: weightError } = await supabase
       .from("weight")
