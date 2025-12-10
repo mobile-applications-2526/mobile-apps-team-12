@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import Header from "../../components/Header";
 import { StyleSheet, Text } from "react-native";
-import CalendarView from "../../components/CalendarView";
+import CalendarView from "../../components/calendar/CalendarView";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/authContext";
 import { Pet } from "../../types";
@@ -20,12 +20,12 @@ export default function CalendarPage() {
 
   async function getPetsData() {
     clearErrors()
-        if (!user) {
+    if (!user) {
       setError("Please login to see your pets and their birthdays")
       setPets([])
       setLoading(false);
       return;
-    } 
+    }
     try {
       const result = await PetService.getMyPets()
       setPets(result);
@@ -36,20 +36,20 @@ export default function CalendarPage() {
       setError("Failed to load pets. Please try again.");
     }
   }
-  
-    useEffect(() => {
-      getPetsData();
-    }, []);
-  
-    return (
-            <View style={styles.container}>
-              <Header />
-              {error && <Text style={styles.error}>{error}</Text>}
-        <CalendarView
-        pets = {pets}
-        ></CalendarView>
-            </View>
-    )
+
+  useEffect(() => {
+    getPetsData();
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Header />
+      {error && <Text style={styles.error}>{error}</Text>}
+      <CalendarView
+        pets={pets}
+      ></CalendarView>
+    </View>
+  )
 }
 const styles = StyleSheet.create({
   container: {
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     height: 100,
     width: 95,
   },
-    error: {
+  error: {
     color: "#d20202ff",
   },
 });

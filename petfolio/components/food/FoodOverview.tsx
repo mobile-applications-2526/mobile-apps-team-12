@@ -1,5 +1,5 @@
 import React from "react";
-import { Food, Pet } from "../types";
+import { Food, Pet } from "../../types";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Table, Row } from 'react-native-table-component';
 import { router } from "expo-router";
@@ -11,26 +11,26 @@ type Props = {
 export default function FoodOverview({ foods }: Props) {
 
     return (
-                <ScrollView contentContainerStyle={{ paddingBottom: 90, paddingHorizontal: 10 }}>
-                    <Table>
-                        {foods && foods.map((food) => (
-                            <TouchableOpacity onPress={() => router.navigate(`/food/${food.id}`)} key={food.id} style={styles.customRow}>
-                                <View style={styles.firstCell}>
-                                    <Text>{food.name}{"\n"}{food.description}</Text>
-                                </View>
+        <ScrollView contentContainerStyle={{ paddingBottom: 90, paddingHorizontal: 10 }}>
+            <Table>
+                {foods && foods.map((food) => (
+                    <TouchableOpacity onPress={() => router.navigate(`/food/${food.id}`)} key={food.id} style={styles.customRow}>
+                        <View style={styles.firstCell}>
+                            <Text>{food.name}{"\n"}{food.description}</Text>
+                        </View>
 
-                                <View style={styles.secondCell}>
-                                    <Text>{food.quantity}</Text>
-                                </View>
+                        <View style={styles.secondCell}>
+                            <Text>{food.quantity}</Text>
+                        </View>
 
-                                <View style={styles.thirdCell}>
-                                    <Text>&rsaquo;</Text>
-                                </View>
-                            </TouchableOpacity >
-                        ))}
+                        <View style={styles.thirdCell}>
+                            <Text>&rsaquo;</Text>
+                        </View>
+                    </TouchableOpacity >
+                ))}
 
-                    </Table>
-                </ScrollView>
+            </Table>
+        </ScrollView>
     )
 }
 

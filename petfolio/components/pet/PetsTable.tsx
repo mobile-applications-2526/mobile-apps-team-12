@@ -1,8 +1,8 @@
-import { Pet } from "../types";
+import { Pet } from "../../types";
 import React from "react";
 import { useRouter } from "expo-router";
 import { StyleSheet, View, Text, ScrollView, Image, ActivityIndicator, TouchableOpacity } from "react-native";
-import Button from "../components/Button";
+import Button from "../../components/Button";
 
 type Props = {
   petData: Pet[]

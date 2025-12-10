@@ -7,12 +7,12 @@ import {
 } from "react-native";
 import { useForm } from "react-hook-form";
 import { Controller } from "react-hook-form";
-import Button from "./Button";
+import Button from "../Button";
 import { DatePickerModal } from "react-native-paper-dates";
 import { useState } from "react";
-import PetService from "../services/PetService";
+import PetService from "../../services/PetService";
 import Ionicons from "@react-native-vector-icons/ionicons";
-import { PetType } from "../types";
+import { PetType } from "../../types";
 import { useRouter } from "expo-router";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNDateTimePicker from "@react-native-community/datetimepicker";
@@ -85,19 +85,19 @@ export default function AddPetForm() {
           <>
             <Text>Birthdate:</Text>
             <View style={styles.dateContainer}>
-            <RNDateTimePicker 
-            title="Select your pets birthday."
-            value={value ? new Date(value) : new Date()} 
-            onChange={(event,selectedDate) => {
-              if (selectedDate){
-              onChange(selectedDate)
-              }
-            }} ></RNDateTimePicker>
-                <Ionicons
-                  name="calendar-number-outline"
-                  size={30}
-                  color="rgba(0, 28, 5, 1)"
-                />
+              <RNDateTimePicker
+                title="Select your pets birthday."
+                value={value ? new Date(value) : new Date()}
+                onChange={(event, selectedDate) => {
+                  if (selectedDate) {
+                    onChange(selectedDate)
+                  }
+                }} ></RNDateTimePicker>
+              <Ionicons
+                name="calendar-number-outline"
+                size={30}
+                color="rgba(0, 28, 5, 1)"
+              />
             </View>
 
           </>

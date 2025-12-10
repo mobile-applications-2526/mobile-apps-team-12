@@ -1,5 +1,5 @@
 import React from "react";
-import { Pet } from "../types";
+import { Pet } from "../../types";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Table, Row } from 'react-native-table-component';
 import { Link, router } from "expo-router";

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Medication, Profile } from "../types";
+import { Medication, Profile } from "../../types";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput, Keyboard } from "react-native";
 import { Table, Row, Rows } from 'react-native-table-component';
-import MedicationService from "../services/MedicationService";
+import MedicationService from "../../services/MedicationService";
 import { router } from "expo-router";
 
 type Props = {

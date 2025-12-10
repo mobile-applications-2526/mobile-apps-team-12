@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import ProfileOverview from "../../components/ProfileOverview";
+import ProfileOverview from "../../components/profile/ProfileOverview";
 import { Profile, User } from "../../types";
 import ProfileService from "../../services/ProfileService";
 import UserService from "../../services/UserService";

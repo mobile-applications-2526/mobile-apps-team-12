@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import * as Notifications from "expo-notifications";
 import { CalendarTriggerInput } from "expo-notifications";
-import PetService from "../services/PetService";
-import { Pet } from "../types";
-import { useAuth } from "../context/authContext";
+import PetService from "../../services/PetService";
+import { Pet } from "../../types";
+import { useAuth } from "../../context/authContext";
 
 
 // Notifications on IOS don't work yet when silent switch is on!!!!
@@ -38,7 +38,7 @@ export default function BdayNotificationInitializer() {
   }
   useEffect(() => {
     async function init() {
-        getPetsData()
+      getPetsData()
       // Ask permission
       const { status } = await Notifications.requestPermissionsAsync();
       if (status !== "granted") {
@@ -71,7 +71,7 @@ export default function BdayNotificationInitializer() {
 
     init();
   }, []);
-  
+
 
 
   return null;

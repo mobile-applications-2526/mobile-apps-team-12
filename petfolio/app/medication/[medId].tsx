@@ -1,13 +1,10 @@
-import { useSQLiteContext } from "expo-sqlite";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import { Medication } from "../../types";
-import PetService from "../../services/PetService";
 import { Link, router, useLocalSearchParams } from "expo-router";
-import MedicationsTable from "../../components/MedicationsTable";
 import MedicationService from "../../services/MedicationService";
-import MedicationSpecification from "../../components/MedicationSpecification";
+import MedicationSpecification from "../../components/medication/MedicationSpecification";
 
 export default function MedicationShow() {
   const [med, setMed] = useState<Medication>(null);
@@ -63,7 +60,7 @@ export default function MedicationShow() {
     <View style={styles.container}>
       <Header />
       <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
-          <Text style={styles.backLinkText}>&larr; Back to medications</Text>
+        <Text style={styles.backLinkText}>&larr; Back to medications</Text>
       </TouchableOpacity>
       <View>
         {!error && med && <MedicationSpecification medicationData={med} />}
@@ -82,12 +79,12 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     width: "100%",
   },
-    backLink: { 
-        marginLeft: 20, 
-        marginBottom: 10 
-    },
-        backLinkText: {
-        textDecorationLine: "underline", 
-        color: "#043500ff"
-    },
+  backLink: {
+    marginLeft: 20,
+    marginBottom: 10
+  },
+  backLinkText: {
+    textDecorationLine: "underline",
+    color: "#043500ff"
+  },
 });
