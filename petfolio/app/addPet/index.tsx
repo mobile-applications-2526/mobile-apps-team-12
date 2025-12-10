@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import Header from "../../components/Header";
-import AddPetForm from "../../components/AddPetForm";
+import AddPetForm from "../../components/pet/AddPetForm";
 export default function PetOverview() {
   return (
     <View style={styles.container}>

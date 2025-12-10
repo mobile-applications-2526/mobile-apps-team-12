@@ -1,8 +1,8 @@
 import React, { use, useState } from "react";
-import { Vaccin } from "../types";
+import { Vaccin } from "../../types";
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Keyboard, TextInput } from "react-native";
 import { Table, Rows } from 'react-native-table-component';
-import VaccinationService from "../services/VaccinationService";
+import VaccinationService from "../../services/VaccinationService";
 import { router } from "expo-router";
 import { DatePickerModal, en, registerTranslation } from "react-native-paper-dates";
 import Ionicons from "@react-native-vector-icons/ionicons";

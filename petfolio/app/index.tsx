@@ -2,8 +2,8 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import Button from "../components/Button";
 import Header from "../components/Header";
 import { useRouter } from "expo-router";
-import TestScreen from "../components/TestNotifs";
-import BdayNotificationInitializer from "../components/BdayNotificationInitializer";
+import TestScreen from "../components/notification/TestNotifs";
+import BdayNotificationInitializer from "../components/notification/BdayNotificationInitializer";
 
 export default function Index() {
   const router = useRouter();

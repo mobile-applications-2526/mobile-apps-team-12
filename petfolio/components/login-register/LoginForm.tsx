@@ -1,10 +1,10 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { StyleSheet, View, Text, TextInput} from "react-native";
+import { StyleSheet, View, Text, TextInput } from "react-native";
 import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from "expo-router";
-import Button from "./Button";
-import UserService from "../services/UserService"
-export default function LoginForm() {    
+import Button from "../Button";
+import UserService from "../../services/UserService"
+export default function LoginForm() {
     const router = useRouter();
     const { control, handleSubmit, watch, formState: { errors } } = useForm();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,34 +34,35 @@ export default function LoginForm() {
                 <Text style={styles.title}>Log in here</Text>
                 {loggedInError && <Text style={styles.error}>{loggedInError}</Text>}
                 {isLoggedIn && <Text style={styles.success}>Login succesfull!</Text>}
-                    <Text>Email*</Text>
-                    <Controller
-                        control={control}
-                        name="email"
-                        rules={{ required: {value: true, message: "This field is required"}, 
-                            pattern: {
-                                value: /^[\w.-]+@([\w-]+\.)+[\w-]{2,}$/,
-                                message: 'Please enter a valid email address',
-                                },
-                        }}
-                        render={({ field: { onChange, value }, fieldState: {error} }) => (
-                            <>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={onChange}
-                            value={value}
-                        />
-                        {error && <Text style={styles.error}>{error.message}</Text>}
+                <Text>Email*</Text>
+                <Controller
+                    control={control}
+                    name="email"
+                    rules={{
+                        required: { value: true, message: "This field is required" },
+                        pattern: {
+                            value: /^[\w.-]+@([\w-]+\.)+[\w-]{2,}$/,
+                            message: 'Please enter a valid email address',
+                        },
+                    }}
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                        <>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={onChange}
+                                value={value}
+                            />
+                            {error && <Text style={styles.error}>{error.message}</Text>}
                         </>
-                        )}
-                    />
-                    <Text>Password*</Text>
-                    <Controller
-                        control={control}
-                        name="password"
-                        rules={{ required: {value: true, message: "This field is required"}}}
-                       render={({ field: { onChange, value }, fieldState: {error} }) => (
-                            <>
+                    )}
+                />
+                <Text>Password*</Text>
+                <Controller
+                    control={control}
+                    name="password"
+                    rules={{ required: { value: true, message: "This field is required" } }}
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                        <>
                             <TextInput
                                 style={styles.input}
                                 onChangeText={onChange}
@@ -69,15 +70,15 @@ export default function LoginForm() {
                                 secureTextEntry={true}
                             />
                             {error && <Text style={styles.error}>{error.message}</Text>}
-                            </>
-                            )}
-                    />
+                        </>
+                    )}
+                />
             </View>
             <View style={styles.buttonContainer}>
-                <Button label="login" onPress={handleSubmit(onSubmit)} testID="login-button"/>
+                <Button label="login" onPress={handleSubmit(onSubmit)} testID="login-button" />
                 <Button label="cancel" onPress={() => router.navigate("/")} testID="cancel-button" />
             </View>
-            </View>
+        </View>
     )
 }
 const styles = StyleSheet.create({
@@ -103,10 +104,10 @@ const styles = StyleSheet.create({
         margin: 3,
     },
     success: {
-        color:  "#00a00bff",
+        color: "#00a00bff",
         marginVertical: 5
     },
     error: {
-        color:  "#d20202ff",
+        color: "#d20202ff",
     },
 })
