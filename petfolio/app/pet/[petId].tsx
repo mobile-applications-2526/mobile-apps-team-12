@@ -66,7 +66,7 @@ export default function PetShow() {
   return (
     <View style={styles.container}>
       <Header />
-          <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
+          <TouchableOpacity onPress={() => router.push("/petOverview")} style={styles.backLink}>
                 <Text style={styles.backLinkText}>&larr; Back to pets overview</Text>
           </TouchableOpacity>
       <View>

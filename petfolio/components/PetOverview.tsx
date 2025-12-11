@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pet } from "../types";
 import {
   View,
@@ -12,24 +12,53 @@ import {
 import { Table, Rows } from "react-native-table-component";
 import { useRouter } from "expo-router";
 import PetService from "../services/PetService";
-import ImagePicker from "./ImagePicker";
+import ImagePicker from "./ImagePickerPets";
+import { supabase } from "../utils/supabase";
 
 type Props = {
   petData: Pet;
 };
 
 export default function PetOverview({ petData }: Props) {
-  // petData.medication.forEach(med => {
-  //     medications.push(med.name)
-  // })
-
-  // petData.vaccins.forEach(vac => {
-  //     vaccins.push(vac.name)
-  // })
 
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showImagePickerModal, setShowImagePickerModal] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    getUserId()
+  }, [])
+  useEffect(() => {
+    if (petData.id && userId) {
+      loadProfileImage();
+    }
+  }, [petData.id, userId])
+
+  const loadProfileImage = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("pets")
+        .select("picture")
+        .eq("id", Number(petData.id))
+        .eq("owner_id", userId)
+        .single();
+        console.log("image data:", data)
+
+      if (error) {
+        console.error("Error fetching profile image:", error);
+        return;
+      }
+
+      if (data?.picture) {
+        setProfileImageUrl(data.picture);
+
+      }
+    } catch (error) {
+      console.error("Error loading profile image:", error);
+    }
+  };
 
   const getCurrentWeight = () => {
     if (!petData.weight || petData.weight.length === 0) return "N/A";
@@ -53,6 +82,18 @@ export default function PetOverview({ petData }: Props) {
       console.error("Error deleting pet:", error);
     }
   };
+  const getUserId = async () => {
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser();
+        if (user) {
+          setUserId(user.id);
+        }
+        else {
+          console.log("something went wrong with fetching userId", userError);
+        }
+  }
 
   const tableData = [
     ["Birthday", petData.birthdate],
@@ -97,7 +138,11 @@ export default function PetOverview({ petData }: Props) {
     >
       <View style={styles.container}>
         <Image
-          source={require("../assets/bengel-pf.png")}
+          source={
+            profileImageUrl
+              ? { uri: profileImageUrl }
+              : require("../assets/bengel-pf.png")
+          }
           style={styles.profilePic}
         />
         <View style={styles.profile}>
@@ -105,7 +150,7 @@ export default function PetOverview({ petData }: Props) {
           <Text style={styles.petType}>{petData.type}</Text>
           <Text onPress={() => setShowImagePickerModal(true)}>Edit Photo</Text>
           <Modal visible={showImagePickerModal}>
-            <ImagePicker />
+            <ImagePicker petId={petData.id} userId={userId} />
           </Modal>
           <Table>
             <Rows style={styles.row} data={tableData} />

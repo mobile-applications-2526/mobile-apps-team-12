@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Profile, User } from "../types";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Modal } from "react-native";
 import { Table, Row, Rows } from "react-native-table-component";
 import { useRouter } from "expo-router";
 import { supabase } from "../utils/supabase";
+import ImagePickerUser from "./ImagePickerUser";
 
 type Props = {
   profileData: Profile;
@@ -12,6 +13,15 @@ type Props = {
 export default function ProfileOverview({ profileData }: Props) {
     const router = useRouter();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showImagePickerModal, setShowImagePickerModal] = useState(false);
+    const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+      if (profileData.user_id) {
+        loadProfileImage();
+      }
+    }, [] )
+
   const tableData = [
     ["Name", profileData.firstname + " " + profileData.lastname],
     ["Email", profileData.email ?? "No email known"], //if email is not know, there is still something written
@@ -23,7 +33,7 @@ export default function ProfileOverview({ profileData }: Props) {
       throw new Error("No pet information available");
     }
     setShowDeleteModal(false);
-const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError || !session) {
         console.log('Error', 'You must be logged in to delete your account');
@@ -53,16 +63,46 @@ const { data: { session }, error: sessionError } = await supabase.auth.getSessio
     } finally {
       setShowDeleteModal(false);
     }
+  }
 
-  } 
+  const loadProfileImage = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("pictures")
+          .eq("user_id", profileData.user_id)
+          .single();
+          console.log("image data:", data)
+  
+        if (error) {
+          console.error("Error fetching profile image:", error);
+          return;
+        }
+  
+        if (data?.pictures) {
+          setProfileImageUrl(data.pictures);
+  
+        }
+      } catch (error) {
+        console.error("Error loading profile image:", error);
+      }
+    };
 
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/anon_user.png")}
+        source={
+          profileImageUrl
+            ? { uri: profileImageUrl }
+            : require("../assets/anon_user.png")
+        }
         style={styles.profilePic}
       />
       <View style={styles.profile}>
+            <Text onPress={() => setShowImagePickerModal(true)}>Edit Photo</Text>
+      <Modal visible={showImagePickerModal}>
+                <ImagePickerUser userId={profileData.user_id} />
+              </Modal>
         <Text style={styles.profileName}>{profileData.firstname}</Text>
         <Table>
           <Rows style={styles.row} data={tableData} />
