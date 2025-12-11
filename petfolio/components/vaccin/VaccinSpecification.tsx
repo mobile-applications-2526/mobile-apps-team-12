@@ -1,11 +1,12 @@
 import React, { use, useState } from "react";
 import { Vaccin } from "../../types";
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Keyboard, TextInput } from "react-native";
-import { Table, Rows } from 'react-native-table-component';
+
 import VaccinationService from "../../services/VaccinationService";
 import { router } from "expo-router";
-import { DatePickerModal, en, registerTranslation } from "react-native-paper-dates";
+import { DatePickerModal } from "react-native-paper-dates";
 import Ionicons from "@react-native-vector-icons/ionicons";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 type Props = {
     vacData: Vaccin
@@ -18,7 +19,7 @@ export default function VaccinSpecification({ vacData }: Props) {
         vacData.shot_date ? new Date(vacData.shot_date) : null
     );
 
-    const [expireDate, setExpiredate] = useState(
+    const [expireDate, setExpireDate] = useState(
         vacData.expire_date ? new Date(vacData.expire_date) : null
     );
 
@@ -74,10 +75,10 @@ export default function VaccinSpecification({ vacData }: Props) {
         if (newDate.getTime() !== (vacData.expire_date ? new Date(vacData.expire_date).getTime() : 0)) {
             try {
                 await VaccinationService.updateVaccin(vacData.id, { expire_date: newDate });
-                setExpiredate(newDate);
+                setExpireDate(newDate);
             } catch (error) {
                 console.error("Failed to update vaccin expire date:", error);
-                setExpiredate(vacData.expire_date ? new Date(vacData.expire_date) : null);
+                setExpireDate(vacData.expire_date ? new Date(vacData.expire_date) : null);
             }
         }
     };
@@ -94,6 +95,7 @@ export default function VaccinSpecification({ vacData }: Props) {
                         setTempType(type);
                         setShowTypeModal(true);
                     }}
+                    testID="type-row"
                 >
                     <Text style={styles.amountLabel}>Type</Text>
                     <View style={styles.amountRight}>
@@ -104,54 +106,33 @@ export default function VaccinSpecification({ vacData }: Props) {
 
                 <Text style={styles.label}>Shot date:</Text>
                 <View style={styles.dateContainer}>
-                    {shotDate && <Text>{shotDate.toLocaleDateString()}</Text>}
-                    <TouchableOpacity onPress={() => setOpenShot(true)}>
-                        <Ionicons
-                            name="calendar-number-outline"
-                            size={30}
-                            color="rgba(0, 28, 5, 1)"
-                        />
-                    </TouchableOpacity>
+                    <Text>{shotDate.toLocaleDateString()}</Text>
+                    <RNDateTimePicker
+                        value={shotDate}
+                        onChange={(event, selectedDate) => {
+                            if (selectedDate) {
+                                setShotDate(selectedDate);
+                                handleShotDate(selectedDate);
+                            }
+                        }}
+                    />
+                    <Ionicons name="calendar-number-outline" size={30} color="rgba(0, 28, 5, 1)" />
                 </View>
-
-                <DatePickerModal
-                    locale="en"
-                    mode="single"
-                    visible={openShot}
-                    date={shotDate}
-                    onDismiss={() => setOpenShot(false)}
-                    onConfirm={({ date }) => {
-                        setOpenShot(false);
-                        setShotDate(date);
-                        handleShotDate(date);
-                    }}
-                />
-
 
                 <Text style={styles.label}>Expire date:</Text>
                 <View style={styles.dateContainer}>
-                    {expireDate && <Text>{expireDate.toLocaleDateString()}</Text>}
-                    <TouchableOpacity onPress={() => setOpenExpire(true)}>
-                        <Ionicons
-                            name="calendar-number-outline"
-                            size={30}
-                            color="rgba(0, 28, 5, 1)"
-                        />
-                    </TouchableOpacity>
+                    <Text>{expireDate.toLocaleDateString()}</Text>
+                    <RNDateTimePicker
+                        value={expireDate}
+                        onChange={(event, selectedDate) => {
+                            if (selectedDate) {
+                                setExpireDate(selectedDate);
+                                handleExpireDate(selectedDate);
+                            }
+                        }}
+                    />
+                    <Ionicons name="calendar-number-outline" size={30} color="rgba(0, 28, 5, 1)" />
                 </View>
-
-                <DatePickerModal
-                    locale="en"
-                    mode="single"
-                    visible={openExpire}
-                    date={expireDate}
-                    onDismiss={() => setOpenExpire(false)}
-                    onConfirm={({ date }) => {
-                        setOpenExpire(false);
-                        setExpiredate(date);
-                        handleExpireDate(date)
-                    }}
-                />
                 <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => setShowDeleteModal(true)}

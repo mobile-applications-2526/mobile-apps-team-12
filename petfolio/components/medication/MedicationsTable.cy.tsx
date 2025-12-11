@@ -34,7 +34,7 @@ describe('MedicationsTable Component', () => {
         cy.contains('Pain killers').should('not.exist');
     });
 
-    it('navigates to food detail when row is clicked', () => {
+    it('navigates to medication specification when row is clicked', () => {
         cy.mount(<MedicationsTable petData={mockPet} />);
 
         cy.contains('Anti-Epilepsi').parent().click();

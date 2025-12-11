@@ -31,7 +31,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
     <Modal visible={visible} transparent>
       <View style={styles.overlay}>
         <View style={styles.modal}>
-          <Text style={styles.title}>Add Vaccine</Text>
+          <Text style={styles.title}>Add Vaccin</Text>
 
           <Text style={styles.label}>Name:</Text>
           <TextInput value={name} onChangeText={setName} style={styles.input} />
@@ -42,6 +42,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
           <Text style={styles.label}>Shot date:</Text>
           <View style={styles.dateContainer}>
             <RNDateTimePicker
+              testID="shotDate"
               value={shot_date}
               onChange={(event, selectedDate) => {
                 if (selectedDate) {
@@ -59,6 +60,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
           <Text style={styles.label}>Expire date:</Text>
           <View style={styles.dateContainer}>
             <RNDateTimePicker
+              testID="expireDate"
               value={expire_date}
               onChange={(event, selectedDate) => {
                 if (selectedDate) {
@@ -83,7 +85,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
                 onSubmit(name, type, shot_date, expire_date);
               }}
               style={styles.addButton}
-              testID="add-vaccine-button"
+              testID="add-vaccin-button"
             >
               <Text style={styles.addText}>Add</Text>
             </Pressable>
