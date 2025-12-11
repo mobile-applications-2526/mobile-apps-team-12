@@ -59,7 +59,7 @@ const { data: { session }, error: sessionError } = await supabase.auth.getSessio
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/bengel-pf.png")}
+        source={require("../assets/anon_user.png")}
         style={styles.profilePic}
       />
       <View style={styles.profile}>
