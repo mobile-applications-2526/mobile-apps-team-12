@@ -1,8 +1,16 @@
 import { useState } from "react";
-import { Alert, Image, View, StyleSheet, ActivityIndicator, TouchableOpacity, Text } from "react-native";
+import {
+  Alert,
+  Image,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../utils/supabase";
-import { decode } from 'base64-arraybuffer'
+import { decode } from "base64-arraybuffer";
 import { useRouter } from "expo-router";
 
 export default function ImagePickerUser({ userId }: { userId: string }) {
@@ -13,7 +21,7 @@ export default function ImagePickerUser({ userId }: { userId: string }) {
   const pickImage = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
+
     if (!permissionResult.granted) {
       Alert.alert(
         "Permission required",
@@ -25,7 +33,7 @@ export default function ImagePickerUser({ userId }: { userId: string }) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: false,
-      aspect: [1, 1], 
+      aspect: [1, 1],
       quality: 0.8,
       base64: true,
     });
@@ -34,73 +42,73 @@ export default function ImagePickerUser({ userId }: { userId: string }) {
       const imageraw = result.assets[0];
       setImage(imageraw.uri);
       try {
-      setUploading(true);
+        setUploading(true);
 
-      // Generate a unique file name
-      const fileExt = imageraw.fileName.split(".").pop();
-      const fileName = `${userId}.${fileExt}`;
-      const filePath = `${fileName}`;
+        // Generate a unique file name
+        const fileExt = imageraw.fileName.split(".").pop();
+        const fileName = `${userId}.${fileExt}`;
+        const filePath = `${userId}/${fileName}`;
 
-      if (!imageraw.base64) {
-        throw new Error("Failed to get image data");
+        if (!imageraw.base64) {
+          throw new Error("Failed to get image data");
+        }
+
+        // Upload to Supabase Storage
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from(`profilepictures`)
+          .upload(filePath, decode(imageraw.base64), {
+            contentType: imageraw.mimeType,
+            upsert: true,
+          });
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        // Get the url
+        const { data: publicUrlData } = await supabase.storage
+          .from(`profilepictures`)
+          .getPublicUrl(filePath);
+
+        const publicUrl = publicUrlData.publicUrl;
+        const { error: updateError } = await supabase
+          .from("profiles")
+          .update({ pictures: publicUrl })
+          .eq("user_id", userId);
+        if (updateError) {
+          throw updateError;
+        }
+
+        console.log("Profile picture updated!");
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        throw new Error("Failed to upload image. Please try again.");
+      } finally {
+        setUploading(false);
+        router.push(`/profile`);
       }
-
-      // Upload to Supabase Storage
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from(`profilepictures`)
-        .upload(filePath, decode(imageraw.base64), {
-          contentType: imageraw.mimeType, upsert:true
-        });
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      // Get the url
-      const { data: publicUrlData } = supabase.storage
-        .from(`profilepictures`)
-        .getPublicUrl(filePath);
-
-      const publicUrl = publicUrlData.publicUrl;
-            const { error: updateError } = await supabase
-        .from("profiles")
-        .update({ pictures: publicUrl })
-        .eq("user_id", userId);
-      if (updateError) {
-        throw updateError;
-      }
-
-      console.log("Profile picture updated!");
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      throw new Error("Failed to upload image. Please try again.");
-    } finally {
-      setUploading(false);
-      router.push(`/profile`);
-    }
     }
   };
 
-
   return (
-     <View style={styles.container}>
-            <TouchableOpacity
-          style={styles.button}
-          onPress={pickImage}
-          disabled={uploading}
-          >
-          <Text style={styles.buttonLabel}>Pick an image from camera roll</Text>
-          </TouchableOpacity>
-    
-          <TouchableOpacity
-          style={styles.buttonCancel}
-          onPress={() => router.push(`/profile`)}
-          >
-          <Text style={styles.buttonLabel}>Cancel</Text>
-          </TouchableOpacity>
-      
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={pickImage}
+        disabled={uploading}
+      >
+        <Text style={styles.buttonLabel}>Pick an image from camera roll</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.buttonCancel}
+        onPress={() => router.push(`/profile`)}
+      >
+        <Text style={styles.buttonLabel}>Cancel</Text>
+      </TouchableOpacity>
+
       {uploading && <ActivityIndicator size="large" style={styles.loader} />}
-      
+
       {image && <Image source={{ uri: image }} style={styles.image} />}
     </View>
   );
@@ -121,7 +129,7 @@ const styles = StyleSheet.create({
   loader: {
     marginTop: 20,
   },
-   button: {
+  button: {
     borderRadius: 10,
     width: "75%",
     paddingVertical: 20,
@@ -133,7 +141,7 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 10,
   },
-    buttonCancel: {
+  buttonCancel: {
     borderRadius: 10,
     width: "75%",
     paddingVertical: 20,
@@ -142,7 +150,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     backgroundColor: "#6d6d6dff",
-    padding: 5
+    padding: 5,
   },
   buttonLabel: {
     color: "#fff",

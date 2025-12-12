@@ -20,7 +20,6 @@ type Props = {
 };
 
 export default function PetOverview({ petData }: Props) {
-
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showImagePickerModal, setShowImagePickerModal] = useState(false);
@@ -28,13 +27,13 @@ export default function PetOverview({ petData }: Props) {
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    getUserId()
-  }, [])
+    getUserId();
+  }, []);
   useEffect(() => {
     if (petData.id && userId) {
       loadProfileImage();
     }
-  }, [petData.id, userId])
+  }, [petData.id, userId]);
 
   const loadProfileImage = async () => {
     try {
@@ -44,7 +43,7 @@ export default function PetOverview({ petData }: Props) {
         .eq("id", Number(petData.id))
         .eq("owner_id", userId)
         .single();
-        console.log("image data:", data)
+      console.log("image data:", data);
 
       if (error) {
         console.error("Error fetching profile image:", error);
@@ -53,7 +52,6 @@ export default function PetOverview({ petData }: Props) {
 
       if (data?.picture) {
         setProfileImageUrl(data.picture);
-
       }
     } catch (error) {
       console.error("Error loading profile image:", error);
@@ -83,17 +81,16 @@ export default function PetOverview({ petData }: Props) {
     }
   };
   const getUserId = async () => {
-        const {
-          data: { user },
-          error: userError,
-        } = await supabase.auth.getUser();
-        if (user) {
-          setUserId(user.id);
-        }
-        else {
-          console.log("something went wrong with fetching userId", userError);
-        }
-  }
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (user) {
+      setUserId(user.id);
+    } else {
+      console.log("something went wrong with fetching userId", userError);
+    }
+  };
 
   const tableData = [
     ["Birthday", petData.birthdate],
@@ -141,7 +138,7 @@ export default function PetOverview({ petData }: Props) {
           source={
             profileImageUrl
               ? { uri: profileImageUrl }
-              : require("../assets/bengel-pf.png")
+              : require("../assets/anon_user.png")
           }
           style={styles.profilePic}
         />
