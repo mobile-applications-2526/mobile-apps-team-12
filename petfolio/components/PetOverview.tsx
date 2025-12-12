@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import PetService from "../services/PetService";
 import ImagePicker from "./ImagePickerPets";
 import { supabase } from "../utils/supabase";
+import Ionicons from "@react-native-vector-icons/ionicons";
 
 type Props = {
   petData: Pet;
@@ -134,18 +135,25 @@ export default function PetOverview({ petData }: Props) {
       contentContainerStyle={{ paddingVertical: 160, paddingHorizontal: 10 }}
     >
       <View style={styles.container}>
-        <Image
-          source={
-            profileImageUrl
-              ? { uri: profileImageUrl }
-              : require("../assets/anon_user.png")
-          }
-          style={styles.profilePic}
-        />
+        <View style={styles.imageContainer}>
+          <Image
+            source={
+              profileImageUrl
+                ? { uri: profileImageUrl }
+                : require("../assets/anon_user.png")
+            }
+            style={styles.profilePic}
+          />
+          <TouchableOpacity
+            style={styles.editIconButton}
+            onPress={() => setShowImagePickerModal(true)}
+          >
+            <Ionicons name="pencil-outline" size={20} color="white" />
+          </TouchableOpacity>
+        </View>
         <View style={styles.profile}>
           <Text style={styles.profileName}>{petData.name}</Text>
           <Text style={styles.petType}>{petData.type}</Text>
-          <Text onPress={() => setShowImagePickerModal(true)}>Edit Photo</Text>
           <Modal visible={showImagePickerModal}>
             <ImagePicker petId={petData.id} userId={userId} />
           </Modal>
@@ -221,13 +229,33 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     height: 700,
   },
-  profilePic: {
+  imageContainer: {
     position: "absolute",
     top: -75,
+    zIndex: 2,
+  },
+  profilePic: {
     width: 150,
     height: 150,
     borderRadius: 75,
-    zIndex: 2,
+  },
+  editIconButton: {
+    position: "absolute",
+    bottom: 5,
+    right: 5,
+    backgroundColor: "#E2866E",
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "white",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   profileName: {
     fontSize: 40,
