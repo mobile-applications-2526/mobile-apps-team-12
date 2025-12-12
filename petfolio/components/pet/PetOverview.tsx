@@ -1,63 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { Pet } from "../types";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  Modal,
-} from "react-native";
+import React, { useState } from "react";
+import { Pet } from "../../types";
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { Table, Rows } from "react-native-table-component";
 import { useRouter } from "expo-router";
-import PetService from "../services/PetService";
-import ImagePicker from "./ImagePickerPets";
-import { supabase } from "../utils/supabase";
-import Ionicons from "@react-native-vector-icons/ionicons";
+import PetService from "../../services/PetService";
+
 
 type Props = {
   petData: Pet;
 };
 
 export default function PetOverview({ petData }: Props) {
+  // petData.medication.forEach(med => {
+  //     medications.push(med.name)
+  // })
+
+  // petData.vaccins.forEach(vac => {
+  //     vaccins.push(vac.name)
+  // })
+
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showImagePickerModal, setShowImagePickerModal] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    getUserId();
-  }, []);
-  useEffect(() => {
-    if (petData.id && userId) {
-      loadProfileImage();
-    }
-  }, [petData.id, userId]);
-
-  const loadProfileImage = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("pets")
-        .select("picture")
-        .eq("id", Number(petData.id))
-        .eq("owner_id", userId)
-        .single();
-      console.log("image data:", data);
-
-      if (error) {
-        console.error("Error fetching profile image:", error);
-        return;
-      }
-
-      if (data?.picture) {
-        setProfileImageUrl(data.picture);
-      }
-    } catch (error) {
-      console.error("Error loading profile image:", error);
-    }
-  };
 
   const getCurrentWeight = () => {
     if (!petData.weight || petData.weight.length === 0) return "N/A";
@@ -67,7 +30,7 @@ export default function PetOverview({ petData }: Props) {
     });
 
     return `${sortedWeights[0].value} kg`;
-  };
+  }
 
   const handleDelete = async () => {
     try {
@@ -80,51 +43,34 @@ export default function PetOverview({ petData }: Props) {
     } catch (error) {
       console.error("Error deleting pet:", error);
     }
-  };
-  const getUserId = async () => {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (user) {
-      setUserId(user.id);
-    } else {
-      console.log("something went wrong with fetching userId", userError);
-    }
-  };
+
+  }
 
   const tableData = [
     ["Birthday", petData.birthdate],
     [
       "Current weight",
-      <TouchableOpacity
-        onPress={() => router.push(`/pet/weights/${petData.id}`)}
-      >
+      <TouchableOpacity onPress={() => router.push(`/pet/weights/${petData.id}`)}>
         <View style={styles.rowContent}>
           <Text>{getCurrentWeight()}</Text>
           <Text style={styles.arrow}>&rsaquo;</Text>
         </View>
-      </TouchableOpacity>,
+      </TouchableOpacity>
     ],
-    [
-      "Food",
+    ["Food",
       <TouchableOpacity onPress={() => router.push(`/pet/foods/${petData.id}`)}>
         <Text style={styles.arrow}>&rsaquo;</Text>
-      </TouchableOpacity>,
+      </TouchableOpacity>
     ],
     [
       "Medication",
-      <TouchableOpacity
-        onPress={() => router.push(`/pet/medications/${petData.id}`)}
-      >
+      <TouchableOpacity onPress={() => router.push(`/pet/medications/${petData.id}`)}>
         <Text style={styles.arrow}>&rsaquo;</Text>
       </TouchableOpacity>,
     ],
     [
       "Vaccinations",
-      <TouchableOpacity
-        onPress={() => router.push(`/pet/vaccinations/${petData.id}`)}
-      >
+      <TouchableOpacity onPress={() => router.push(`/pet/vaccinations/${petData.id}`)}>
         <Text style={styles.arrow}>&rsaquo;</Text>
       </TouchableOpacity>,
     ],
@@ -135,28 +81,13 @@ export default function PetOverview({ petData }: Props) {
       contentContainerStyle={{ paddingVertical: 160, paddingHorizontal: 10 }}
     >
       <View style={styles.container}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={
-              profileImageUrl
-                ? { uri: profileImageUrl }
-                : require("../assets/anon_user.png")
-            }
-            style={styles.profilePic}
-          />
-          <TouchableOpacity
-            style={styles.editIconButton}
-            onPress={() => setShowImagePickerModal(true)}
-          >
-            <Ionicons name="pencil-outline" size={20} color="white" />
-          </TouchableOpacity>
-        </View>
+        <Image
+          source={require("../assets/bengel-pf.png")}
+          style={styles.profilePic}
+        />
         <View style={styles.profile}>
           <Text style={styles.profileName}>{petData.name}</Text>
           <Text style={styles.petType}>{petData.type}</Text>
-          <Modal visible={showImagePickerModal}>
-            <ImagePicker petId={petData.id} userId={userId} />
-          </Modal>
           <Table>
             <Rows style={styles.row} data={tableData} />
           </Table>
@@ -177,14 +108,10 @@ export default function PetOverview({ petData }: Props) {
               activeOpacity={1}
               onPress={() => setShowDeleteModal(false)}
             >
-              <View
-                style={styles.modalContent}
-                onStartShouldSetResponder={() => true}
-              >
+              <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
                 <Text style={styles.modalTitle}>Delete Pet</Text>
                 <Text style={styles.confirmText}>
-                  Are you sure you want to delete {petData.name}? This action
-                  cannot be undone.
+                  Are you sure you want to delete {petData.name}? This action cannot be undone.
                 </Text>
 
                 <View style={styles.modalButtons}>
@@ -229,33 +156,13 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     height: 700,
   },
-  imageContainer: {
+  profilePic: {
     position: "absolute",
     top: -75,
-    zIndex: 2,
-  },
-  profilePic: {
     width: 150,
     height: 150,
     borderRadius: 75,
-  },
-  editIconButton: {
-    position: "absolute",
-    bottom: 5,
-    right: 5,
-    backgroundColor: "#E2866E",
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 2,
-    borderColor: "white",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    zIndex: 2,
   },
   profileName: {
     fontSize: 40,
@@ -288,10 +195,10 @@ const styles = StyleSheet.create({
     marginRight: 30,
   },
   deleteButton: {
-    backgroundColor: "#dc3545",
+    backgroundColor: '#dc3545',
     padding: 16,
     borderRadius: 12,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -300,48 +207,48 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   deleteButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 16,
     padding: 24,
-    width: "80%",
+    width: '80%',
     maxWidth: 340,
   },
 
   modalTitle: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 16,
-    textAlign: "center",
-    color: "#333",
+    textAlign: 'center',
+    color: '#333',
   },
 
   confirmText: {
     fontSize: 15,
-    color: "#666",
-    textAlign: "center",
+    color: '#666',
+    textAlign: 'center',
     marginBottom: 20,
     lineHeight: 22,
   },
   cancelButtonText: {
-    color: "#666",
+    color: '#666',
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   modalInput: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
@@ -349,7 +256,7 @@ const styles = StyleSheet.create({
   },
 
   modalButtons: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 12,
   },
 
@@ -357,13 +264,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 14,
     borderRadius: 8,
-    alignItems: "center",
+    alignItems: 'center',
   },
 
   cancelButton: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: '#f0f0f0',
   },
   deleteModalButton: {
-    backgroundColor: "#dc3545",
+    backgroundColor: '#dc3545',
   },
 });

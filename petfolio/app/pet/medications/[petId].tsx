@@ -4,8 +4,8 @@ import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { Pet } from "../../../types";
 import PetService from "../../../services/PetService";
 import Header from "../../../components/Header";
-import MedicationsTable from "../../../components/MedicationsTable";
-import AddMedicationModal from "../../../components/AddMedicationModal";
+import MedicationsTable from "../../../components/medication/MedicationsTable";
+import AddMedicationModal from "../../../components/medication/AddMedicationModal";
 import MedicationService from "../../../services/MedicationService";
 import Button from "../../../components/Button";
 

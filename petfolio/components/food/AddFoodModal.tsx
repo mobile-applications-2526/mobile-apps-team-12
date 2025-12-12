@@ -1,69 +1,64 @@
-import React, { useState } from "react";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import react, { useState } from "react";
 import { View, Text, StyleSheet, Modal, TextInput, Pressable } from "react-native";
 
 type Props = {
     visible: boolean;
     onClose: () => void;
-    onSubmit: (value:string, date:string) => void;
+    onSubmit: (name:string, description:string, quantity:string) => void;
 };
 
-export default function AddWeightModel({ visible, onClose, onSubmit }: Props) {
-    const  [weight, setWeight] = useState("");
-    const [date, setDate] = useState(new Date());
-    const [showPicker, setShowPicker] = useState(false);
-
+export default function AddFoodModal({ visible, onClose, onSubmit }: Props) {
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [quantity, setQuantity] = useState("");
+    
     return (
         <Modal visible={visible} transparent>
             <View style={styles.overlay}>
                 <View style={styles.modal}>
-                    <Text style={styles.title}>Add Weight</Text>
+                    <Text style={styles.title}>Add Food</Text>
 
-                    <Text style={styles.label}>Weight (kg):</Text>
+                    <Text style={styles.label}>Name:</Text>
                     <TextInput
-                        value={weight}
-                        onChangeText={setWeight}
-                        keyboardType="decimal-pad"
+                        value={name}
+                        onChangeText={setName}
                         style={styles.input}
                     />
 
-                    <Text style={styles.label}>Date</Text>
-                    <Pressable onPress={() => setShowPicker(true)} style={styles.input}>
-                        <Text>{date.toLocaleDateString("nl-BE")}</Text>
-                    </Pressable>
+                    <Text style={styles.label}>Description:</Text>
+                    <TextInput
+                        value={description}
+                        onChangeText={setDescription}
+                        style={styles.input}
+                    />
 
-                    {showPicker && (
-                        <DateTimePicker
-                            display="spinner"
-                            value={date}
-                            mode="date"
-                            onChange={(event, date) => {
-                                setShowPicker(false);
-                                if (date) setDate(date);
-                            }}
-                        />
-                    )}
+                    <Text style={styles.label}>Quantity:</Text>
+                    <TextInput
+                        value={quantity}
+                        onChangeText={setQuantity}
+                        style={styles.input}
+                    />
 
                     <View style={styles.buttonRow}>
-                        <Pressable onPress={onClose} style={styles.cancelButton}>
+                        <Pressable onPress={onClose} style={styles.cancelButton} testID="cancel-food-button">
                             <Text style={styles.cancelText}>Cancel</Text>
                         </Pressable>
 
-                        <Pressable
-                            onPress={() => {
-                                onSubmit(weight, date.toISOString());
+                        <Pressable onPress={() => {
+                                onSubmit(name, description, quantity);
                             }}
                             style={styles.addButton}
+                            testID="add-food-button"
                         >
                             <Text style={styles.addText}>Add</Text>
                         </Pressable>
                     </View>
                 </View>
-            </View>            
+            </View>
         </Modal>
     )
+}
 
-};
 const styles = StyleSheet.create({
     overlay: {
         flex: 1,
@@ -105,7 +100,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     addButton: {
-        backgroundColor: "rgba(0, 28, 5, 1)",
+        backgroundColor: "#507e62",
         padding: 10,
         borderRadius: 10,
         width: "45%",

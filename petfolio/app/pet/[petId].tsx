@@ -2,9 +2,14 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import Header from "../../components/Header";
 import { Pet } from "../../types";
-import PetOverview from "../../components/PetOverview";
+import PetOverview from "../../components/pet/PetOverview";
 import PetService from "../../services/PetService";
-import { Link, router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import {
+  Link,
+  router,
+  useFocusEffect,
+  useLocalSearchParams,
+} from "expo-router";
 
 export default function PetShow() {
   // const db = useSQLiteContext();
@@ -66,9 +71,12 @@ export default function PetShow() {
   return (
     <View style={styles.container}>
       <Header />
-          <TouchableOpacity onPress={() => router.push("/petOverview")} style={styles.backLink}>
-                <Text style={styles.backLinkText}>&larr; Back to pets overview</Text>
-          </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => router.push("/petOverview")}
+        style={styles.backLink}
+      >
+        <Text style={styles.backLinkText}>&larr; Back to pets overview</Text>
+      </TouchableOpacity>
       <View>
         {!error && pet && <PetOverview petData={pet} />}
         {error && <Text>Error</Text>}
@@ -86,12 +94,12 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     width: "100%",
   },
-    backLink: { 
-        marginLeft: 20, 
-        marginBottom: 10 
-    },
-        backLinkText: {
-        textDecorationLine: "underline", 
-        color: "#043500ff"
-    },
+  backLink: {
+    marginLeft: 20,
+    marginBottom: 10,
+  },
+  backLinkText: {
+    textDecorationLine: "underline",
+    color: "#043500ff",
+  },
 });

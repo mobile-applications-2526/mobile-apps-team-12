@@ -9,7 +9,7 @@ import {
 import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
 import PetService from "../../services/PetService";
-import PetsTable from "../../components/PetsTable";
+import PetsTable from "../../components/pet/PetsTable";
 import { Pet } from "../../types";
 import { useAuth } from "../../context/authContext";
 import { useRouter } from "expo-router";

@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal } from "react-native";
-import { Weight } from "../types";
-import { useState } from "react";
+import { Weight } from "../../types";
+import React, { useState } from "react";
 
 type Props = {
     weights?: Weight[];
@@ -10,7 +10,7 @@ type Props = {
 export default function WeightOverview({ weights = [], onDelete }: Props) {
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [selectedWeight, setSelectedWeight] = useState<Weight | null>(null);
-    
+
     const sortedWeights = [...weights].sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
@@ -27,7 +27,7 @@ export default function WeightOverview({ weights = [], onDelete }: Props) {
         setDeleteModalVisible(false);
         setSelectedWeight(null);
     };
-    
+
     return (
         <>
             <ScrollView contentContainerStyle={{ paddingBottom: 90, paddingHorizontal: 10 }}>
@@ -87,11 +87,12 @@ export default function WeightOverview({ weights = [], onDelete }: Props) {
                             <TouchableOpacity
                                 style={[styles.modalButton, styles.deleteButtonModal]}
                                 onPress={confirmDelete}
+                                testID="delete-weight-button"
                             >
                                 <Text style={styles.deleteButtonText}>Delete</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>                    
+                    </View>
                 </TouchableOpacity>
             </Modal>
         </>

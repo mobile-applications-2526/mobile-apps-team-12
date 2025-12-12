@@ -1,5 +1,5 @@
 import React from "react";
-import { Pet } from "../types";
+import { Pet } from "../../types";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Table } from 'react-native-table-component';
 import { router } from "expo-router";
@@ -14,7 +14,7 @@ export default function VaccinationsTable({ petData }: Props) {
         <View style={styles.container}>
             <View style={styles.profile}>
                 <Text style={styles.profileName}>{petData.name}'s Vaccinations</Text>
-                <ScrollView>
+                <ScrollView contentContainerStyle={{ paddingBottom: 90, paddingHorizontal: 10 }}>
                     <Table>
                         {petData && petData.vaccins.map((vac) => (
                             <TouchableOpacity onPress={() => router.navigate(`/vaccination/${vac.id}`)} key={vac.id} style={styles.customRow}>
@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         alignItems: 'stretch',
         padding: 20,
-        height: 700
     },
     profileName: {
         fontSize: 40,

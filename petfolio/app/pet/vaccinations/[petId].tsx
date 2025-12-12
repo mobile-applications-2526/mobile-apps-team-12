@@ -1,15 +1,13 @@
-import { useSQLiteContext } from "expo-sqlite";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { Pet } from "../../../types";
 import PetService from "../../../services/PetService";
 import Header from "../../../components/Header";
-import MedicationsTable from "../../../components/MedicationsTable";
-import VaccinationsTable from "../../../components/VaccinationsTable";
+import VaccinationsTable from "../../../components/vaccin/VaccinationsTable";
 import VaccinationService from "../../../services/VaccinationService";
 import Button from "../../../components/Button";
-import AddVaccinModal from "../../../components/AddVaccinModal";
+import AddVaccinModal from "../../../components/vaccin/AddVaccinModal";
 
 export default function MedicationShow() {
   const [pet, setPet] = useState<Pet>(null);
