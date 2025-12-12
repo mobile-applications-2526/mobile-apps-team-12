@@ -4,7 +4,12 @@ import Header from "../../components/Header";
 import { Pet } from "../../types";
 import PetOverview from "../../components/pet/PetOverview";
 import PetService from "../../services/PetService";
-import { Link, router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import {
+  Link,
+  router,
+  useFocusEffect,
+  useLocalSearchParams,
+} from "expo-router";
 
 export default function PetShow() {
   // const db = useSQLiteContext();
@@ -66,7 +71,10 @@ export default function PetShow() {
   return (
     <View style={styles.container}>
       <Header />
-      <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
+      <TouchableOpacity
+        onPress={() => router.push("/petOverview")}
+        style={styles.backLink}
+      >
         <Text style={styles.backLinkText}>&larr; Back to pets overview</Text>
       </TouchableOpacity>
       <View>
@@ -88,10 +96,10 @@ const styles = StyleSheet.create({
   },
   backLink: {
     marginLeft: 20,
-    marginBottom: 10
+    marginBottom: 10,
   },
   backLinkText: {
     textDecorationLine: "underline",
-    color: "#043500ff"
+    color: "#043500ff",
   },
 });
