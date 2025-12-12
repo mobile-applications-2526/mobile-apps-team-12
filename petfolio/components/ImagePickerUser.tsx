@@ -15,6 +15,7 @@ import { useRouter } from "expo-router";
 
 export default function ImagePickerUser({ userId }: { userId: string }) {
   const [image, setImage] = useState<string | null>(null);
+  const [imageData, setImageData] = useState<any>(null);
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
 
@@ -39,54 +40,86 @@ export default function ImagePickerUser({ userId }: { userId: string }) {
     });
 
     if (!result.canceled) {
+      setImageData(result.assets[0]);
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const takePhoto = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert(
+        "Permission required",
+        "Permission to access the camera is required."
+      );
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: false,
+      aspect: [1, 1],
+      quality: 0.8,
+      base64: true,
+    });
+
+    if (!result.canceled) {
       const imageraw = result.assets[0];
       setImage(imageraw.uri);
-      try {
-        setUploading(true);
+      setImageData(imageraw); // Store the full image data
+    }
+  };
 
-        // Generate a unique file name
-        const fileExt = imageraw.fileName.split(".").pop();
-        const fileName = `${userId}.${fileExt}`;
-        const filePath = `${userId}/${fileName}`;
+  const uploadImage = async () => {
+    if (!imageData) {
+      Alert.alert("No image selected", "Please select an image first");
+      return;
+    }
+    try {
+      setUploading(true);
 
-        if (!imageraw.base64) {
-          throw new Error("Failed to get image data");
-        }
+      // Generate a unique file name
+      const fileExt = imageData.fileName.split("/").pop() ?? "jpeg";
+      const fileName = `${userId}.${fileExt}`;
+      const filePath = `${userId}/${fileName}`;
 
-        // Upload to Supabase Storage
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from(`profilepictures`)
-          .upload(filePath, decode(imageraw.base64), {
-            contentType: imageraw.mimeType,
-            upsert: true,
-          });
-
-        if (uploadError) {
-          throw uploadError;
-        }
-
-        // Get the url
-        const { data: publicUrlData } = await supabase.storage
-          .from(`profilepictures`)
-          .getPublicUrl(filePath);
-
-        const publicUrl = publicUrlData.publicUrl;
-        const { error: updateError } = await supabase
-          .from("profiles")
-          .update({ pictures: publicUrl })
-          .eq("user_id", userId);
-        if (updateError) {
-          throw updateError;
-        }
-
-        console.log("Profile picture updated!");
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        throw new Error("Failed to upload image. Please try again.");
-      } finally {
-        setUploading(false);
-        router.push(`/profile`);
+      if (!imageData.base64) {
+        throw new Error("Failed to get image data");
       }
+
+      // Upload to Supabase Storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from(`profilepictures`)
+        .upload(filePath, decode(imageData.base64), {
+          contentType: imageData.mimeType ?? "jpeg",
+          upsert: true,
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // Get the url
+      const { data: publicUrlData } = await supabase.storage
+        .from(`profilepictures`)
+        .getPublicUrl(filePath);
+
+      const publicUrl = publicUrlData.publicUrl;
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({ pictures: publicUrl })
+        .eq("user_id", userId);
+      if (updateError) {
+        throw updateError;
+      }
+
+      console.log("Profile picture updated!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw new Error("Failed to upload image. Please try again.");
+    } finally {
+      setUploading(false);
+      router.push(`/profile`);
     }
   };
 
@@ -99,6 +132,28 @@ export default function ImagePickerUser({ userId }: { userId: string }) {
       >
         <Text style={styles.buttonLabel}>Pick an image from camera roll</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, styles.cameraButton]}
+        onPress={takePhoto}
+        disabled={uploading}
+      >
+        <Text style={styles.buttonLabel}>Take Photo</Text>
+      </TouchableOpacity>
+
+      {image && (
+        <>
+          <TouchableOpacity
+            style={[styles.button, styles.uploadButton]}
+            onPress={uploadImage}
+            disabled={uploading}
+          >
+            <Text style={styles.buttonLabel}>
+              {uploading ? "Uploading..." : "Save & Upload"}
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
 
       <TouchableOpacity
         style={styles.buttonCancel}
@@ -140,6 +195,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#507e62",
     padding: 5,
     marginBottom: 10,
+  },
+  cameraButton: {
+    backgroundColor: "#507e62",
+  },
+  uploadButton: {
+    backgroundColor: "#2196F3",
   },
   buttonCancel: {
     borderRadius: 10,

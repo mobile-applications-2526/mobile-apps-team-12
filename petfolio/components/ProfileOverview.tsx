@@ -119,7 +119,6 @@ export default function ProfileOverview({ profileData }: Props) {
         </TouchableOpacity>
       </View>
       <View style={styles.profile}>
-        <Text onPress={() => setShowImagePickerModal(true)}>Edit Photo</Text>
         <Modal visible={showImagePickerModal}>
           <ImagePickerUser userId={profileData.user_id} />
         </Modal>

@@ -1,19 +1,34 @@
 import { useState } from "react";
-import { Alert, Image, View, StyleSheet, ActivityIndicator, TouchableOpacity, Text } from "react-native";
+import {
+  Alert,
+  Image,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "../utils/supabase";
-import { decode } from 'base64-arraybuffer'
+import { decode } from "base64-arraybuffer";
 import { useRouter } from "expo-router";
 
-export default function ImagePickerPets({ petId, userId }: { petId: string, userId: string }) {
+export default function ImagePickerPets({
+  petId,
+  userId,
+}: {
+  petId: string;
+  userId: string;
+}) {
   const [image, setImage] = useState<string | null>(null);
+  const [imageData, setImageData] = useState<any>(null);
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
 
   const pickImage = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
+
     if (!permissionResult.granted) {
       Alert.alert(
         "Permission required",
@@ -25,7 +40,7 @@ export default function ImagePickerPets({ petId, userId }: { petId: string, user
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: false,
-      aspect: [1, 1], 
+      aspect: [1, 1],
       quality: 0.8,
       base64: true,
     });
@@ -33,23 +48,57 @@ export default function ImagePickerPets({ petId, userId }: { petId: string, user
     if (!result.canceled) {
       const imageraw = result.assets[0];
       setImage(imageraw.uri);
-      try {
+      setImageData(imageraw);
+    }
+  };
+  const takePhoto = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert(
+        "Permission required",
+        "Permission to access the camera is required."
+      );
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: false,
+      aspect: [1, 1],
+      quality: 0.8,
+      base64: true,
+    });
+
+    if (!result.canceled) {
+      const imageraw = result.assets[0];
+      setImage(imageraw.uri);
+      setImageData(imageraw); // Store the full image data
+    }
+  };
+
+  const uploadImage = async () => {
+    if (!imageData) {
+      Alert.alert("No image selected", "Please select an image first");
+      return;
+    }
+    try {
       setUploading(true);
 
       // Generate a unique file name
-      const fileExt = imageraw.mimeType?.split("/")[1] ?? "jpg";
+      const fileExt = imageData.mimeType?.split("/")[1] ?? "jpeg";
       const fileName = `${petId}.${fileExt}`;
       const filePath = `${userId}/${fileName}`;
 
-      if (!imageraw.base64) {
+      if (!imageData.base64) {
         throw new Error("Failed to get image data");
       }
 
       // Upload to Supabase Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from(`petpictures`)
-        .upload(filePath, decode(imageraw.base64), {
-          contentType: imageraw.mimeType ?? "jpg", upsert:true
+        .upload(filePath, decode(imageData.base64), {
+          contentType: imageData.mimeType ?? "jpeg",
+          upsert: true,
         });
 
       if (uploadError) {
@@ -59,15 +108,15 @@ export default function ImagePickerPets({ petId, userId }: { petId: string, user
       // Get the url
       const { data: signedUrlData } = await supabase.storage
         .from(`petpictures`)
-        .createSignedUrl(filePath, 60*60);
+        .createSignedUrl(filePath, 60 * 60);
 
       const url = signedUrlData.signedUrl;
-        const { error: updateError } = await supabase
+      const { error: updateError } = await supabase
         .from("pets")
         .update({ picture: url })
         .eq("id", Number(petId))
         .eq("owner_id", userId);
-        console.log("number petId:", Number(petId));
+      console.log("number petId:", Number(petId));
       if (updateError) {
         console.log("Could not download image: ", updateError);
         throw updateError;
@@ -81,29 +130,49 @@ export default function ImagePickerPets({ petId, userId }: { petId: string, user
       setUploading(false);
       router.push(`/pet/${petId}`);
     }
-    }
   };
-
 
   return (
     <View style={styles.container}>
-        <TouchableOpacity
-      style={styles.button}
-      onPress={pickImage}
-      disabled={uploading}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={pickImage}
+        disabled={uploading}
       >
-      <Text style={styles.buttonLabel}>Pick an image from camera roll</Text>
+        <Text style={styles.buttonLabel}>Pick an image from camera roll</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-      style={styles.buttonCancel}
-      onPress={() => router.push(`/pet/${petId}`)}
+        style={[styles.button, styles.cameraButton]}
+        onPress={takePhoto}
+        disabled={uploading}
       >
-      <Text style={styles.buttonLabel}>Cancel</Text>
+        <Text style={styles.buttonLabel}>Take Photo</Text>
       </TouchableOpacity>
-      
+
+      {image && (
+        <>
+          <TouchableOpacity
+            style={[styles.button, styles.uploadButton]}
+            onPress={uploadImage}
+            disabled={uploading}
+          >
+            <Text style={styles.buttonLabel}>
+              {uploading ? "Uploading..." : "Save & Upload"}
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
+
+      <TouchableOpacity
+        style={styles.buttonCancel}
+        onPress={() => router.push(`/pet/${petId}`)}
+      >
+        <Text style={styles.buttonLabel}>Cancel</Text>
+      </TouchableOpacity>
+
       {uploading && <ActivityIndicator size="large" style={styles.loader} />}
-      
+
       {image && <Image source={{ uri: image }} style={styles.image} />}
     </View>
   );
@@ -136,7 +205,13 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 10,
   },
-    buttonCancel: {
+  cameraButton: {
+    backgroundColor: "#507e62",
+  },
+  uploadButton: {
+    backgroundColor: "#2196F3",
+  },
+  buttonCancel: {
     borderRadius: 10,
     width: "75%",
     paddingVertical: 20,
@@ -145,7 +220,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     backgroundColor: "#6d6d6dff",
-    padding: 5
+    padding: 5,
   },
   buttonLabel: {
     color: "#fff",
