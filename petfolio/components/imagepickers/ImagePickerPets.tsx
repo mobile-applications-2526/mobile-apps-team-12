@@ -9,11 +9,17 @@ import {
   Text,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { supabase } from "../utils/supabase";
+import { supabase } from "../../utils/supabase";
 import { decode } from "base64-arraybuffer";
 import { useRouter } from "expo-router";
 
-export default function ImagePickerUser({ userId }: { userId: string }) {
+export default function ImagePickerPets({
+  petId,
+  userId,
+}: {
+  petId: string;
+  userId: string;
+}) {
   const [image, setImage] = useState<string | null>(null);
   const [imageData, setImageData] = useState<any>(null);
   const [uploading, setUploading] = useState(false);
@@ -40,11 +46,11 @@ export default function ImagePickerUser({ userId }: { userId: string }) {
     });
 
     if (!result.canceled) {
-      setImageData(result.assets[0]);
-      setImage(result.assets[0].uri);
+      const imageraw = result.assets[0];
+      setImage(imageraw.uri);
+      setImageData(imageraw);
     }
   };
-
   const takePhoto = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
@@ -79,8 +85,8 @@ export default function ImagePickerUser({ userId }: { userId: string }) {
       setUploading(true);
 
       // Generate a unique file name
-      const fileExt = imageData.fileName.split("/").pop() ?? "jpeg";
-      const fileName = `${userId}.${fileExt}`;
+      const fileExt = imageData.mimeType?.split("/")[1] ?? "jpeg";
+      const fileName = `${petId}.${fileExt}`;
       const filePath = `${userId}/${fileName}`;
 
       if (!imageData.base64) {
@@ -89,7 +95,7 @@ export default function ImagePickerUser({ userId }: { userId: string }) {
 
       // Upload to Supabase Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from(`profilepictures`)
+        .from(`petpictures`)
         .upload(filePath, decode(imageData.base64), {
           contentType: imageData.mimeType ?? "jpeg",
           upsert: true,
@@ -100,16 +106,19 @@ export default function ImagePickerUser({ userId }: { userId: string }) {
       }
 
       // Get the url
-      const { data: publicUrlData } = await supabase.storage
-        .from(`profilepictures`)
-        .getPublicUrl(filePath);
+      const { data: signedUrlData } = await supabase.storage
+        .from(`petpictures`)
+        .createSignedUrl(filePath, 60 * 60);
 
-      const publicUrl = publicUrlData.publicUrl;
+      const url = signedUrlData.signedUrl;
       const { error: updateError } = await supabase
-        .from("profiles")
-        .update({ pictures: publicUrl })
-        .eq("user_id", userId);
+        .from("pets")
+        .update({ picture: url })
+        .eq("id", Number(petId))
+        .eq("owner_id", userId);
+      console.log("number petId:", Number(petId));
       if (updateError) {
+        console.log("Could not download image: ", updateError);
         throw updateError;
       }
 
@@ -119,7 +128,7 @@ export default function ImagePickerUser({ userId }: { userId: string }) {
       throw new Error("Failed to upload image. Please try again.");
     } finally {
       setUploading(false);
-      router.push(`/profile`);
+      router.push(`/pet/${petId}`);
     }
   };
 
@@ -157,7 +166,7 @@ export default function ImagePickerUser({ userId }: { userId: string }) {
 
       <TouchableOpacity
         style={styles.buttonCancel}
-        onPress={() => router.push(`/profile`)}
+        onPress={() => router.push(`/pet/${petId}`)}
       >
         <Text style={styles.buttonLabel}>Cancel</Text>
       </TouchableOpacity>
