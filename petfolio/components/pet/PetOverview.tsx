@@ -140,7 +140,7 @@ export default function PetOverview({ petData }: Props) {
             source={
               profileImageUrl
                 ? { uri: profileImageUrl }
-                : require("../assets/anon_user.png")
+                : require("../../assets/anon_user.png")
             }
             style={styles.profilePic}
           />
