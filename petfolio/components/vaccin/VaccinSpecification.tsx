@@ -157,13 +157,13 @@ export default function VaccinSpecification({ vacData }: Props) {
                         </Text>
 
                         <View style={styles.modalButtons}>
-                            <TouchableOpacity
+                            <TouchableOpacity testID="cancel-vaccin-button"
                                 style={[styles.modalButton, styles.cancelButton]}
                                 onPress={() => setShowDeleteModal(false)}
                             >
                                 <Text style={styles.cancelButtonText}>Cancel</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity
+                            <TouchableOpacity testID="delete-vaccin-button"
                                 style={[styles.modalButton, styles.deleteModalButton]}
                                 onPress={handleDelete}
                             >
@@ -195,13 +195,13 @@ export default function VaccinSpecification({ vacData }: Props) {
                         />
 
                         <View style={styles.modalButtons}>
-                            <TouchableOpacity
+                            <TouchableOpacity testID="cancel-vaccin-button"
                                 style={[styles.modalButton, styles.cancelButton]}
                                 onPress={() => setShowTypeModal(false)}
                             >
                                 <Text style={styles.cancelButtonText}>Cancel</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity
+                            <TouchableOpacity testID="save-vaccin-button"
                                 style={[styles.modalButton, styles.saveButton]}
                                 onPress={handleType}
                             >

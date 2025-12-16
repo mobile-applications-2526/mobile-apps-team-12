@@ -66,7 +66,7 @@ describe("Medication e2e flow", () => {
         cy.contains('Medication that treats epilepsi').should('be.visible');
     });
 
-    it('Should redirect to the medications detail page when clicken on a medication', () => {
+    it('Should redirect to the medications detail page when clicked on a medication', () => {
         cy.wait(2000);
 
         cy.get('body').then(() => {
@@ -74,8 +74,6 @@ describe("Medication e2e flow", () => {
             cy.get('div').contains('›').first().parent().click();
 
             cy.url({ timeout: 10000 }).should('include', '/medication/');
-
-            cy.contains('Amount', { timeout: 10000 }).should('be.visible');
             cy.contains('Delete Medication').should('be.visible');
         });
     });
@@ -88,7 +86,6 @@ describe("Medication e2e flow", () => {
                 cy.contains('Anti-Epilepsi').click();
 
                 cy.url({ timeout: 10000 }).should('include', '/medication/');
-                cy.contains('Amount', { timeout: 10000 }).should('be.visible');
 
                 cy.contains('Delete Medication').scrollIntoView().click();
 

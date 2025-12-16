@@ -40,7 +40,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
           <TextInput value={type} onChangeText={setType} style={styles.input} />
 
           <Text style={styles.label}>Shot date:</Text>
-          <View style={styles.dateContainer}>
+          <View style={styles.dateContainer} testID="shot_date">
             <RNDateTimePicker
               testID="shotDate"
               value={shot_date}
@@ -58,7 +58,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
           </View>
 
           <Text style={styles.label}>Expire date:</Text>
-          <View style={styles.dateContainer}>
+          <View style={styles.dateContainer} testID="expire_date">
             <RNDateTimePicker
               testID="expireDate"
               value={expire_date}
@@ -76,7 +76,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
           </View>
 
           <View style={styles.buttonRow}>
-            <Pressable onPress={onClose} style={styles.cancelButton}>
+            <Pressable testID="cancel-vaccin-button" onPress={onClose} style={styles.cancelButton}>
               <Text style={styles.cancelText}>Cancel</Text>
             </Pressable>
 
