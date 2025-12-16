@@ -51,6 +51,9 @@ module.exports = {
             ],
           },
         },
+      }, {
+        test: /\.(ttf|woff|woff2|eot)$/,
+        type: 'asset/inline'
       },
     ],
   },

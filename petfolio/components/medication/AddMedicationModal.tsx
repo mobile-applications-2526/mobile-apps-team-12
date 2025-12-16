@@ -40,11 +40,11 @@ export default function AddMedicationModal({ visible, onClose, onSubmit }: Props
                     />
 
                     <View style={styles.buttonRow}>
-                        <Pressable onPress={onClose} style={styles.cancelButton}>
+                        <Pressable testID="cancel-medication-button" onPress={onClose} style={styles.cancelButton}>
                             <Text style={styles.cancelText}>Cancel</Text>
                         </Pressable>
 
-                        <Pressable onPress={() => {
+                        <Pressable testID="add-medication-button" onPress={() => {
                             onSubmit(name, description, quantity);
                         }}
                             style={styles.addButton}
