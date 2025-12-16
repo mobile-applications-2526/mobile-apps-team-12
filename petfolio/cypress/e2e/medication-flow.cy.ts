@@ -16,8 +16,8 @@ describe("Medication e2e flow", () => {
         cy.wait(2000);
 
         cy.get('body').then(($body) => {
-            if ($body.text().includes('Antibiotica')) {
-                cy.contains('Antibiotica').click();
+            if ($body.text().includes('Anti-Epilepsi')) {
+                cy.contains('Anti-Epilepsi').click();
                 cy.wait(1000);
 
                 cy.contains('Delete Medication').click();
@@ -84,8 +84,8 @@ describe("Medication e2e flow", () => {
         cy.wait(2000);
 
         cy.get('body').then(($body) => {
-            if ($body.text().includes('Antibiotica')) {
-                cy.contains('Antibiotica').click();
+            if ($body.text().includes('Anti-Epilepsi')) {
+                cy.contains('Anti-Epilepsi').click();
 
                 cy.url({ timeout: 10000 }).should('include', '/medication/');
                 cy.contains('Amount', { timeout: 10000 }).should('be.visible');
@@ -103,7 +103,7 @@ describe("Medication e2e flow", () => {
                 cy.reload();
                 cy.wait(2000);
 
-                cy.get('body').should('not.contain', 'Antibiotica');
+                cy.get('body').should('not.contain', 'Anti-Epilepsi');
             }
         });
     });
