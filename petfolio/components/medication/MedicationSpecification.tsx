@@ -116,13 +116,13 @@ export default function MedicationSpecification({ medicationData }: Props) {
                         </Text>
 
                         <View style={styles.modalButtons}>
-                            <TouchableOpacity
+                            <TouchableOpacity testID="cancel-medication-button"
                                 style={[styles.modalButton, styles.cancelButton]}
                                 onPress={() => setShowDeleteModal(false)}
                             >
                                 <Text style={styles.cancelButtonText}>Cancel</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity
+                            <TouchableOpacity testID="delete-medication-button"
                                 style={[styles.modalButton, styles.deleteModalButton]}
                                 onPress={handleDelete}
                             >
@@ -154,13 +154,13 @@ export default function MedicationSpecification({ medicationData }: Props) {
                         />
 
                         <View style={styles.modalButtons}>
-                            <TouchableOpacity
+                            <TouchableOpacity testID="cancel-medication-button"
                                 style={[styles.modalButton, styles.cancelButton]}
                                 onPress={() => setShowQuantityModal(false)}
                             >
                                 <Text style={styles.cancelButtonText}>Cancel</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity
+                            <TouchableOpacity testID="save-medication-button"
                                 style={[styles.modalButton, styles.saveButton]}
                                 onPress={handleQuantity}
                             >
