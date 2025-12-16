@@ -51,6 +51,7 @@ export default function UserProfile() {
   }, []);
 
   return (
+    
     <View style={styles.container}>
       <Header />
       <View>

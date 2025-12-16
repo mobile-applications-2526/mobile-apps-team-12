@@ -1,0 +1,229 @@
+import { useState } from "react";
+import {
+  Alert,
+  Image,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Text,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { supabase } from "../../utils/supabase";
+import { decode } from "base64-arraybuffer";
+import { useRouter } from "expo-router";
+
+export default function ImagePickerPets({
+  petId,
+  userId,
+}: {
+  petId: string;
+  userId: string;
+}) {
+  const [image, setImage] = useState<string | null>(null);
+  const [imageData, setImageData] = useState<any>(null);
+  const [uploading, setUploading] = useState(false);
+  const router = useRouter();
+
+  const pickImage = async () => {
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert(
+        "Permission required",
+        "Permission to access the media library is required."
+      );
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: false,
+      aspect: [1, 1],
+      quality: 0.8,
+      base64: true,
+    });
+
+    if (!result.canceled) {
+      const imageraw = result.assets[0];
+      setImage(imageraw.uri);
+      setImageData(imageraw);
+    }
+  };
+  const takePhoto = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert(
+        "Permission required",
+        "Permission to access the camera is required."
+      );
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: false,
+      aspect: [1, 1],
+      quality: 0.8,
+      base64: true,
+    });
+
+    if (!result.canceled) {
+      const imageraw = result.assets[0];
+      setImage(imageraw.uri);
+      setImageData(imageraw); // Store the full image data
+    }
+  };
+
+  const uploadImage = async () => {
+    if (!imageData) {
+      Alert.alert("No image selected", "Please select an image first");
+      return;
+    }
+    try {
+      setUploading(true);
+
+      // Generate a unique file name
+      const fileExt = imageData.mimeType?.split("/")[1] ?? "jpeg";
+      const fileName = `${petId}.${fileExt}`;
+      const filePath = `${userId}/${fileName}`;
+
+      if (!imageData.base64) {
+        throw new Error("Failed to get image data");
+      }
+
+      // Upload to Supabase Storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from(`petpictures`)
+        .upload(filePath, decode(imageData.base64), {
+          contentType: imageData.mimeType ?? "jpeg",
+          upsert: true,
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // Get the url
+      const { data: signedUrlData } = await supabase.storage
+        .from(`petpictures`)
+        .createSignedUrl(filePath, 60 * 60);
+
+      const url = signedUrlData.signedUrl;
+      const { error: updateError } = await supabase
+        .from("pets")
+        .update({ picture: url })
+        .eq("id", Number(petId))
+        .eq("owner_id", userId);
+      console.log("number petId:", Number(petId));
+      if (updateError) {
+        console.log("Could not download image: ", updateError);
+        throw updateError;
+      }
+
+      console.log("Profile picture updated!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw new Error("Failed to upload image. Please try again.");
+    } finally {
+      setUploading(false);
+      router.push(`/pet/${petId}`);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={pickImage}
+        disabled={uploading}
+      >
+        <Text style={styles.buttonLabel}>Pick an image from camera roll</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, styles.cameraButton]}
+        onPress={takePhoto}
+        disabled={uploading}
+      >
+        <Text style={styles.buttonLabel}>Take Photo</Text>
+      </TouchableOpacity>
+
+      {image && (
+        <>
+          <TouchableOpacity
+            style={[styles.button, styles.uploadButton]}
+            onPress={uploadImage}
+            disabled={uploading}
+          >
+            <Text style={styles.buttonLabel}>
+              {uploading ? "Uploading..." : "Save & Upload"}
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
+
+      <TouchableOpacity
+        style={styles.buttonCancel}
+        onPress={() => router.push(`/pet/${petId}`)}
+      >
+        <Text style={styles.buttonLabel}>Cancel</Text>
+      </TouchableOpacity>
+
+      {uploading && <ActivityIndicator size="large" style={styles.loader} />}
+
+      {image && <Image source={{ uri: image }} style={styles.image} />}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  image: {
+    width: 200,
+    height: 200,
+    borderRadius: 100, // Make it circular
+    marginTop: 20,
+  },
+  loader: {
+    marginTop: 20,
+  },
+  button: {
+    borderRadius: 10,
+    width: "75%",
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    backgroundColor: "#507e62",
+    padding: 5,
+    marginBottom: 10,
+  },
+  cameraButton: {
+    backgroundColor: "#507e62",
+  },
+  uploadButton: {
+    backgroundColor: "#2196F3",
+  },
+  buttonCancel: {
+    borderRadius: 10,
+    width: "75%",
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    backgroundColor: "#6d6d6dff",
+    padding: 5,
+  },
+  buttonLabel: {
+    color: "#fff",
+    fontSize: 16,
+  },
+});
