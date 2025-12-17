@@ -5,11 +5,13 @@ import ProfileOverview from "../../components/profile/ProfileOverview";
 import { Profile, User } from "../../types";
 import ProfileService from "../../services/ProfileService";
 import UserService from "../../services/UserService";
+import { useAuth } from "../../context/authContext";
 
 export default function UserProfile() {
   const [profile, setProfile] = useState<Profile>(undefined);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const { session } = useAuth();
 
   function clearErrors() {
     setError("");
@@ -25,7 +27,7 @@ export default function UserProfile() {
   });
   async function getProfileByUser() {
     clearErrors();
-
+    if (session) {
     try {
       const result = await ProfileService.getProfileByUserId();
       const userInfo = await UserService.getUserInformationByUserId();
@@ -45,6 +47,7 @@ export default function UserProfile() {
       setLoading(false);
     }
   }
+      }
 
   useEffect(() => {
     getProfileByUser();
