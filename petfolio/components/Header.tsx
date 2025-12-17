@@ -16,7 +16,7 @@ export default function Header() {
     <View style={styles.container}>
       <View style={styles.leftButtons}>
         <Pressable
-          onPress={() => router.navigate("/homepage")}
+          onPress={() => router.navigate("/homepage")} testID="home-icon"
         >
           <Image
             source={require("../assets/petfolio-logo.png")}
@@ -27,10 +27,10 @@ export default function Header() {
       <View style={styles.rightButtons}>
 
         <Pressable
-          onPress={() => router.navigate("/profile")}
+          onPress={() => router.navigate("/profile")} testID="profile-icon"
         ><Ionicons name="person" size={40} color="rgba(0, 28, 5, 1)" /></Pressable>
         <Pressable
-        onPress={() => router.navigate("/calendar")}>
+        onPress={() => router.navigate("/calendar")} testID="calendar-icon">
         <Ionicons
           name="calendar-clear-outline"
           size={40}
@@ -41,7 +41,7 @@ export default function Header() {
           size={40}
           color="rgba(0, 28, 5, 1)"
         />
-        <Pressable>
+        <Pressable testID="logout-icon">
           <Ionicons  onPress={() => logout()}
           name="exit-outline"
           size={42}

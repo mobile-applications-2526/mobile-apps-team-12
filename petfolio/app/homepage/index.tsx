@@ -48,6 +48,7 @@ export default function Homepage() {
           <Button
             label="Pet Overview"
             onPress={() => router.navigate("/petOverview")}
+            testID="pet-overview-button"
           />
           <Button label="Add Pet" onPress={() => router.navigate("/addPet")} />
         </View>

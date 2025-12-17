@@ -99,24 +99,24 @@ export default function PetOverview({ petData }: Props) {
       "Current weight",
       <TouchableOpacity
         onPress={() => router.push(`/pet/weights/${petData.id}`)}
-      >
+      testID="weight-arrow">
         <View style={styles.rowContent}>
           <Text>{getCurrentWeight()}</Text>
-          <Text style={styles.arrow}>&rsaquo;</Text>
+          <Text style={styles.arrow} >&rsaquo;</Text>
         </View>
       </TouchableOpacity>,
     ],
     [
       "Food",
-      <TouchableOpacity onPress={() => router.push(`/pet/foods/${petData.id}`)}>
-        <Text style={styles.arrow}>&rsaquo;</Text>
+      <TouchableOpacity onPress={() => router.push(`/pet/foods/${petData.id}`)}testID="food-arrow">
+        <Text style={styles.arrow} >&rsaquo;</Text>
       </TouchableOpacity>,
     ],
     [
       "Medication",
       <TouchableOpacity
         onPress={() => router.push(`/pet/medications/${petData.id}`)}
-      >
+       testID="medication-arrow">
         <Text style={styles.arrow}>&rsaquo;</Text>
       </TouchableOpacity>,
     ],
@@ -124,16 +124,16 @@ export default function PetOverview({ petData }: Props) {
       "Vaccinations",
       <TouchableOpacity
         onPress={() => router.push(`/pet/vaccinations/${petData.id}`)}
-      >
-        <Text style={styles.arrow}>&rsaquo;</Text>
+      testID="vaccin-arrow">
+        <Text style={styles.arrow} >&rsaquo;</Text>
       </TouchableOpacity>,
     ],
   ];
 
   return (
     <ScrollView
-      contentContainerStyle={{ paddingVertical: 160, paddingHorizontal: 10 }}
-    >
+      contentContainerStyle={{ paddingVertical: 160, paddingHorizontal: 10 } }
+    testID="pet-scrollview">
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           <Image

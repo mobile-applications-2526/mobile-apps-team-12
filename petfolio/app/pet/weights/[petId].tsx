@@ -92,7 +92,7 @@ export default function WeightPage() {
         <View style={styles.container}>
             <ScrollView>
                 <Header />
-                <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
+                <TouchableOpacity onPress={() => router.back()} style={styles.backLink} testID="back-button">
                     <Text style={styles.backLinkText}>&larr; Back to pets</Text>
                 </TouchableOpacity>
 

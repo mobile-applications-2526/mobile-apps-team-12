@@ -53,7 +53,7 @@ export default function MedicationShow() {
   return (
     <ScrollView>
       <Header />
-      <TouchableOpacity onPress={() => router.back()} style={styles.backLink}>
+      <TouchableOpacity onPress={() => router.back()} style={styles.backLink} testID="back-button">
         <Text style={styles.backLinkText}>&larr; Back to pet</Text>
       </TouchableOpacity>
 
