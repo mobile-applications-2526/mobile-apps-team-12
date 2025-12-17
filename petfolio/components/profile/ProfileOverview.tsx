@@ -107,7 +107,7 @@ export default function ProfileOverview({ profileData }: Props) {
           source={
             profileImageUrl
               ? { uri: profileImageUrl }
-              : require("../../assets/anon_user.png")
+              : require("../../assets/anon-user.png")
           }
           style={styles.profilePic}
         />
