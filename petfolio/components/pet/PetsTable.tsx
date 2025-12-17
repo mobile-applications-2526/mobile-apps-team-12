@@ -18,7 +18,7 @@ export default function PetsTable({ petData }: Props) {
       <ScrollView contentContainerStyle={styles.petList}>
         {petData.map((pet) => (
           <View key={pet.id} style={styles.petCard} >
-            <TouchableOpacity onPress={() => router.navigate(`/pet/${pet.id}`)}>
+            <TouchableOpacity onPress={() => router.navigate(`/pet/${pet.id}`)} testID="pet-details-button">
               {/* <Image
                             source={pet.image ? pet.image : require("../assets/azula.jpg")}
                             style={styles.petImage}
