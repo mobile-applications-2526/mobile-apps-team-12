@@ -24,8 +24,9 @@ export default function Index() {
         <Button
           label="Register"
           onPress={() => router.navigate("/register")}
+          testID="register-button"
         />
-        <Button label="Login" onPress={() => router.navigate("/login")} />
+        <Button label="Login" onPress={() => router.navigate("/login")} testID="login-button" />
       </View>
     </View>
   );
