@@ -57,7 +57,7 @@ const loginUser = async (userData) => {
     return data;
   } catch (error) {
     console.error("Error signing up:", error.message);
-    return null;
+    throw error;
   }
 };
 

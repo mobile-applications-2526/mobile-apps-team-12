@@ -10,6 +10,7 @@ export default function LoginForm() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedInError, setLoggedInError] = useState("");
     const onSubmit = useCallback(async (data) => {
+        setLoggedInError("");
         const { confirmPassword, ...userData } = data; //confirmPassword is not data we need to send to the backend
         console.log(userData);
         try {
@@ -22,7 +23,7 @@ export default function LoginForm() {
             // network or server error; show friendly message
             console.error(error);
             setLoggedInError(
-                error || "Network or server error. Please check your connection and try again."
+                error?.message || "Network or server error. Please check your connection and try again."
             );
         }
 
