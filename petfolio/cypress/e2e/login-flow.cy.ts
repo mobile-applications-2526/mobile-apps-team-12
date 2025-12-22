@@ -26,6 +26,7 @@ describe("Login User Flow", () => {
         cy.get('[type="password"]').type(`wrongPassword123`);
         cy.contains("login").click();
         cy.wait(5000);
+        cy.contains("Invalid login credentials").should("be.visible");
         cy.url().should("include", "/login");
     })
     it("log user in without any credentials", () => {
