@@ -1,5 +1,5 @@
 import * as Notifications from "expo-notifications";
-import { Button, View } from "react-native";
+import { Button, Platform, View } from "react-native";
 
 export default function TestScreen() {
   async function testBirthdayNotification() {
@@ -14,27 +14,43 @@ export default function TestScreen() {
     const now = new Date();
     const triggerTime = new Date(now.getTime() + 60 * 1000); // +1 min
 
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "🎉 TEST BIRTHDAY",
-        body: "If you see this, calendar notifications WORK!",
-      },
-      trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
-        minute: triggerTime.getMinutes(),
-        hour: triggerTime.getHours(),
-        day: triggerTime.getDate(),
-        month: triggerTime.getMonth() + 1,
-        repeats: false,
-      },
-    });
+    if (Platform.OS === "ios") {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "🎉 TEST BIRTHDAY",
+          body: "If you see this, calendar notifications WORK!",
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
+          minute: triggerTime.getMinutes(),
+          hour: triggerTime.getHours(),
+          day: triggerTime.getDate(),
+          month: triggerTime.getMonth() + 1,
+          repeats: false,
+        },
+      });
+    } else {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "🎉 TEST BIRTHDAY",
+          body: "If you see this, calendar notifications WORK!",
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.DATE,
+          date: triggerTime,
+        },
+      });
+    }
 
     alert("Notification scheduled for 1 minute from now!");
   }
 
   return (
     <View style={{ marginTop: 100 }}>
-      <Button title="TEST BIRTHDAY NOTIFICATION" onPress={testBirthdayNotification} />
+      <Button
+        title="TEST BIRTHDAY NOTIFICATION"
+        onPress={testBirthdayNotification}
+      />
     </View>
   );
 }

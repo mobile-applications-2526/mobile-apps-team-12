@@ -4,7 +4,7 @@ import { CalendarTriggerInput } from "expo-notifications";
 import PetService from "../../services/PetService";
 import { Pet } from "../../types";
 import { useAuth } from "../../context/authContext";
-
+import { Platform } from "react-native";
 
 // Notifications on IOS don't work yet when silent switch is on!!!!
 export default function BdayNotificationInitializer() {
@@ -27,7 +27,7 @@ export default function BdayNotificationInitializer() {
     try {
       const result = await PetService.getMyPets();
       setPets(result);
-      console.log(result)
+      console.log(result);
     } catch (err) {
       console.error("Failed to fetch pets", err);
       setPets([]);
@@ -38,41 +38,51 @@ export default function BdayNotificationInitializer() {
   }
   useEffect(() => {
     async function init() {
-      getPetsData()
+      getPetsData();
       // Ask permission
       const { status } = await Notifications.requestPermissionsAsync();
       if (status !== "granted") {
         console.log("permission not");
       }
 
-
       pets.forEach((pet) => {
         if (!pet.birthdate) return;
 
         const birthdayDate = new Date(pet.birthdate);
-        birthdayDate.setHours(15, 0, 0); // send at 09:00
+        birthdayDate.setHours(9, 0, 0); // send at 09:00
 
-        Notifications.scheduleNotificationAsync({
-          content: {
-            title: "🎉 Birthday today!",
-            body: `It's ${pet.name}'s birthday today! 🎂`,
-          },
-          trigger: {
-            type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
-            month: birthdayDate.getMonth() + 1,
-            day: birthdayDate.getDate(),
-            hour: birthdayDate.getHours(),
-            minute: birthdayDate.getMinutes(),
-            repeats: true,
-          },
-        });
+        if (Platform.OS === "ios") {
+          Notifications.scheduleNotificationAsync({
+            content: {
+              title: "🎉 Birthday today!",
+              body: `It's ${pet.name}'s birthday today! 🎂`,
+            },
+            trigger: {
+              type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
+              month: birthdayDate.getMonth() + 1,
+              day: birthdayDate.getDate(),
+              hour: birthdayDate.getHours(),
+              minute: birthdayDate.getMinutes(),
+              repeats: true,
+            },
+          });
+        } else {
+          Notifications.scheduleNotificationAsync({
+            content: {
+              title: "🎉 Birthday today!",
+              body: `It's ${pet.name}'s birthday today! 🎂`,
+            },
+            trigger: {
+              type: Notifications.SchedulableTriggerInputTypes.DATE,
+              date: birthdayDate,
+            },
+          });
+        }
       });
     }
 
     init();
   }, []);
-
-
 
   return null;
 }
