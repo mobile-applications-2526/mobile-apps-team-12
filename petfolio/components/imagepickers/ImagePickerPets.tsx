@@ -104,11 +104,12 @@ export default function ImagePickerPets({
       if (uploadError) {
         throw uploadError;
       }
+      const twoMonthsInSeconds = 60 * 60 * 24 * 30 * 2;
 
       // Get the url
       const { data: signedUrlData } = await supabase.storage
         .from(`petpictures`)
-        .createSignedUrl(filePath, 60 * 60);
+        .createSignedUrl(filePath, twoMonthsInSeconds);
 
       const url = signedUrlData.signedUrl;
       const { error: updateError } = await supabase
