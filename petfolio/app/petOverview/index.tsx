@@ -53,11 +53,7 @@ export default function PetOverview() {
       getPetsData();
     }
   }, [authLoading, user]);
-  // Redirect to login if not authenticated
-  if (!user) {
-    router.replace("/login");
-    return null;
-  }
+
 
   if (loading) {
     return (
