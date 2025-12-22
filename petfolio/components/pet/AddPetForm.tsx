@@ -25,6 +25,8 @@ type FormDataPet = {
 };
 
 export default function AddPetForm() {
+  const [open, setOpen] = useState(false);
+  const [birthdateSelected, setBirthdateSelected] = useState(false);
   const router = useRouter();
   const [errors, setErrors] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -85,19 +87,32 @@ export default function AddPetForm() {
           <>
             <Text>Birthdate:</Text>
             <View style={styles.dateContainer}>
-              <RNDateTimePicker
+               {birthdateSelected && <Text>{value.toLocaleDateString("en-GB")}</Text>}
+              {!birthdateSelected && !open &&(
+                <Text style={styles.dateText}>Select your pet's birthday</Text>
+              )}
+              {open && (<RNDateTimePicker
+                mode="date"
                 title="Select your pets birthday."
                 value={value ? new Date(value) : new Date()}
+                maximumDate={new Date()}
                 onChange={(event, selectedDate) => {
                   if (selectedDate) {
                     onChange(selectedDate)
+                    setBirthdateSelected(true)
+                    setOpen(false)
                   }
-                }} ></RNDateTimePicker>
-              <Ionicons
-                name="calendar-number-outline"
-                size={30}
-                color="rgba(0, 28, 5, 1)"
-              />
+                }} ></RNDateTimePicker>)}
+              <TouchableOpacity onPress={() => setOpen(true)}>
+                <Ionicons
+                  name="calendar-number-outline"
+                  size={30}
+                  color="rgba(0, 28, 5, 1)"
+                />
+              </TouchableOpacity>
+              
+              
+
             </View>
 
           </>

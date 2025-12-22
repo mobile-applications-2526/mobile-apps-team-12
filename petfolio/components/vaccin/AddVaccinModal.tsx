@@ -8,6 +8,7 @@ import {
   Modal,
   TextInput,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 
 type Props = {
@@ -22,6 +23,10 @@ type Props = {
 };
 
 export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
+  const [shotOpen, setShotOpen] = useState(false);
+  const [expireOpen, setExpireOpen] = useState(false);
+  const [shotDateSelected, setShotdateSelected] = useState(false);
+  const [expireDateSelected, setExpireDateSelected] = useState(false);
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [shot_date, setShotDate] = useState<Date>(new Date());
@@ -41,42 +46,86 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
 
           <Text style={styles.label}>Shot date:</Text>
           <View style={styles.dateContainer} testID="shot_date">
-            <RNDateTimePicker
-              testID="shotDate"
-              value={shot_date}
-              onChange={(event, selectedDate) => {
-                if (selectedDate) {
-                  setShotDate(selectedDate);
-                }
-              }}
-            />
-            <Ionicons
-              name="calendar-number-outline"
-              size={30}
-              color="rgba(0, 28, 5, 1)"
-            />
+            {shotDateSelected && (
+              <Text>{shot_date.toLocaleDateString("en-GB")}</Text>
+            )}
+            {!shotDateSelected && !shotOpen &&(
+              <Text style={styles.dateText}>Select the date of injection</Text>
+            )}
+            {shotOpen && (
+              <RNDateTimePicker
+                testID="shotDate"
+                value={shot_date}
+                onChange={(event, selectedDate) => {
+                  if (selectedDate) {
+                    setShotDate(selectedDate);
+                    setShotdateSelected(true);
+                    setShotOpen(false);
+                  }
+                }}
+              />
+            )}
+            <TouchableOpacity onPress={() => {
+              if (shotOpen){
+                setShotOpen(false);
+              }
+              else {
+                setShotOpen(true);
+              }
+              }}>
+              <Ionicons
+                name="calendar-number-outline"
+                size={30}
+                color="rgba(0, 28, 5, 1)"
+              />
+            </TouchableOpacity>
+            
           </View>
 
           <Text style={styles.label}>Expire date:</Text>
           <View style={styles.dateContainer} testID="expire_date">
-            <RNDateTimePicker
-              testID="expireDate"
-              value={expire_date}
-              onChange={(event, selectedDate) => {
-                if (selectedDate) {
-                  setExpireDate(selectedDate);
-                }
-              }}
-            />
-            <Ionicons
-              name="calendar-number-outline"
-              size={30}
-              color="rgba(0, 28, 5, 1)"
-            />
+            {expireDateSelected && (
+              <Text>{expire_date.toLocaleDateString("en-GB")}</Text>
+            )}
+            {!expireDateSelected && !expireOpen &&(
+              <Text style={styles.dateText}>Select the expiration date</Text>
+            )}
+            {expireOpen && (
+              <RNDateTimePicker
+                testID="expireDate"
+                value={expire_date}
+                onChange={(event, selectedDate) => {
+                  if (selectedDate) {
+                    setExpireDate(selectedDate);
+                    setExpireDateSelected(true);
+                    setExpireOpen(false);
+                  }
+                }}
+              />
+            )}
+            <TouchableOpacity onPress={() => {
+              if (expireOpen){
+                setExpireOpen(false);
+              }
+              else {
+                setExpireOpen(true);
+              }
+              }}>
+              <Ionicons
+                name="calendar-number-outline"
+                size={30}
+                color="rgba(0, 28, 5, 1)"
+              />
+            </TouchableOpacity>
+            
           </View>
 
           <View style={styles.buttonRow}>
-            <Pressable testID="cancel-vaccin-button" onPress={onClose} style={styles.cancelButton}>
+            <Pressable
+              testID="cancel-vaccin-button"
+              onPress={onClose}
+              style={styles.cancelButton}
+            >
               <Text style={styles.cancelText}>Cancel</Text>
             </Pressable>
 
