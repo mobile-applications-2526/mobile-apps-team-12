@@ -10,9 +10,8 @@ module.exports = {
       '@react-native-community/datetimepicker': path.resolve(__dirname, 'cypress/mocks/datetimepicker.js'),
       '@react-native-async-storage/async-storage': path.resolve(__dirname, 'cypress/mocks/AsyncStorage.js'),
       'react-native-table-component': path.resolve(__dirname, 'cypress/mocks/table-component.js'),
-      '../utils/supabase': path.resolve(__dirname, 'cypress/mocks/supabase.js'),
-      '../services/FoodService': path.resolve(__dirname, 'cypress/mocks/FoodService.js'),
-      '../services/PetService': path.resolve(__dirname, "cypress/mocks/PetService.js")
+      '../../utils/supabase': path.resolve(__dirname, 'cypress/mocks/supabase.js'),
+      '../../services/FoodService': path.resolve(__dirname, 'cypress/mocks/FoodService.js'),
     },
     fallback: {
       "process": false,

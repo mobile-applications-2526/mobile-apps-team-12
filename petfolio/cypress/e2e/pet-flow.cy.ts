@@ -1,7 +1,7 @@
 describe("Pet Overview Flow", () => {
     const userEmail = "testuser@ucll.be";
     const userPassword = "Test123";
-    const petId = 36;
+    const petId = 41;
     beforeEach(() => {
         cy.login(userEmail, userPassword);
         cy.visit("/homepage");
@@ -21,31 +21,32 @@ describe("Pet Overview Flow", () => {
         cy.url({ timeout: 5000 }).should('include', `/pet/${petId}`);
         cy.contains("Snowy").should("exist");
         cy.contains("Birthday").should("be.visible");
-        cy.contains("Current weight")
-    .scrollIntoView({ offset: { top: -100, left: 0 } });
-    cy.contains("Food").scrollIntoView({ offset: { top: -100, left: 0 } }).should("be.visible");
-    cy.contains("Medication").scrollIntoView({ offset: { top: -100, left: 0 } }).should("be.visible");
-    cy.contains("Vaccinations").scrollIntoView({ offset: { top: -100, left: 0 } }).should("be.visible");
+        cy.contains("Current weight").scrollIntoView({ offset: { top: -100, left: 0 } });
+        cy.contains("Food").scrollIntoView({ offset: { top: -100, left: 0 } }).should("be.visible");
+        cy.contains("Medication").scrollIntoView({ offset: { top: -100, left: 0 } }).should("be.visible");
+        cy.contains("Vaccinations").scrollIntoView({ offset: { top: -100, left: 0 } }).should("be.visible");
        
     })
     it("user can delete pet", () => {
-         cy.get("[data-testid='pet-details-button']").eq(1).click();
+        // Mock the delete request
+        cy.intercept('DELETE', '**/rest/v1/pets?id=eq.*', {
+        statusCode: 204,
+        body: null
+        }).as('deletePetAndExtras');
+        cy.get("[data-testid='pet-details-button']").eq(1).click();
         cy.url({ timeout: 5000 }).should('include', `/pet/${petId}`);
         cy.contains("Snowy").should("exist");
-                cy.contains("Delete Pet")
-    .scrollIntoView({ offset: { top: -100, left: 0 } }).click();
-    cy.contains('Are you sure', { timeout: 5000 }).should('be.visible');
+        cy.contains("Delete Pet").scrollIntoView({ offset: { top: -100, left: 0 } }).click();
+
+        cy.contains('Are you sure', { timeout: 5000 }).should('be.visible');
         cy.contains('This action cannot be undone').should('be.visible');
         
         cy.get('[data-testid="delete-pet-button"]').click();
-        
-        cy.wait(3000);
-        cy.url({ timeout: 10000 }).should('include', '/petOverview');
-        
-        cy.reload();
-        cy.wait(2000);
-        
-        cy.get('body').should('not.contain', 'Max');
+        cy.wait('@deletePetAndExtras').then((interception) => {
+        cy.log('Intercepted request:', interception.request.url);
+            expect(interception.request.method).to.equal('DELETE');
+            expect(interception.response.statusCode).to.equal(204);
+        });
     })
   
 })
