@@ -19,9 +19,10 @@ import UserService from "../../services/UserService";
 
 type Props = {
   profileData: Profile;
+  onProfileUpdated?: () => void;
 };
 
-export default function ProfileOverview({ profileData }: Props) {
+export default function ProfileOverview({ profileData, onProfileUpdated }: Props) {
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showImagePickerModal, setShowImagePickerModal] = useState(false);
@@ -34,7 +35,7 @@ export default function ProfileOverview({ profileData }: Props) {
       loadProfileImage();
       setError("");
     }
-  }, []);
+  }, [profileData.user_id]);
 
   const tableData = [
     ["Name", profileData.firstname + " " + profileData.lastname],
@@ -119,6 +120,9 @@ export default function ProfileOverview({ profileData }: Props) {
           UserService.updateAuthEmail(profileData.user_id, email);
         }
         setEditProfileModalVisible(false);
+        if (onProfileUpdated) {
+        onProfileUpdated();
+      }
     } catch (error) {
         console.error("Failed to update user profile", error);
         setError(error);
