@@ -4,9 +4,8 @@ import { View, StyleSheet } from "react-native";
 import { supabase } from "../utils/supabase";
 import { Stack } from "expo-router";
 import { AuthProvider, useAuth } from "../context/authContext";
-import { migrateDbIfNeeded } from '../db/database';
 import { setUpNotification } from "../services/notificationService";
-import BdayNotificationInitializer from "../components/BdayNotificationInitializer";
+
 
 // Define public routes that don't need authentication
 const PUBLIC_ROUTES = ["index", "login", "register"];
