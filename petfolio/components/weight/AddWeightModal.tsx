@@ -7,9 +7,11 @@ import {
   Modal,
   TextInput,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import Ionicons from "@react-native-vector-icons/ionicons";
+import { Controller } from "react-hook-form";
 
 type Props = {
   visible: boolean;
@@ -18,6 +20,8 @@ type Props = {
 };
 
 export default function AddWeightModel({ visible, onClose, onSubmit }: Props) {
+  const [open, setOpen] = useState(false);
+  const [dateSelected, setDateSelected] = useState(false);
   const [weight, setWeight] = useState("");
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
@@ -38,18 +42,31 @@ export default function AddWeightModel({ visible, onClose, onSubmit }: Props) {
           />
 
           <Text style={styles.label}>Date</Text>
-          <View style={styles.input}>
-            <RNDateTimePicker
-              value={date ? new Date(date) : new Date()}
-              onChange={(event, selectedDate) => {
-                if (selectedDate) {
-                  setDate(selectedDate);
-                }
-              }}
-            ></RNDateTimePicker>
-
+           <View style={styles.dateContainer}>
+               {dateSelected && <Text>{date.toLocaleDateString("en-GB")}</Text>}
+              {!dateSelected && !open &&(
+                <Text style={styles.dateText}>{new Date().toLocaleDateString('nl-BE')}</Text>
+              )}
+              {open && (<RNDateTimePicker
+                mode="date"
+                title="Select your pets birthday."
+                value={date ? new Date(date) : new Date()}
+                maximumDate={new Date()}
+                onChange={(event, selectedDate) => {
+                  if (selectedDate) {
+                    setDate(selectedDate)
+                    setDateSelected(true)
+                    setOpen(false)
+                  }
+                }} ></RNDateTimePicker>)}
+              <TouchableOpacity onPress={() => setOpen(true)}>
+                <Ionicons
+                  name="calendar-number-outline"
+                  size={30}
+                  color="rgba(0, 28, 5, 1)"
+                />
+              </TouchableOpacity>
           </View>
-
           <View style={styles.buttonRow}>
             <Pressable onPress={onClose} style={styles.cancelButton}>
               <Text style={styles.cancelText}>Cancel</Text>
@@ -119,4 +136,19 @@ const styles = StyleSheet.create({
   },
   cancelText: { color: "white" },
   addText: { color: "white" },
+  dateContainer: {
+    borderColor: "rgb(200, 200, 200)",
+    borderWidth: 2,
+    paddingVertical: 5,
+    margin: 5,
+    borderRadius: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+    dateText: {
+    fontSize: 14,
+    color: "#3C3C434C",
+    margin: 5,
+  },
 });
