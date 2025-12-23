@@ -12,6 +12,7 @@ module.exports = {
       'react-native-table-component': path.resolve(__dirname, 'cypress/mocks/table-component.js'),
       '../utils/supabase': path.resolve(__dirname, 'cypress/mocks/supabase.js'),
       '../services/FoodService': path.resolve(__dirname, 'cypress/mocks/FoodService.js'),
+      '../services/PetService': path.resolve(__dirname, "cypress/mocks/PetService.js")
     },
     fallback: {
       "process": false,

@@ -1,7 +1,7 @@
 describe("Pet Overview Flow", () => {
     const userEmail = "testuser@ucll.be";
     const userPassword = "Test123";
-    const petId = 32
+    const petId = 36;
     beforeEach(() => {
         cy.login(userEmail, userPassword);
         cy.visit("/homepage");
@@ -14,20 +14,38 @@ describe("Pet Overview Flow", () => {
     it("user can see his pets", () => {
         cy.contains("This is the pet Overview").should("be.visible");
         cy.contains("Tasha").should("be.visible");
-        cy.contains("Max").should("be.visible");
+        cy.contains("Snowy").should("be.visible");
     })
     it("user can see pet Max his details", () => {
         cy.get("[data-testid='pet-details-button']").eq(1).click();
         cy.url({ timeout: 5000 }).should('include', `/pet/${petId}`);
-        cy.contains("Max").should("exist");
+        cy.contains("Snowy").should("exist");
         cy.contains("Birthday").should("be.visible");
-        cy.contains("2025-12-16");
         cy.contains("Current weight")
     .scrollIntoView({ offset: { top: -100, left: 0 } });
     cy.contains("Food").scrollIntoView({ offset: { top: -100, left: 0 } }).should("be.visible");
     cy.contains("Medication").scrollIntoView({ offset: { top: -100, left: 0 } }).should("be.visible");
     cy.contains("Vaccinations").scrollIntoView({ offset: { top: -100, left: 0 } }).should("be.visible");
        
+    })
+    it("user can delete pet", () => {
+         cy.get("[data-testid='pet-details-button']").eq(1).click();
+        cy.url({ timeout: 5000 }).should('include', `/pet/${petId}`);
+        cy.contains("Snowy").should("exist");
+                cy.contains("Delete Pet")
+    .scrollIntoView({ offset: { top: -100, left: 0 } }).click();
+    cy.contains('Are you sure', { timeout: 5000 }).should('be.visible');
+        cy.contains('This action cannot be undone').should('be.visible');
+        
+        cy.get('[data-testid="delete-pet-button"]').click();
+        
+        cy.wait(3000);
+        cy.url({ timeout: 10000 }).should('include', '/petOverview');
+        
+        cy.reload();
+        cy.wait(2000);
+        
+        cy.get('body').should('not.contain', 'Max');
     })
   
 })

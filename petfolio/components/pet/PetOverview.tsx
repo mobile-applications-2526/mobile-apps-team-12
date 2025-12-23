@@ -196,7 +196,7 @@ export default function PetOverview({ petData }: Props) {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.modalButton, styles.deleteModalButton]}
-                    onPress={handleDelete}
+                    onPress={handleDelete}  testID="delete-pet-button"
                   >
                     <Text style={styles.deleteButtonText}>Delete</Text>
                   </TouchableOpacity>
