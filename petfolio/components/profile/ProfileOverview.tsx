@@ -13,22 +13,29 @@ import { useRouter } from "expo-router";
 import { supabase } from "../../utils/supabase";
 import ImagePickerUser from "../imagepickers/ImagePickerUser";
 import Ionicons from "@react-native-vector-icons/ionicons";
+import Button from "../Button";
+import EditProfileModal from "./EditProfileModal";
+import UserService from "../../services/UserService";
 
 type Props = {
   profileData: Profile;
+  onProfileUpdated?: () => void;
 };
 
-export default function ProfileOverview({ profileData }: Props) {
+export default function ProfileOverview({ profileData, onProfileUpdated }: Props) {
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showImagePickerModal, setShowImagePickerModal] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+  const [editProfileModalVisible, setEditProfileModalVisible] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (profileData.user_id) {
       loadProfileImage();
+      setError("");
     }
-  }, []);
+  }, [profileData.user_id]);
 
   const tableData = [
     ["Name", profileData.firstname + " " + profileData.lastname],
@@ -79,6 +86,7 @@ export default function ProfileOverview({ profileData }: Props) {
   };
 
   const loadProfileImage = async () => {
+    setError("");
     try {
       const { data, error } = await supabase
         .from("profiles")
@@ -89,6 +97,7 @@ export default function ProfileOverview({ profileData }: Props) {
 
       if (error) {
         console.error("Error fetching profile image:", error);
+        setError(error.message);
         return;
       }
 
@@ -97,11 +106,32 @@ export default function ProfileOverview({ profileData }: Props) {
       }
     } catch (error) {
       console.error("Error loading profile image:", error);
+      setError(error);
     }
   };
 
+  const handleEditProfile = async (firstName: string, lastName: string, email: string, phonenumber: string) => {
+    setError("");
+    if (!profileData || !profileData.user_id) return;
+
+    try {
+        await UserService.updateUserInformation(profileData.user_id, firstName, lastName, email, phonenumber);
+        if (profileData.email != email ) {
+          UserService.updateAuthEmail(profileData.user_id, email);
+        }
+        setEditProfileModalVisible(false);
+        if (onProfileUpdated) {
+        onProfileUpdated();
+      }
+    } catch (error) {
+        console.error("Failed to update user profile", error);
+        setError(error);
+    }
+};
+
   return (
     <View style={styles.container}>
+      {error && <Text style={styles.error}>{error}</Text>}
       <View style={styles.imageContainer}>
         <Image
           source={
@@ -126,6 +156,13 @@ export default function ProfileOverview({ profileData }: Props) {
         <Table>
           <Rows style={styles.row} data={tableData} />
         </Table>
+        <Button label="Edit User Profile" onPress={() => setEditProfileModalVisible(true)} />
+          <EditProfileModal
+                              oldProfileData={profileData}
+                              visible={editProfileModalVisible}
+                              onClose={() => setEditProfileModalVisible(false)}
+                              onSubmit={handleEditProfile}
+                          />
         <TouchableOpacity
           style={styles.deleteButton}
           onPress={() => setShowDeleteModal(true)}
@@ -237,6 +274,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#dc3545",
     padding: 16,
     borderRadius: 12,
+    width: "75%",
+    alignSelf: "center",
     alignItems: "center",
     marginTop: 30,
     shadowColor: "#000",
@@ -311,5 +350,8 @@ const styles = StyleSheet.create({
   },
   deleteModalButton: {
     backgroundColor: "#dc3545",
+  },
+    error: {
+      color: "#d20202ff",
   },
 });

@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import ProfileOverview from "../../components/profile/ProfileOverview";
-import { Profile, User } from "../../types";
+import { Profile } from "../../types";
 import ProfileService from "../../services/ProfileService";
 import UserService from "../../services/UserService";
 import { useAuth } from "../../context/authContext";
@@ -12,6 +12,7 @@ export default function UserProfile() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const { session } = useAuth();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   function clearErrors() {
     setError("");
@@ -26,6 +27,11 @@ export default function UserProfile() {
     pictures: raw.pictures,
   });
   async function getProfileByUser() {
+      if (!session) {
+      setProfile(null);
+      setLoading(false);
+      return;
+    }
     clearErrors();
     if (session) {
     try {
@@ -47,18 +53,21 @@ export default function UserProfile() {
       setLoading(false);
     }
   }
-      }
+}
 
+  const handleRefresh = () => {
+    setRefreshKey(prev => prev + 1);
+  };
   useEffect(() => {
     getProfileByUser();
-  }, []);
+  }, [session, refreshKey]);
 
   return (
     
     <View style={styles.container}>
       <Header />
       <View>
-        {!error && profile && <ProfileOverview profileData={profile} />}
+        {!error && profile && <ProfileOverview profileData={profile} onProfileUpdated={handleRefresh} />}
         {error && <Text>Error</Text>}
       </View>
     </View>
