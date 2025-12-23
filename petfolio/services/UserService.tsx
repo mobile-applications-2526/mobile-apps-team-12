@@ -97,18 +97,34 @@ const deleteUserAndExtras = async (userId: string) => {
 
 }
 
-const updateUserInformation = async (userId: string, name: string, email:string, phonenumber: string) => {
-  const [firstName,lastName] = name.split(" ");
+const updateUserInformation = async (userId: string, firstName: string, lastName:string, email:string, phonenumber: string) => {
   try {
-  const {error} = await supabase
+  const {error: updateError} = await supabase
   .from("user_information")
   .update({first_name: firstName, last_name: lastName, email: email, phonenumber: phonenumber })
   .eq("auth_user_id", userId );
+      if (updateError) {
+      console.log("Deleting user failed: ", updateError)
+      throw updateError;
+    }
   } catch (error) {
     console.error(`Error updating userprofile`, error);
     throw error;
   }
 }
+const updateAuthEmail = async (userId: string, email:string) => {
+  try {
+    const {error: updateError} = await supabase.auth.updateUser({email: email});
+          if (updateError) {
+      console.log("Updating email failed: ", updateError)
+      throw updateError;
+    }
+  } catch (error) {
+    console.error(`Error updating email`, error);
+    throw error;
+  }
 
-const UserService = { registerUser, loginUser, getUserInformationByUserId, deleteUserAndExtras, updateUserInformation };
+}
+
+const UserService = { registerUser, loginUser, getUserInformationByUserId, deleteUserAndExtras, updateUserInformation, updateAuthEmail };
 export default UserService;

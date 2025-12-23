@@ -6,11 +6,12 @@ type Props = {
     oldProfileData: Profile
     visible: boolean;
     onClose: () => void;
-    onSubmit: (name: string, email:string, phonenumber:string) => void;
+    onSubmit: (firstName: string, lastName:string, email:string, phonenumber:string) => void;
 };
 
 export default function EditProfileModal({oldProfileData, visible, onClose, onSubmit }: Props) {
-    const [name, setName] = useState(oldProfileData.firstname + oldProfileData.lastname);
+    const [firstName, setFirstName] = useState(oldProfileData.firstname);
+    const [lastName, setLastName] = useState(oldProfileData.lastname);
     const [email, setEmail] = useState(oldProfileData.email);
     const [phonenumber, setPhonenumber] = useState(oldProfileData.phonenumber);
     
@@ -20,10 +21,16 @@ export default function EditProfileModal({oldProfileData, visible, onClose, onSu
                 <View style={styles.modal}>
                     <Text style={styles.title}>Edit User Profile</Text>
 
+                    <Text style={styles.label}>Surname:</Text>
+                    <TextInput
+                        value={firstName}
+                        onChangeText={setFirstName}
+                        style={styles.input}
+                    />
                     <Text style={styles.label}>Name:</Text>
                     <TextInput
-                        value={name}
-                        onChangeText={setName}
+                        value={lastName}
+                        onChangeText={setLastName}
                         style={styles.input}
                     />
 
@@ -47,7 +54,7 @@ export default function EditProfileModal({oldProfileData, visible, onClose, onSu
                         </Pressable>
 
                         <Pressable onPress={() => {
-                                onSubmit(name, email, phonenumber);
+                                onSubmit(firstName, lastName, email, phonenumber);
                             }}
                             style={styles.addButton}
                             testID="edit-profile-button"

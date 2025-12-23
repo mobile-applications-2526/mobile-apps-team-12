@@ -27,10 +27,12 @@ export default function ProfileOverview({ profileData }: Props) {
   const [showImagePickerModal, setShowImagePickerModal] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
   const [editProfileModalVisible, setEditProfileModalVisible] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (profileData.user_id) {
       loadProfileImage();
+      setError("");
     }
   }, []);
 
@@ -83,6 +85,7 @@ export default function ProfileOverview({ profileData }: Props) {
   };
 
   const loadProfileImage = async () => {
+    setError("");
     try {
       const { data, error } = await supabase
         .from("profiles")
@@ -93,6 +96,7 @@ export default function ProfileOverview({ profileData }: Props) {
 
       if (error) {
         console.error("Error fetching profile image:", error);
+        setError(error.message);
         return;
       }
 
@@ -101,22 +105,29 @@ export default function ProfileOverview({ profileData }: Props) {
       }
     } catch (error) {
       console.error("Error loading profile image:", error);
+      setError(error);
     }
   };
 
-  const handleEditProfile = async (name: string, email: string, phonenumber: string) => {
+  const handleEditProfile = async (firstName: string, lastName: string, email: string, phonenumber: string) => {
+    setError("");
     if (!profileData || !profileData.user_id) return;
 
     try {
-        await UserService.updateUserInformation(profileData.user_id, name, email, phonenumber);
+        await UserService.updateUserInformation(profileData.user_id, firstName, lastName, email, phonenumber);
+        if (profileData.email != email ) {
+          UserService.updateAuthEmail(profileData.user_id, email);
+        }
         setEditProfileModalVisible(false);
     } catch (error) {
         console.error("Failed to update user profile", error);
+        setError(error);
     }
 };
 
   return (
     <View style={styles.container}>
+      {error && <Text style={styles.error}>{error}</Text>}
       <View style={styles.imageContainer}>
         <Image
           source={
@@ -335,5 +346,8 @@ const styles = StyleSheet.create({
   },
   deleteModalButton: {
     backgroundColor: "#dc3545",
+  },
+    error: {
+      color: "#d20202ff",
   },
 });
