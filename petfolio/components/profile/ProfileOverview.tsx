@@ -13,6 +13,9 @@ import { useRouter } from "expo-router";
 import { supabase } from "../../utils/supabase";
 import ImagePickerUser from "../imagepickers/ImagePickerUser";
 import Ionicons from "@react-native-vector-icons/ionicons";
+import Button from "../Button";
+import EditProfileModal from "./EditProfileModal";
+import UserService from "../../services/UserService";
 
 type Props = {
   profileData: Profile;
@@ -23,6 +26,7 @@ export default function ProfileOverview({ profileData }: Props) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showImagePickerModal, setShowImagePickerModal] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+  const [editProfileModalVisible, setEditProfileModalVisible] = useState(false);
 
   useEffect(() => {
     if (profileData.user_id) {
@@ -100,6 +104,17 @@ export default function ProfileOverview({ profileData }: Props) {
     }
   };
 
+  const handleEditProfile = async (name: string, email: string, phonenumber: string) => {
+    if (!profileData || !profileData.user_id) return;
+
+    try {
+        await UserService.updateUserInformation(profileData.user_id, name, email, phonenumber);
+        setEditProfileModalVisible(false);
+    } catch (error) {
+        console.error("Failed to update user profile", error);
+    }
+};
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -126,6 +141,13 @@ export default function ProfileOverview({ profileData }: Props) {
         <Table>
           <Rows style={styles.row} data={tableData} />
         </Table>
+        <Button label="Edit User Profile" onPress={() => setEditProfileModalVisible(true)} />
+          <EditProfileModal
+                              oldProfileData={profileData}
+                              visible={editProfileModalVisible}
+                              onClose={() => setEditProfileModalVisible(false)}
+                              onSubmit={handleEditProfile}
+                          />
         <TouchableOpacity
           style={styles.deleteButton}
           onPress={() => setShowDeleteModal(true)}
@@ -237,6 +259,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#dc3545",
     padding: 16,
     borderRadius: 12,
+    width: "75%",
+    alignSelf: "center",
     alignItems: "center",
     marginTop: 30,
     shadowColor: "#000",

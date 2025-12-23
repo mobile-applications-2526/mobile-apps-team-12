@@ -95,8 +95,20 @@ const deleteUserAndExtras = async (userId: string) => {
     throw error;
   }
 
-
 }
 
-const UserService = { registerUser, loginUser, getUserInformationByUserId, deleteUserAndExtras };
+const updateUserInformation = async (userId: string, name: string, email:string, phonenumber: string) => {
+  const [firstName,lastName] = name.split(" ");
+  try {
+  const {error} = await supabase
+  .from("user_information")
+  .update({first_name: firstName, last_name: lastName, email: email, phonenumber: phonenumber })
+  .eq("auth_user_id", userId );
+  } catch (error) {
+    console.error(`Error updating userprofile`, error);
+    throw error;
+  }
+}
+
+const UserService = { registerUser, loginUser, getUserInformationByUserId, deleteUserAndExtras, updateUserInformation };
 export default UserService;

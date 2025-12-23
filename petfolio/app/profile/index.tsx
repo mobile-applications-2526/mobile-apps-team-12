@@ -51,7 +51,7 @@ export default function UserProfile() {
 
   useEffect(() => {
     getProfileByUser();
-  }, []);
+  }, [profile]);
 
   return (
     
