@@ -40,7 +40,15 @@ const createReminder = async (reminder: ReminderInput ,userId: string)  => {
     return data;
 }
 
-
+const schedulereminderNotification= async (reminder: Reminder) => {
+    await Notifications.scheduleNotificationAsync({
+    content: {
+      title: reminder.title,
+      body: reminder.description,
+    },
+    trigger: new Date(reminder.timestamp),
+  });
+}
 
 
 

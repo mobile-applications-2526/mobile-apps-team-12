@@ -87,3 +87,10 @@ export type Reminder = {
   timestamp: Date;
   repeat_rule: ReminderRepeatRule; 
 }
+
+export type ReminderInput = {
+  title: string;
+  description: string;
+  timestamp: Date;
+  repeat_rule: ReminderRepeatRule; 
+}
