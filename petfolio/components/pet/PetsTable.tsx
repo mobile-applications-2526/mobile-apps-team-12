@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
   },
   petList: {
     alignItems: "center",
+    paddingBottom: 110
   },
   petCard: {
     backgroundColor: "#E2866E",

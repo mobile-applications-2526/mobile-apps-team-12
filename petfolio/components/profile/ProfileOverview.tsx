@@ -235,6 +235,7 @@ const styles = StyleSheet.create({
     top: -75,
     zIndex: 2,
   },
+
   profilePic: {
     width: 150,
     height: 150,

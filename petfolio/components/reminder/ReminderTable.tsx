@@ -25,13 +25,20 @@ export default function ReminderTable({ reminderData }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style= {styles.subtitle}>All Reminders:</Text>
     <ScrollView contentContainerStyle = {styles.reminderList}>
     {reminderData.map((reminder) => (
-      <View key={reminder.id}>
-        <Text>
+      <View key={reminder.id} style={styles.reminderCard}>
+        <Text style={styles.text}>
         {reminder.title}
         </Text>
+        <View style={styles.reminderTime}>
+        <Text style= {styles.timeElement}>
+          {new Date(reminder.timestamp).toLocaleDateString()}
+        </Text>
+        <Text style={styles.timeElement}>
+          {new Date(reminder.timestamp).toLocaleTimeString()}
+        </Text>
+        </View>
       </View>
     ))}
     </ScrollView>
@@ -45,38 +52,31 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F1EB",
     alignItems: "center",
   },
-  welcome: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#3D3D3D",
-    alignSelf: "flex-start",
-    marginLeft: 25,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: "#3D3D3D",
-    alignSelf: "flex-start",
-    marginLeft: 25,
-    marginTop: 5,
-    marginBottom: 10,
-  },
   reminderList: {
     alignItems: "center",
+    paddingBottom: 100
   },
   reminderCard: {
-    backgroundColor: "#E2866E",
-    borderRadius: 15,
+    borderTopWidth: 1,
+    borderTopColor: "#acadac",
     flexDirection: "row",
     alignItems: "center",
-    width: 300,
+    justifyContent: "space-between",
+    width: 400,
     padding: 10,
     marginBottom: 15,
   },
-  petImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
-    marginRight: 15,
+  reminderTime: {
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+  timeElement: {
+    padding: 10,
+    backgroundColor: "#d9d9d9f1",
+    marginHorizontal: 5,
+    borderRadius: 5,
+    color: "#3D3D3D"
+
   },
   reminderInfo: {
     flexDirection: "column",
@@ -85,17 +85,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#3D3D3D",
+    marginBottom: 5
   },
-  addButton: {
-    backgroundColor: "#507C59",
-    borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 40,
-    marginTop: 10,
+    text: {
+    color: "#3D3D3D",
+    fontWeight: "bold",
+    margin: 5,
   },
-  addButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-  },
+
 });

@@ -5,6 +5,8 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
+  Button,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
@@ -13,14 +15,16 @@ import { useAuth } from "../../context/authContext";
 import ReminderService from "../../services/ReminderService";
 import { supabase } from "../../utils/supabase";
 import ReminderTable from "../../components/reminder/ReminderTable";
+import AddReminder from "../../components/reminder/AddReminder";
+import { useRouter } from "expo-router";
+import Ionicons from "@react-native-vector-icons/ionicons";
 
-export default function PetOverview() {
+export default function ReminderOverview() {
+  const router = useRouter();
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const { user, loading: authLoading } = useAuth();
-
-   
 
   function clearErrors() {
     setError("");
@@ -35,7 +39,7 @@ export default function PetOverview() {
     }
     try {
       const result = await ReminderService.getRemindersByUserId(user.id);
-      console.log(result)
+      console.log(result);
       setReminders(result);
     } catch (err) {
       console.error("Failed to fetch reminders", err);
@@ -46,8 +50,6 @@ export default function PetOverview() {
     }
   }
 
-
-
   useEffect(() => {
     getReminderData();
   }, []);
@@ -57,7 +59,6 @@ export default function PetOverview() {
       getReminderData();
     }
   }, [authLoading, user]);
-
 
   if (loading) {
     return (
@@ -70,15 +71,23 @@ export default function PetOverview() {
   return (
     <View style={styles.container}>
       <Header />
-      <View>
-        <Text style={styles.title}>View your reminders here</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Reminders</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={() => router.navigate("/addReminder")}>
+            <Ionicons name="add-outline" size={30} color="rgba(0, 28, 5, 1)" />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <ScrollView contentContainerStyle={styles.scroll}>
         {error && <Text style={styles.error}>{error}</Text>}
+
         {reminders.length === 0 ? (
           <Text style={styles.text}>There are currently no reminders...</Text>
         ) : (
           <ReminderTable reminderData={reminders} />
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -95,30 +104,34 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  imageContainer: {
+  scroll: {
     alignItems: "center",
-    marginTop: 50,
+    paddingBottom: 100,
   },
-
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#75b381ff",
+    margin: 5,
+    padding: 5,
+    borderRadius: 5
   },
   text: {
     color: "#3D3D3D",
     margin: 5,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
     marginBottom: 10,
     color: "#3D3D3D",
     margin: 3,
+    alignSelf: "flex-start",
   },
-  image: {
-    height: 100,
-    width: 95,
+  titleContainer: {
+    flexDirection: "row",
+    width: 400,
+    justifyContent: "space-between"
   },
   error: {
     color: "#d20202ff",

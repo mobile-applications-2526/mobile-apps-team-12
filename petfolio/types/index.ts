@@ -7,11 +7,7 @@ export enum PetType {
   Bird = "Bird",
 }
 export enum ReminderRepeatRule {
-  None = "None",
-  Daily = "Daily",
-  Weekly = "Weekly",
-  Monthly = "Monthly",
-  Yearly = "Yearly",
+  None = "None"
 }
 
 export type User = {
