@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import ProfileOverview from "../../components/profile/ProfileOverview";
@@ -27,49 +27,55 @@ export default function UserProfile() {
     pictures: raw.pictures,
   });
   async function getProfileByUser() {
-      if (!session) {
+    if (!session) {
       setProfile(null);
       setLoading(false);
       return;
     }
     clearErrors();
     if (session) {
-    try {
-      const result = await ProfileService.getProfileByUserId();
-      const userInfo = await UserService.getUserInformationByUserId();
-      console.log("userInfo ", userInfo);
-      if (result != null && userInfo != null) {
-        const mappedProfile = mapToProfile(result, userInfo);
-        setProfile(mappedProfile);
-      } else {
+      try {
+        const result = await ProfileService.getProfileByUserId();
+        const userInfo = await UserService.getUserInformationByUserId();
+        console.log("userInfo ", userInfo);
+        if (result != null && userInfo != null) {
+          const mappedProfile = mapToProfile(result, userInfo);
+          setProfile(mappedProfile);
+        } else {
+          setProfile(null);
+          setError("Something went wrong with fetching your Profile...");
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile", err);
         setProfile(null);
-        setError("Something went wrong with fetching your Profile...");
+        setError("Failed to load profile. Please try again.");
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Failed to fetch profile", err);
-      setProfile(null);
-      setError("Failed to load profile. Please try again.");
-    } finally {
-      setLoading(false);
     }
   }
-}
 
   const handleRefresh = () => {
-    setRefreshKey(prev => prev + 1);
+    setRefreshKey((prev) => prev + 1);
   };
   useEffect(() => {
     getProfileByUser();
   }, [session, refreshKey]);
 
   return (
-    
     <View style={styles.container}>
       <Header />
+      <ScrollView style= {styles.scroll}>
       <View>
-        {!error && profile && <ProfileOverview profileData={profile} onProfileUpdated={handleRefresh} />}
+        {!error && profile && (
+          <ProfileOverview
+            profileData={profile}
+            onProfileUpdated={handleRefresh}
+          />
+        )}
         {error && <Text>Error</Text>}
       </View>
+      </ScrollView>
     </View>
   );
 }
@@ -83,4 +89,7 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     width: "100%",
   },
+  scroll: {
+    paddingTop: 90,
+  }
 });

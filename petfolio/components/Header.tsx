@@ -36,11 +36,13 @@ export default function Header() {
           size={40}
           color="rgba(0, 28, 5, 1)"
         /></Pressable>
+        <Pressable onPress= {() => router.navigate("/reminders")} testID="notification-icon">
         <Ionicons
           name="notifications-outline"
           size={40}
           color="rgba(0, 28, 5, 1)"
         />
+        </Pressable>
         <Pressable testID="logout-icon">
           <Ionicons  onPress={() => logout()}
           name="exit-outline"
@@ -54,7 +56,8 @@ export default function Header() {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 60,
+    marginTop: 60,
+    marginBottom: 20,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",

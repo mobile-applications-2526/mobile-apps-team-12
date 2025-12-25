@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import { Session, User } from '@supabase/supabase-js';
+import ReminderService from '../services/ReminderService';
+
 
 interface AuthContextType {
   session: Session | null;
@@ -36,6 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(session?.user ?? null);
       setLoading(false);
     });
+    
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -48,6 +51,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+  if (!user) return;
+  
+  
+  ReminderService.resyncRemindersForUser(user.id)
+    .catch(err => {
+      console.error('Failed to resync reminders', err);
+    });
+}, [user]);
 
   const signOut = async () => {
     await supabase.auth.signOut();

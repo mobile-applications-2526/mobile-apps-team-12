@@ -6,6 +6,9 @@ export enum PetType {
   Hamster = "Hamster",
   Bird = "Bird",
 }
+export enum ReminderRepeatRule {
+  None = "None"
+}
 
 export type User = {
   id: string;
@@ -72,3 +75,18 @@ export type Profile = {
   phonenumber: string;
   pictures: [];
 };
+
+export type Reminder = {
+  id: string;
+  title: string;
+  description: string;
+  timestamp: Date;
+  repeat_rule: ReminderRepeatRule; 
+}
+
+export type ReminderInput = {
+  title: string;
+  description: string;
+  timestamp: Date;
+  repeat_rule: ReminderRepeatRule; 
+}
