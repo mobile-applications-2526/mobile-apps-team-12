@@ -74,7 +74,9 @@ export default function ReminderOverview() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Reminders</Text>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => router.navigate("/addReminder")}>
+          <TouchableOpacity 
+          testID="add-reminder-button"
+          onPress={() => router.navigate("/addReminder")}>
             <Ionicons name="add-outline" size={30} color="rgba(0, 28, 5, 1)" />
           </TouchableOpacity>
         </View>

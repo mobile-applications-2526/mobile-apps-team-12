@@ -59,7 +59,7 @@ const schedulereminderNotification = async (reminder: Reminder) => {
       },
     });
     console.log(notificationId)
-  } else {
+  } else  if (Platform.OS == "android"){
     notificationId = await Notifications.scheduleNotificationAsync({
       content: {
         title: reminder.title,
@@ -70,6 +70,10 @@ const schedulereminderNotification = async (reminder: Reminder) => {
         date: reminder.timestamp,
       },
     });
+  }
+  else if (Platform.OS =="web") {
+      console.log("Skipping notification scheduling on web/test");
+    return;
   }
   await supabase
     .from("reminder")
