@@ -18,8 +18,8 @@ describe('VaccinSpecification Component', () => {
 
         cy.contains('Anti-wormen').should('be.visible');
         cy.contains('A').should('be.visible');
-        cy.contains('12/12/2012').should('be.visible');
-        cy.contains('12/12/2022').should('be.visible');
+        cy.contains('12-12-2012').should('be.visible');
+        cy.contains('12-12-2022').should('be.visible');
     });
 
     it('Shows edit type when type is clicked', () => {

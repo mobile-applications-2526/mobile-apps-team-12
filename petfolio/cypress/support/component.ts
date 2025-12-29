@@ -29,6 +29,22 @@ declare global {
     }
   }
 }
+if (typeof window !== 'undefined') {
+  (window as any).__DEV__ = true;
+  // Suppress console warnings for known React Native/Expo issues
+  const originalWarn = console.warn;
+  console.warn = (...args) => {
+    const msg = args[0]?.toString() || '';
+    if (
+      msg.includes('TurboModuleRegistry') ||
+      msg.includes('@react-native-vector-icons') ||
+      msg.includes('ExpoModulesCoreJSLogger')
+    ) {
+      return;
+    }
+    originalWarn(...args);
+  };
+}
 
 Cypress.Commands.add('mount', mount)
 

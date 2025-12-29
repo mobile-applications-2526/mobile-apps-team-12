@@ -1,6 +1,6 @@
 describe('Navigation Flow ', () => {
-  const testPetId = '9';
-  const userEmail = 'odemalfait@student.ucll.be';
+  const testPetId = '8';
+  const userEmail = 'ode.malfait@student.ucll.be';
   const userPassword = 'welkom321';
 
   beforeEach(() => {

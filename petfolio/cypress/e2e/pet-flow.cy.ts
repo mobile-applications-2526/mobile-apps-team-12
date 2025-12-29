@@ -13,11 +13,11 @@ describe("Pet Overview Flow", () => {
 
     it("user can see his pets", () => {
         cy.contains("This is the pet Overview").should("be.visible");
-        cy.contains("Tasha").should("be.visible");
         cy.contains("Snowy").should("be.visible");
+        cy.contains("Tasha").should("be.visible");
     })
     it("user can see pet Max his details", () => {
-        cy.get("[data-testid='pet-details-button']").eq(1).click();
+        cy.get("[data-testid='pet-details-button']").eq(0).click();
         cy.url({ timeout: 5000 }).should('include', `/pet/${petId}`);
         cy.contains("Snowy").should("exist");
         cy.contains("Birthday").should("be.visible");
@@ -33,7 +33,7 @@ describe("Pet Overview Flow", () => {
         statusCode: 204,
         body: null
         }).as('deletePetAndExtras');
-        cy.get("[data-testid='pet-details-button']").eq(1).click();
+        cy.get("[data-testid='pet-details-button']").eq(0).click();
         cy.url({ timeout: 5000 }).should('include', `/pet/${petId}`);
         cy.contains("Snowy").should("exist");
         cy.contains("Delete Pet").scrollIntoView({ offset: { top: -100, left: 0 } }).click();

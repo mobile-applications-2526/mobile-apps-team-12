@@ -44,11 +44,13 @@ describe('AddVaccinModal Component', () => {
         cy.get('input').eq(0).type('Rabies');
         cy.get('input').eq(1).type('A');
 
+        cy.get('[data-testid="shot_date_icon"]').click()
         cy.get('[data-testid="shotDate"]').within(() => {
-            cy.contains('Change Date').click();
+           cy.contains("Change Date").click()
         });
+        cy.get('[data-testid="expire_date_icon"]').click()
         cy.get('[data-testid="expireDate"]').within(() => {
-            cy.contains('Change Date').click();
+           cy.contains("Change Date").click()
         });
 
         cy.contains('Cancel').parent().parent().within(() => { cy.contains('Add').click(); });
