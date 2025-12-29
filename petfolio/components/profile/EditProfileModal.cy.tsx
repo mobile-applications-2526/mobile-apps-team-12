@@ -41,4 +41,13 @@ describe("EditProfileModal Component", () => {
                 "0475428824"
             );
         });
+
+            it('Should cancel when cancel button is clicked', () => {
+                const onClose = cy.stub().as('onCloseStub');
+                const onSubmit = cy.stub();
+                 cy.mount( <EditProfileModal oldProfileData={mockProfileData} visible={true} onClose={onClose} onSubmit={onSubmit}/>);
+        
+                cy.contains('Cancel').click();
+                cy.get('@onCloseStub').should('have.been.called');
+            });
 })
