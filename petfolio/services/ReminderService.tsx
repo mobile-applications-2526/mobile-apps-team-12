@@ -160,8 +160,38 @@ const resyncRemindersForUser = async (userId: string) => {
 //   });
 // };
 
+const deleteReminder = async (reminderId: string) => {
+  try {
+    const { data: reminder, error: fetchError } = await supabase
+      .from("reminder")
+      .select("*")
+      .eq("id", reminderId)
+      .single();
 
+    if (fetchError) {
+      throw fetchError;
+    }
 
-const ReminderService = { getRemindersByUserId, createReminder, schedulereminderNotification, resyncRemindersForUser };
+    if (reminder?.notification_id) {
+      await Notifications.cancelScheduledNotificationAsync(reminder.notification_id);
+    }
+
+    const { error: deleteError } = await supabase
+      .from("reminder")
+      .delete()
+      .eq("id", reminderId);
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    console.log(`Reminder ${reminderId} deleted successfully`);
+  } catch (error) {
+    console.error(`Error deleting reminder ${reminderId}:`, error.message);
+    throw error;
+  }
+};
+
+const ReminderService = { getRemindersByUserId, createReminder, schedulereminderNotification, resyncRemindersForUser, deleteReminder };
 
 export default ReminderService;
