@@ -199,7 +199,7 @@ export default function ProfileOverview({ profileData, onProfileUpdated }: Props
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.modalButton, styles.deleteModalButton]}
-                  onPress={handleDelete}
+                  onPress={handleDelete} testID="delete-account-button"
                 >
                   <Text style={styles.deleteButtonText}>Delete</Text>
                 </TouchableOpacity>
