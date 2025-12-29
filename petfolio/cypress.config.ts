@@ -1,4 +1,6 @@
 import { defineConfig } from "cypress";
+import webpackConfig from './webpack.config'
+import path from 'path';
 
 export default defineConfig({
   e2e: {
@@ -16,6 +18,38 @@ export default defineConfig({
     devServer: {
       framework: "react",
       bundler: "webpack",
+      webpackConfig: {
+        ...webpackConfig,
+        devServer: {
+          allowedHosts: "all",
+          host: "localhost",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        },
+        resolve: {
+          ...webpackConfig.resolve,
+          alias: {
+            ...webpackConfig.resolve?.alias,
+            '@react-native-vector-icons/get-image': false,
+            'expo-modules-core': path.resolve(__dirname, 'cypress/mocks/expo-modules-core.js'),
+          },
+          fallback: {
+            ...webpackConfig.resolve?.fallback,
+            'react-native': false,
+          },
+        },
+        module: {
+          rules: [
+            ...(webpackConfig.module?.rules || []),
+            {
+              test: /\.(png|jpe?g|gif|svg|webp)$/i,
+              type: 'asset/resource',
+            },
+          ],
+        },
+      },
     },
+    specPattern: "**/*.cy.{js,jsx,ts,tsx}",
   },
 });
