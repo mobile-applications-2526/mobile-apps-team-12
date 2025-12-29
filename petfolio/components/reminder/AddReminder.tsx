@@ -15,7 +15,6 @@ import ReminderService from "../../services/ReminderService";
 import { ReminderRepeatRule } from "../../types";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import Ionicons from "@react-native-vector-icons/ionicons";
-import Dropdown from "react-native-input-select";
 import Button from "../Button";
 import { useRouter } from "expo-router";
 
