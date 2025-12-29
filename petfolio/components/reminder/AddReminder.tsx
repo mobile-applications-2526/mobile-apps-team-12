@@ -26,7 +26,7 @@ type FormValues = {
 };
 
 export default function AddReminder() {
-const router= useRouter();
+  const router = useRouter();
   const [timestampSelected, setTimestampSelected] = useState(false);
   const [open, setOpen] = useState(false);
   const { control, handleSubmit } = useForm<FormValues>({
@@ -44,17 +44,20 @@ const router= useRouter();
     try {
       setLoading(true);
 
-      // 1️⃣ Get current user
+
       const { data: userData } = await supabase.auth.getUser();
       const userId = userData.user?.id;
       if (!userId) throw new Error("User not logged in");
 
-      // 2️⃣ Create reminder in Supabase
+      const timestampToSave =
+      (typeof globalThis.window !== "undefined" && (globalThis.window as any).TEST_TIMESTAMP) ||
+      data.timestamp;
+
       const reminder = await ReminderService.createReminder(
         {
           title: data.title,
           description: data.description,
-          timestamp: data.timestamp,
+          timestamp: timestampToSave,
           repeat_rule: data.repeat_rule,
         },
         userId
@@ -65,7 +68,7 @@ const router= useRouter();
         ...reminder,
         timestamp: new Date(reminder.timestamp),
       });
-      router.navigate("/reminders")
+      router.navigate("/reminders");
     } catch (err: any) {
       console.error(err);
       throw err;
@@ -108,7 +111,6 @@ const router= useRouter();
               value={value}
               onChangeText={onChange}
               placeholder="Optional description"
-              multiline
               style={styles.input}
             />
           )}
@@ -120,45 +122,56 @@ const router= useRouter();
           control={control}
           name="timestamp"
           render={({ field: { onChange, value } }) => (
-            
-              <View style={styles.dateContainer}>
-                {timestampSelected && !open && (
-                  <Text>{value.toLocaleDateString("en-GB")}</Text>
-                )}
-                {!timestampSelected && !open && (
-                  <Text style={styles.dateText}>
-                    Select the moment of reminder:
-                  </Text>
-                )}
-                {open && (
-                  <RNDateTimePicker
-                    mode="datetime"
-                    value={value ? new Date(value) : new Date()}
-                    onChange={(event, selectedDate) => {
-                      if (selectedDate) {
-                        onChange(selectedDate);
-                        setTimestampSelected(true);
-                      }
-                    }}
-                  ></RNDateTimePicker>
-                )}
-                <TouchableOpacity
-                  onPress={() => {
-                    if (open) {
-                      setOpen(false);
-                    } else {
-                      setOpen(true);
-                    }
+            <View style={styles.dateContainer}>
+              {Platform.OS === "web" ? (
+                <input
+                  data-testid="datetime-picker"
+                  type="datetime-local"
+                  value={value.toISOString().slice(0, 16)}
+                  onChange={(e) => onChange(new Date(e.target.value))}
+                  style={{
+                    padding: 8,
+                    borderRadius: 5,
+                    border: "1px solid #ccc",
+                    flex: 1,
                   }}
-                >
-                  <Ionicons
-                    name="calendar-number-outline"
-                    size={30}
-                    color="rgba(0, 28, 5, 1)"
-                  />
-                </TouchableOpacity>
-              </View>
-            
+                />
+              ) : (
+                <>
+                  {timestampSelected && !open && (
+                    <Text>{value.toLocaleDateString("en-GB")}</Text>
+                  )}
+                  {!timestampSelected && !open && (
+                    <Text style={styles.dateText}>
+                      Select the moment of reminder:
+                    </Text>
+                  )}
+                  {open && (
+                    <RNDateTimePicker
+                      testID="datetime-picker"
+                      mode="datetime"
+                      value={value ? new Date(value) : new Date()}
+                      onChange={(event, selectedDate) => {
+                        if (selectedDate) {
+                          onChange(selectedDate);
+                          setTimestampSelected(true);
+                        }
+                      }}
+                    />
+                  )}
+                  <TouchableOpacity
+                    testID="datetime-picker-open"
+                    onPress={() => setOpen(!open)}
+                  >
+                    <Ionicons
+                      name="calendar-number-outline"
+                      size={30}
+                      color="rgba(0, 28, 5, 1)"
+                    />
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
           )}
         />
 
@@ -175,6 +188,7 @@ const router= useRouter();
       </View>
       <View style={styles.buttonContainer}>
         <Button
+          testID="save-reminder-button"
           label={loading ? "Saving..." : "Add Reminder"}
           onPress={handleSubmit(onSubmit)}
         />
@@ -219,7 +233,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 50,
-    marginTop: 20
+    marginTop: 20,
   },
 
   title: {
@@ -248,5 +262,4 @@ const styles = StyleSheet.create({
     color: "#3D3D3D",
     margin: 5,
   },
-
 });
