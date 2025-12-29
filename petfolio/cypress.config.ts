@@ -33,7 +33,8 @@ export default defineConfig({
             ...webpackConfig.resolve?.alias,
             '@react-native-vector-icons/get-image': false,
             'expo-modules-core': path.resolve(__dirname, 'cypress/mocks/expo-modules-core.js'),
-            'utils/supabase': path.resolve(__dirname, 'cypress/mocks/supabase.ts'),
+            'utils/supabase': path.resolve(__dirname, 'cypress/mocks/supabase.js'),
+            '@react-native-community/datetimepicker': path.resolve(__dirname, 'cypress/mocks/datetimepicker.js'),
           },
           fallback: {
             ...webpackConfig.resolve?.fallback,

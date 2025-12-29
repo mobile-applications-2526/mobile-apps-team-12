@@ -45,7 +45,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
           <TextInput value={type} onChangeText={setType} style={styles.input} />
 
           <Text style={styles.label}>Shot date:</Text>
-          <View style={styles.dateContainer} testID="shot_date">
+          <View style={styles.dateContainer} >
             {shotDateSelected && (
               <Text>{shot_date.toLocaleDateString("en-GB")}</Text>
             )}
@@ -72,7 +72,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
               else {
                 setShotOpen(true);
               }
-              }}>
+              }} testID="shot_date_icon">
               <Ionicons
                 name="calendar-number-outline"
                 size={30}
@@ -83,7 +83,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
           </View>
 
           <Text style={styles.label}>Expire date:</Text>
-          <View style={styles.dateContainer} testID="expire_date">
+          <View style={styles.dateContainer}>
             {expireDateSelected && (
               <Text>{expire_date.toLocaleDateString("en-GB")}</Text>
             )}
@@ -110,7 +110,7 @@ export default function AddVaccinModal({ visible, onClose, onSubmit }: Props) {
               else {
                 setExpireOpen(true);
               }
-              }}>
+              }} testID="expire_date_icon">
               <Ionicons
                 name="calendar-number-outline"
                 size={30}
