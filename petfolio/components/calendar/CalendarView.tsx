@@ -29,16 +29,26 @@ export default function CalendarView({ pets }: Props) {
 
   return (
     <View>
-      <Calendar
-        style={styles.calendar}
-        theme={{
-          calendarBackground: "#E07A5F",
-        }}
-        onDayPress={(day) => {
-          setSelected(day.dateString);
-        }}
-        markedDates={combinedMarks}
-      />
+<Calendar
+  style={styles.calendar}
+  theme={{
+    calendarBackground: "#E07A5F",
+    textSectionTitleColor: "#ffffff", // Maanddagen (Mon, Tue…)
+    dayTextColor: "#ffffff",           // Dagen
+    todayTextColor: "#E07A5F",         // Vandaag
+    monthTextColor: "#ffffff",         // Maand titel
+    selectedDayBackgroundColor: "#af3f20ff",
+    selectedDayTextColor: "#ffffff",
+    arrowColor: "#ffffff",             // pijltjes
+    textDisabledColor: "#f0f0f0",      // uitgeschakelde dagen
+    dotColor: "#ffffff",
+    selectedDotColor: "#ffffff",
+  }}
+  onDayPress={(day) => {
+    setSelected(day.dateString);
+  }}
+  markedDates={combinedMarks}
+/>
     </View>
   );
 }
