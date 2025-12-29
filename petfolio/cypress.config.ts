@@ -33,6 +33,7 @@ export default defineConfig({
             ...webpackConfig.resolve?.alias,
             '@react-native-vector-icons/get-image': false,
             'expo-modules-core': path.resolve(__dirname, 'cypress/mocks/expo-modules-core.js'),
+            'utils/supabase': path.resolve(__dirname, 'cypress/mocks/supabase.ts'),
           },
           fallback: {
             ...webpackConfig.resolve?.fallback,
