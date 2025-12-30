@@ -94,7 +94,7 @@ export default function PetOverview({ petData }: Props) {
   };
 
   const tableData = [
-    ["Birthday", petData.birthdate],
+    ["Birthday", petData.birthdate.toLocaleDateString()],
     [
       "Current weight",
       <TouchableOpacity
@@ -137,6 +137,7 @@ export default function PetOverview({ petData }: Props) {
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           <Image
+            testID="image"
             source={
               profileImageUrl
                 ? { uri: profileImageUrl }
@@ -145,6 +146,7 @@ export default function PetOverview({ petData }: Props) {
             style={styles.profilePic}
           />
           <TouchableOpacity
+            testID="edit-icon-button"
             style={styles.editIconButton}
             onPress={() => setShowImagePickerModal(true)}
           >

@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Pet, Reminder } from "../../types";
+import React, {  useState } from "react";
+import {  Reminder } from "../../types";
 import {
   View,
   Text,
   StyleSheet,
-  Image,
   ScrollView,
   TouchableOpacity,
-  Modal,
-  Alert,
 } from "react-native";
-import { Table, Rows } from "react-native-table-component";
-import { useRouter } from "expo-router";
 import ReminderService from "../../services/ReminderService";
-import ImagePicker from "../imagepickers/ImagePickerPets";
-import { supabase } from "../../utils/supabase";
 import Ionicons from "@react-native-vector-icons/ionicons";
 
 type Props = {

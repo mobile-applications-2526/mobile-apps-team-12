@@ -14,7 +14,6 @@ import PetService from "../../services/PetService";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { PetType } from "../../types";
 import { useRouter } from "expo-router";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 type FormDataPet = {
@@ -38,7 +37,6 @@ export default function AddPetForm() {
   });
   const [typeOpen, setTypeOpen] = useState(false);
 
-
   const onSubmit = async (data: FormDataPet) => {
     setErrors(null);
     setMessage(null);
@@ -56,14 +54,14 @@ export default function AddPetForm() {
       setMessage("Pet added succesfully!");
       setTimeout(() => router.navigate("/homepage"), 2000);
     } catch (error) {
-      setErrors(error);
+      setErrors(error.message);
       console.log(error);
     }
   };
 
   return (
     <View>
-      {message && <Text style={styles.success} >{message}</Text>}
+      {message && <Text style={styles.success}>{message}</Text>}
       <Text style={styles.title}>Register Pet</Text>
       <Controller
         control={control}
@@ -87,34 +85,48 @@ export default function AddPetForm() {
           <>
             <Text>Birthdate:</Text>
             <View style={styles.dateContainer}>
-               {birthdateSelected && <Text>{value.toLocaleDateString("en-GB")}</Text>}
-              {!birthdateSelected && !open &&(
+              {birthdateSelected && (
+                <Text>{value.toLocaleDateString("en-GB")}</Text>
+              )}
+              {!birthdateSelected && !open && (
                 <Text style={styles.dateText}>Select your pet's birthday</Text>
               )}
-              {open && (<RNDateTimePicker
-                mode="date"
-                title="Select your pets birthday."
-                value={value ? new Date(value) : new Date()}
-                maximumDate={new Date()}
-                onChange={(event, selectedDate) => {
-                  if (selectedDate) {
-                    onChange(selectedDate)
-                    setBirthdateSelected(true)
-                    setOpen(false)
-                  }
-                }} ></RNDateTimePicker>)}
-              <TouchableOpacity onPress={() => setOpen(true)}>
+              {open && (
+                <RNDateTimePicker
+                  testID="date-picker"
+                  mode="date"
+                  title="Select your pets birthday."
+                  value={value ? new Date(value) : new Date()}
+                  maximumDate={new Date()}
+                  onChange={(event, selectedDate) => {
+                    if (selectedDate) {
+                      onChange(selectedDate);
+                      setBirthdateSelected(true);
+                      setOpen(false);
+                    }
+                  }}
+                ></RNDateTimePicker>
+              )}
+              {__DEV__ && (
+                <TouchableOpacity
+                  testID="set-test-date"
+                  onPress={() => {
+                    onChange(new Date("2020-01-01"));
+                    setBirthdateSelected(true);
+                  }}
+                />
+              )}
+              <TouchableOpacity
+                testID="date-picker-button"
+                onPress={() => setOpen(true)}
+              >
                 <Ionicons
                   name="calendar-number-outline"
                   size={30}
                   color="rgba(0, 28, 5, 1)"
                 />
               </TouchableOpacity>
-              
-              
-
             </View>
-
           </>
         )}
       />
@@ -154,7 +166,7 @@ export default function AddPetForm() {
 
             {/* Modal list for selecting pet type */}
             {typeOpen && (
-              <View style={styles.modalOverlay}>
+              <View testID="pet-type-picker" style={styles.modalOverlay}>
                 <View style={styles.modalContent}>
                   {Object.values(PetType).map((petType) => (
                     <TouchableOpacity
@@ -180,7 +192,12 @@ export default function AddPetForm() {
           </>
         )}
       />
-      <Button label="Add" onPress={handleSubmit(onSubmit)} />
+      {errors && (
+        <Text style= {styles.error}>{errors}</Text>
+      )}
+      <Button 
+      testID="save-pet-button"
+      label="Add" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 }
