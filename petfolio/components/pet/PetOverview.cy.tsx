@@ -53,7 +53,7 @@ describe("PetOverview Component", () => {
 
     it("displays birthdate in table", () => {
         cy.contains("Birthday").should("be.visible");
-        cy.contains("1/15/2020").should("be.visible");
+        cy.contains("15-1-2020").should("be.visible");
     });
 
     it("opens delete confirmation modal when delete button is clicked", () => {
