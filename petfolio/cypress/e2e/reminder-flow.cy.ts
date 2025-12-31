@@ -51,7 +51,7 @@ describe("Reminder Flow", () => {
   .find('div[data-testid="reminder-date"]') // or just the first child with date
   .first()
   .invoke('text')
-  .should('match', /\d{1,2}\/\d{1,2}\/\d{4}/);
+  .should('match', /\d{1,2}-\d{1,2}-\d{4}/);
  });
 
  

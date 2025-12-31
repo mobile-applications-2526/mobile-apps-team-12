@@ -94,7 +94,7 @@ export default function PetOverview({ petData }: Props) {
   };
 
   const tableData = [
-    ["Birthday", petData.birthdate.toLocaleDateString()],
+    ["Birthday", new Date(petData.birthdate).toLocaleDateString()],
     [
       "Current weight",
       <TouchableOpacity

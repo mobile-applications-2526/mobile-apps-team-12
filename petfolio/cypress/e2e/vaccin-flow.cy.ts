@@ -54,8 +54,8 @@ describe("Vaccin e2e flow", () => {
         cy.get('input').eq(0).type('Rabies');
         cy.get('input').eq(1).type('A');
 
-        cy.get('[data-testid="shot_date"]').click();
-        cy.get('[data-testid="expire_date"]').click();
+        cy.get('[data-testid="shot_date_icon"]').click();
+        cy.get('[data-testid="expire_date_icon"]').click();
 
         cy.get('[data-testid="add-vaccin-button"]').click();
 

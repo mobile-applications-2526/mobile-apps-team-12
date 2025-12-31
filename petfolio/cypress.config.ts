@@ -13,6 +13,10 @@ export default defineConfig({
     video: false,
     screenshotOnRunFailure: true,
   },
+  env: {
+      SUPABASE_URL: 'https://ccqacjrgnbqfyvkfxjoq.supabase.co',
+      SUPABASE_ANON_KEY: 'sb_publishable_er4-JYK258s6fUpzHCd7BA_pP-vDn76'
+    },
 
   component: {
     devServer: {

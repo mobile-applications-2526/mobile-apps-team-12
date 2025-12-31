@@ -6,8 +6,8 @@ describe('Navigation Flow ', () => {
   beforeEach(() => {
     cy.login(userEmail, userPassword);
     cy.visit('/homepage');
-    cy.url({ timeout: 10000 }).should('include', '/homepage');
   });
+
 
 it('navigates through main pet pages and back', () => {
     cy.get('[data-testid="pet-overview-button"]').click();

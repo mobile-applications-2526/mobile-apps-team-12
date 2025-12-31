@@ -50,26 +50,45 @@ Cypress.Commands.add('login', (
   password = 'welkom1234' 
 ) => {
   cy.session(['login-session', email, password], () => {
-    cy.visit('/login');
-    
-    cy.contains('Log in here', { timeout: 10000 }).should('be.visible');
-    
-    cy.get('input').first().clear().type(email);
-    cy.get('input').eq(1).clear().type(password);
-    
-    cy.get('[data-testid="login-button"]').click();
-        
-    cy.url({ timeout: 15000 }).should('include', '/homepage');
-    
-    cy.wait(2000);
+    cy.request({
+      method: 'POST',
+      url: `${Cypress.env('SUPABASE_URL')}/auth/v1/token?grant_type=password`,
+      headers: {
+        'apikey': Cypress.env('SUPABASE_ANON_KEY'),
+        'Content-Type': 'application/json'
+      },
+      body: {
+        email,
+        password
+      }
+    }).then((response) => {
+      const { access_token, refresh_token, expires_in, expires_at, user } = response.body;
+      
+      const session = {
+        access_token,
+        refresh_token,
+        expires_in,
+        expires_at,
+        token_type: 'bearer',
+        user
+      };
+      
+      const projectRef = Cypress.env('SUPABASE_URL').match(/https:\/\/([^.]+)/)[1];
+      const storageKey = `sb-${projectRef}-auth-token`;
+      
+      cy.window().then((win) => {
+        win.localStorage.setItem(storageKey, JSON.stringify(session));
+      });
+    });
   }, {
     validate() {
-      cy.request({
-        url: '/homepage',
-        failOnStatusCode: false
-      }).then((response) => {
-        if (response.status === 200 && response.body.includes('login')) {
-          throw new Error('Session expired');
+      const projectRef = Cypress.env('SUPABASE_URL').match(/https:\/\/([^.]+)/)[1];
+      const storageKey = `sb-${projectRef}-auth-token`;
+      
+      cy.window().then((win) => {
+        const authToken = win.localStorage.getItem(storageKey);
+        if (!authToken) {
+          throw new Error('No auth token found');
         }
       });
     }

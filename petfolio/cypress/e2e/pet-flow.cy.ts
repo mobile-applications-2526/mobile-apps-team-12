@@ -16,7 +16,7 @@ describe("Pet Overview Flow", () => {
         cy.contains("Snowy").should("be.visible");
         cy.contains("Tasha").should("be.visible");
     })
-    it("user can see pet Max his details", () => {
+    it("user can see pet Snowy his details", () => {
         cy.get("[data-testid='pet-details-button']").eq(0).click();
         cy.url({ timeout: 5000 }).should('include', `/pet/${petId}`);
         cy.contains("Snowy").should("exist");
