@@ -26,9 +26,7 @@ describe("Medication e2e flow", () => {
                 cy.contains('This action cannot be undone')
                     .parent()
                     .parent()
-                    .contains('Delete')
-                    .click({ force: true });
-
+                    cy.get('[data-testid="delete-medication-button"]').click({force:true});
                 cy.wait(2000);
             }
         });
@@ -77,31 +75,21 @@ describe("Medication e2e flow", () => {
             cy.contains('Delete Medication').should('be.visible');
         });
     });
-
     it('Deleted medication', () => {
-        cy.wait(2000);
+    cy.contains('Anti-Epilepsi', { timeout: 10000 }).click();
 
-        cy.get('body').then(($body) => {
-            if ($body.text().includes('Anti-Epilepsi')) {
-                cy.contains('Anti-Epilepsi').click();
+    cy.url().should('include', '/medication/');
 
-                cy.url({ timeout: 10000 }).should('include', '/medication/');
+    cy.contains('Delete Medication').click();
 
-                cy.contains('Delete Medication').scrollIntoView().click();
+    cy.contains('Are you sure').should('be.visible');
+    cy.contains('This action cannot be undone').should('be.visible');
 
-                cy.contains('Are you sure', { timeout: 5000 }).should('be.visible');
-                cy.contains('This action cannot be undone').should('be.visible');
+    cy.get('[data-testid="delete-medication-button"]').click();
 
-                cy.get('[data-testid="delete-medication-button"]').click();
+    cy.url({ timeout: 10000 }).should('include', '/pet/medications/');
 
-                cy.wait(3000);
-                cy.url({ timeout: 10000 }).should('include', '/pet/medications/');
-
-                cy.reload();
-                cy.wait(2000);
-
-                cy.get('body').should('not.contain', 'Anti-Epilepsi');
-            }
-        });
+    cy.contains('Anti-Epilepsi').should('not.exist');
     });
+
 })
